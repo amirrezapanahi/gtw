@@ -1,4 +1,5 @@
 import React from "react"
+import { Link } from "react-router-dom";
 
 function Paper(){
     return (
@@ -22,7 +23,7 @@ export default function DocList(props: {docs:any}) {
         {
             props.docs.map((item:any, i:number) =>{
                 console.log(item);
-                return <Doc name={item}/>
+                return <Link to={`/docs/${i}`}><Doc name={item}/></Link>
             })
         } 
         </div>  
