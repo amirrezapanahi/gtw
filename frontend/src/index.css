@@ -35,3 +35,34 @@ body{
     letter-spacing: -1px;
     font-size: 1em;
 }
+
+button{
+    background-color: black;
+    color: white;
+    padding: 0.1em 1em 0.1em 1em;
+    text-decoration: none;
+    border: none;   
+    border-radius: 10px;
+}
+
+button:hover{
+    background-color: #727272;
+    transition: 0.5s;
+    cursor: pointer;
+}
+
+.docs{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 2em;
+}
+
+.doc{
+    display:flex;
+    flex-direction: column;
+    width: fit-content;
+}
+
+.doc h3 {
+    text-align: center;
+}
