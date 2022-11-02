@@ -1,8 +1,8 @@
 import { useEffect,useState } from "react";
 import React from "react";
-import DocList from "./DocList";
+import { DocList } from "./DocList";
 
-function HomePage() {
+export const HomePage: React.FC = () => {
 
   const [docs, setDocs] = useState<string[]>([]);
   const [addDoc, setAddDoc] = useState<boolean>(false);
@@ -54,5 +54,3 @@ function HomePage() {
     </div>
   );
 }
-
-export default HomePage;

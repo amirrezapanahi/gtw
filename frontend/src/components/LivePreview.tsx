@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function LivePreview() {
+export const LivePreview: React.FC = () => {
   return (
     <div style={{"backgroundColor": "white", "height": "100vh"}}></div>
   )

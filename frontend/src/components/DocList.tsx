@@ -1,6 +1,10 @@
 import React from "react"
 import { Link } from "react-router-dom";
 
+interface Props {
+    docs: any
+}
+
 function Paper(){
     return (
         <div style={{"backgroundColor": "white", "height": "12em", "width": "8em"}}>
@@ -17,11 +21,11 @@ function Doc(props: {name:string}){
     )
 }
 
-export default function DocList(props: {docs:any}) {
+export const DocList: React.FC<Props> = ({docs}) => {
     return (
         <div className="docs">
         {
-            props.docs.map((item:any, i:number) =>{
+            docs.map((item:any, i:number) =>{
                 console.log(item);
                 return <Link to={`/docs/${i}`}><Doc name={item}/></Link>
             })

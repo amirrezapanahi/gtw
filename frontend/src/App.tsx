@@ -6,10 +6,10 @@ import {
   Routes,
   Link
 } from "react-router-dom";
-import HomePage from "./components/HomePage";
-import Document from "./components/Document";
+import { HomePage } from "./components/HomePage";
+import { Document } from "./components/Document";
 
-export default function App(){
+export const App: React.FC = () => {
   return (
       <Routes>
         <Route path="/" element={<HomePage/>}/>        

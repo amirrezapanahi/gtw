@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function Inbox() {
+export const Inbox: React.FC = () => {
   return (
     <div>Inbox</div>
   )
