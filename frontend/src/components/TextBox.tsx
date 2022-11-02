@@ -17,7 +17,7 @@ export const TextBox: React.FC<Props> = ({getContent}) => {
     }
 
     const completedContent = () => {
-
+        
     }
   
     return (
