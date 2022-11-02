@@ -1,7 +1,13 @@
 import React from 'react'
 
-export const LivePreview: React.FC = () => {
+interface Props{
+  displayContent: string
+}
+
+export const LivePreview: React.FC<Props> = ({displayContent}) => {
   return (
-    <div style={{"backgroundColor": "white", "height": "100vh"}}></div>
+    <div style={{"backgroundColor": "white", "height": "100vh"}}>
+      {displayContent}
+    </div>
   )
 }
