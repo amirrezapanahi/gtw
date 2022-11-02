@@ -1,29 +1,30 @@
-import React, { useState } from 'react'
+import React, { Dispatch, SetStateAction, useState } from 'react'
 
 interface Props {
     getContent: (content:string) => void
+    doneClicked: (content:string) => void
 }
 
-export const TextBox: React.FC<Props> = ({getContent}) => {
+export const TextBox: React.FC<Props> = ({getContent, doneClicked}) => {
 
-    const [writingContent, setWritingContent] = useState<string>("");
-  
-    //need to pass the prop back up to the parent so that live preview is updated
+    const [content, setContent] = useState<string>("")
 
-    //function which updates the prop 
-    const updateContent = (e:any) =>{
-        setWritingContent(e.target.value)
-        getContent(writingContent);
+
+    const handleUserInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        setContent(e.target.value)
+        getContent(e.target.value) 
     }
 
-    const completedContent = () => {
-        
+    const buttonClicked = () => {
+        var contentBeforeReset = content;
+        setContent("");
+        doneClicked(contentBeforeReset);
     }
   
     return (
         <>
-        <textarea onChange={e => updateContent(e)}></textarea>
-        <button onClick={completedContent} className="button">Done</button>
+        <textarea onChange={e => handleUserInput(e)} placeholder="Begin writing..." value={content}></textarea>
+        <button onClick={buttonClicked} className="button">Done</button>
         </>
     )
 }
