@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import parse from 'html-react-parser';
 
 interface Props{
   displayContent: string
@@ -6,7 +7,7 @@ interface Props{
   setWrittenContent: React.Dispatch<React.SetStateAction<string>>
 }
 
-export const LivePreview: React.FC<Props> = ({displayContent, saveContent, setWrittenContent}) => {
+export const Editor: React.FC<Props> = ({displayContent, saveContent, setWrittenContent}) => {
 
   const [content, setContent] = useState<string>("")
 
@@ -17,7 +18,7 @@ export const LivePreview: React.FC<Props> = ({displayContent, saveContent, setWr
 
   return (
     <div style={{"backgroundColor": "white", "height": "100vh"}}>
-      {content + " " + displayContent}
+      {parse(displayContent)}
     </div>
   )
 }

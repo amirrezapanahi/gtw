@@ -7,13 +7,13 @@ import {
   Link
 } from "react-router-dom";
 import { HomePage } from "./components/HomePage";
-import { Document } from "./components/Document";
+import { DocumentComponent } from "./components/DocumentComponent";
 
 export const App: React.FC = () => {
   return (
       <Routes>
         <Route path="/" element={<HomePage/>}/>        
-        <Route path="/docs/:id" element={<Document />}/>
+        <Route path="/docs/:id" element={<DocumentComponent />}/>
       </Routes>
   )
 }
