@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import { Inbox } from './Inbox'
-import MyEditor from '../components/editor/MyEditor'
+import { DocEditor }  from './Editor'
 import DocumentType from '../types/doc'
 import { useParams } from 'react-router-dom'
 
@@ -23,8 +23,7 @@ export const DocumentComponent: React.FC = () => {
             <Inbox/><br></br>
         </div>
         <div style={{"width": "50%"}}>
-          {/* <DocEditor content={doc.content} docIndex={parseInt(id!, 10)}/> */}
-          <MyEditor />
+          <DocEditor content={doc.content} docIndex={parseInt(id!, 10)}/>
         </div>
     </div>
   )
