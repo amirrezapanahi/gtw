@@ -34,10 +34,23 @@ export default class Document {
   }
 
   reviewDue(): number {
-    const date1 = this.last_reviewed
+    const date1 = new Date()
     const date2 = this.next_reviewed;
     const diffInMilliseconds = date2.getTime() - date1.getTime();
     const diffInDays = diffInMilliseconds / (1000 * 60 * 60 * 24);
     return diffInDays    
+  }
+
+  fromJSON(doc: Document): Document{
+    let docCopy = new Document(doc.doc_name, doc.review_freq)
+    docCopy.created_at = doc.created_at 
+    docCopy.last_reviewed = doc.last_reviewed
+    docCopy.next_reviewed = doc.next_reviewed
+    docCopy.review_freq = doc.review_freq
+    docCopy.doc_name = doc.doc_name
+    docCopy.content = doc.content
+    docCopy._inbox = doc._inbox
+    docCopy.daysUntilReview = this.reviewDue()
+    return doc
   }
 }

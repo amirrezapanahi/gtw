@@ -65,7 +65,6 @@ export default function Editor({docIndex}) {
       LinkNode
     ]
   };
-
   return (
     <LexicalComposer initialConfig={editorConfig} >
       <div className="editor-container">
