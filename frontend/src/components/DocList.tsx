@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react"
+import React, {useContext, useEffect, useState} from "react"
 import { Link } from "react-router-dom";
 import Document from "../types/doc"
-
+import {useGlobalState} from "../GTWContext";
 interface Props {
     docs: Document[]
 }
@@ -34,12 +34,14 @@ function Doc(props: {name:string; daysUntilReview:number;}){
 
 export const DocList: React.FC<Props> = ({docs}) => {
 
+    const {state, setState} = useGlobalState()
     const updateReviewDueAllDocs = (docs: Document[]): Document[] => {
         for (let i = 0 ; i<docs.length-1; i++){
             const strictDoc: Document = new Document(docs[i].doc_name, docs[i].review_freq).fromJSON(docs[i])
             docs[i] = strictDoc
         }
         localStorage.setItem('gtw', JSON.stringify(docs))
+        setState(docs)
         return docs
     }
 

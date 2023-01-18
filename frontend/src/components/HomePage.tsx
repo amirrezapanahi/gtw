@@ -11,31 +11,11 @@ export const HomePage: React.FC = () => {
   const [docName, setDocName] = useState<string>();
   const [reviewFreq, setReviewFreq] = useState<number>();
 
-  //useEffect(() => {
-  //  //retrieve documents from localstorage
-  //  if ('gtw' in localStorage){
-  //    console.log(localStorage)
-  //    const docsFromStorage = localStorage.getItem('gtw');
-  //    console.log(docsFromStorage)
-  //    setDocs(JSON.parse(docsFromStorage!))
-  //  }
-  //},[])
-
-  // useEffect(() => {    
-  //   localStorage.setItem("gtw", JSON.stringify(docs))
-  // }, [docs])
-  
   const requestToRegisterDoc = () => {
     setAddDoc(!addDoc);
   }
 
   const registerDoc = () => {
-    // fetch("/register-doc", {
-    //     method: "POST",
-    //     body: JSON.stringify({input: input})
-    // })
-    // .then(res => res.json);
-
     let doc = new Document(docName!,reviewFreq!);
     
     let prev = [...docs];
