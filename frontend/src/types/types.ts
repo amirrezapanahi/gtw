@@ -2,6 +2,8 @@ export type TaskType = {
     description: string;
     dueDate: Date;
     priority: Priority;
+    dependentOn: TaskType[];
+    
 }
 
 export type DocumentType = {
@@ -14,7 +16,7 @@ export type DocumentType = {
     review_freq: number;
 }
 
-enum Priority{
+export enum Priority{
     High = 0,
     Mid = 1,
     Low = 2

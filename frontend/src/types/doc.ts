@@ -4,16 +4,16 @@ export default class Document {
   doc_name: string;
   content: string;
   _inbox: Array<TaskType>
-  last_reviewed: Date;
-  next_reviewed: Date;
-  created_at: Date;
+  last_reviewed: string;
+  next_reviewed: string;
+  created_at: string;
   review_freq: number;
   daysUntilReview: number;
 
   constructor(name: string, freq: number){
-    this.created_at = new Date()
-    this.last_reviewed = new Date()
-    this.next_reviewed = new Date(new Date().setDate(new Date().getDate() + freq));
+    this.created_at = new Date().toISOString().slice(0, 10);
+    this.last_reviewed = new Date().toISOString().slice(0,10)
+    this.next_reviewed = new Date(new Date().setDate(new Date().getDate() + freq)).toISOString().slice(0,10)
     this.review_freq = freq
     this.doc_name = name
     this.content = ""
@@ -34,10 +34,11 @@ export default class Document {
   }
 
   reviewDue(): number {
-    const date1 = new Date()
-    const date2 = this.next_reviewed;
-    const diffInMilliseconds = date2.getTime() - date1.getTime();
+    let date1 = Date.parse(new Date().toISOString().slice(0,10))
+    const date2 = Date.parse(this.next_reviewed.toString());
+    const diffInMilliseconds = date2 - date1;
     const diffInDays = diffInMilliseconds / (1000 * 60 * 60 * 24);
+    console.log(diffInDays + "\n" + date2 + "\n" + date1)
     return diffInDays    
   }
 
@@ -46,9 +47,8 @@ export default class Document {
     docCopy.created_at = doc.created_at 
     docCopy.last_reviewed = doc.last_reviewed
     docCopy.next_reviewed = doc.next_reviewed
-    docCopy.review_freq = doc.review_freq
-    docCopy.doc_name = doc.doc_name
     docCopy.content = doc.content
+    console.log(typeof docCopy.next_reviewed)
     docCopy._inbox = doc._inbox
     docCopy.daysUntilReview = this.reviewDue()
     return doc

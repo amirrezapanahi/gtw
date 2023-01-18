@@ -83,3 +83,25 @@ button:hover {
 .doc h3 {
   text-align: center;
 }
+
+.header {
+  background-color: #006BA6;
+  display: flex;
+  justify-content: center;
+  color: white;
+  padding: 0.5em 0 0.5em 0;
+  border-left: 1px solid #477998
+}
+
+.block {
+  background-color: rgba(0, 0, 60, 0.8);
+  color: white;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+.block textarea {
+  width: 95%;
+  margin: 0 auto;
+}

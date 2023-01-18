@@ -21,9 +21,9 @@ export const HomePage: React.FC = () => {
   //  }
   //},[])
 
-  useEffect(() => {    
-    localStorage.setItem("gtw", JSON.stringify(docs))
-  }, [docs])
+  // useEffect(() => {    
+  //   localStorage.setItem("gtw", JSON.stringify(docs))
+  // }, [docs])
   
   const requestToRegisterDoc = () => {
     setAddDoc(!addDoc);
@@ -46,9 +46,6 @@ export const HomePage: React.FC = () => {
 
   return (
     <div className="App">
-        <div className="header">
-            <h3>Login/Register</h3>
-        </div>
         <div className="container">
             <h1>Getting Things Written.</h1>
             <h3>Write. Journal. Research.</h3>

@@ -3,6 +3,7 @@ import { Inbox } from './Inbox'
 import { DocEditor }  from './Editor'
 import DocumentType from '../types/doc'
 import { useParams } from 'react-router-dom'
+import { CaptureBlock } from './Block'
 
 export const DocumentComponent: React.FC = () => {
   let {id} = useParams();
@@ -20,9 +21,19 @@ export const DocumentComponent: React.FC = () => {
   return (
     <div style={{"display": "flex"}}>
         <div style={{"width": "50%"}}>
+            <div className='header'>
+              <div style={{display: 'flex', gap: '2em'}}>
+                <span>Dashboard</span>
+                <span>Inbox ({doc._inbox.length})</span>
+              </div>
+            </div>
             <Inbox/><br></br>
+            <CaptureBlock docIndex={parseInt(id)} />
         </div>
         <div style={{"width": "50%"}}>
+          <div className='header'>
+            {doc.doc_name}
+          </div>
           <DocEditor content={doc.content} docIndex={parseInt(id!, 10)}/>
         </div>
     </div>
