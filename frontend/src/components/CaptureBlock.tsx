@@ -29,7 +29,7 @@ export const CaptureBlock: React.FC<Props> = ({docIndex}) => {
             description: desc,
             dependentOn: dependentOn,
             priority: Priority[priority],
-            dueDate: new Date(dueDate),
+            dueDate: new Date(dueDate).toISOString().slice(0,10),
         }
 
         docs[docIndex]._inbox.push(task)

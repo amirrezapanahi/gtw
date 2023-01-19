@@ -2,7 +2,6 @@ import React, {useContext, useEffect, useState} from "react"
 import { Link } from "react-router-dom";
 import Document from "../types/doc"
 import {useGlobalState} from "../GTWContext";
-import {DocumentType} from "../types/types";
 interface Props {
     docs: Document[]
 }
