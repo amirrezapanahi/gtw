@@ -3,7 +3,7 @@ import { Inbox } from './Inbox'
 import { DocEditor }  from './Editor'
 import DocumentType from '../types/doc'
 import { useParams } from 'react-router-dom'
-import { CaptureBlock } from './Block'
+import { CaptureBlock } from './CaptureBlock'
 
 export const DocumentComponent: React.FC = () => {
   let {id} = useParams();

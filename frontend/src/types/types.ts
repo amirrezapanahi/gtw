@@ -1,8 +1,8 @@
 export type TaskType = {
-    description: string;
-    dueDate: Date;
-    priority: Priority;
-    dependentOn: TaskType[];
+    description: string
+    dueDate: Date
+    priority: Priority
+    dependentOn: TaskType[]
     
 }
 
