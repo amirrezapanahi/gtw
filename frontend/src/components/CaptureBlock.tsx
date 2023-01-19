@@ -13,8 +13,9 @@ export const CaptureBlock: React.FC<Props> = ({docIndex}) => {
     const {state, setState} = useGlobalState()
 
     const [currentInbox, setCurrentInbox] = useState<TaskType[]>(() => {
-        // const docs: Document[] = JSON.parse(localStorage.getItem('gtw'))
-        return state[docIndex]._inbox
+        const docs: Document[] = JSON.parse(localStorage.getItem('gtw'))
+        console.log(docs[docIndex]._inbox)
+        return docs[docIndex]._inbox
     })
     const [dueDate, setDueDate] = useState<string>("")
     const [priority, setPriority] = useState<string>("")
@@ -57,7 +58,7 @@ export const CaptureBlock: React.FC<Props> = ({docIndex}) => {
         </select>
         <span>Dependent on</span>
           {
-              currentInbox.length == 0 ?
+              currentInbox.length !== 0 ?
                   <select>
                       {
                           currentInbox.map((item:TaskType, i:number) =>{
@@ -67,7 +68,7 @@ export const CaptureBlock: React.FC<Props> = ({docIndex}) => {
                   </select> :
                   <select disabled><option>Inbox empty</option></select>
           }
-          <button type="submit" className='button' onClick={handleTask}/>
+          <button type="submit" onClick={handleTask}>Capture</button>
       </div>
     </div>
   )
