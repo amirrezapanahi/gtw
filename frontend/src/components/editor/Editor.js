@@ -24,6 +24,7 @@ import ListMaxIndentLevelPlugin from "./ListMaxIndentLevelPlugin";
 import CodeHighlightPlugin from "./CodeHighlightPlugin";
 import AutoLinkPlugin from "./AutoLinkPlugin";
 import { useEffect } from "react";
+import {useGlobalState} from "../../GTWContext";
 
 function Placeholder() {
   return <div className="editor-placeholder">Enter some rich text...</div>;
@@ -33,11 +34,13 @@ function Placeholder() {
 const emptyEditor = '{"root":{"children":[{"children":[],"direction":null,"format":"","indent":0,"type":"paragraph","version":1}],"direction":null,"format":"","indent":0,"type":"root","version":1}}';
 
 export default function Editor({docIndex}) {
-  
+
+  const {state, setState} = useGlobalState()
   const loadContent = () => {
     console.log(docIndex)
-    let editorState = JSON.parse(localStorage.getItem('gtw'))
-    return editorState[docIndex].content == '' ? emptyEditor : JSON.stringify(editorState[docIndex].content);
+    // let editorState = JSON.parse(localStorage.getItem('gtw'))
+    let editorState = state;
+    return editorState[docIndex].content === '' ? emptyEditor : JSON.stringify(editorState[docIndex].content);
   }
   
   const initialState = loadContent()

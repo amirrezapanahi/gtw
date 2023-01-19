@@ -10,11 +10,11 @@ interface Props {
 }
 
 export const CaptureBlock: React.FC<Props> = ({docIndex}) => {
-    const {state, updateState} = useGlobalState()
+    const {state, setState} = useGlobalState()
 
     const [currentInbox, setCurrentInbox] = useState<TaskType[]>(() => {
-        const docs: Document[] = JSON.parse(localStorage.getItem('gtw'))
-        return docs[docIndex]._inbox
+        // const docs: Document[] = JSON.parse(localStorage.getItem('gtw'))
+        return state[docIndex]._inbox
     })
     const [dueDate, setDueDate] = useState<string>("")
     const [priority, setPriority] = useState<string>("")
@@ -22,7 +22,8 @@ export const CaptureBlock: React.FC<Props> = ({docIndex}) => {
     const [dependentOn, setDependentOn] = useState<TaskType[]>([])
     const handleTask = () => {
         //get inbox property for particular doc
-        const docs: Document[] = JSON.parse(localStorage.getItem('gtw'))
+        // const docs: Document[] = JSON.parse(localStorage.getItem('gtw'))
+        const docs: Document[] = state
         const task: TaskType = {
             description: desc,
             dependentOn: dependentOn,
@@ -34,6 +35,10 @@ export const CaptureBlock: React.FC<Props> = ({docIndex}) => {
         let prev = [...currentInbox];
         setCurrentInbox([...prev!, task]);
         localStorage.setItem('gtw', JSON.stringify(docs))
+        // @ts-ignore
+        setState(docs, () => {
+            console.log(state)
+        })
     }
 
     return(

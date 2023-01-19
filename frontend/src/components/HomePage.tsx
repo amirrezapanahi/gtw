@@ -2,10 +2,11 @@ import { useEffect,useState } from "react";
 import React from "react";
 import { DocList } from "./DocList";
 import Document from "../types/doc"
+import {useGlobalState} from "../GTWContext";
 
 export const HomePage: React.FC = () => {
-
-  const [docs, setDocs] = useState<Document[]>(JSON.parse(localStorage.getItem('gtw')!) || []);
+    const {state, setState} = useGlobalState()
+  // const [docs, setDocs] = useState<Document[]>(JSON.parse(localStorage.getItem('gtw')!) || []);
   
   const [addDoc, setAddDoc] = useState<boolean>(false);
   const [docName, setDocName] = useState<string>();
@@ -17,11 +18,15 @@ export const HomePage: React.FC = () => {
 
   const registerDoc = () => {
     let doc = new Document(docName!,reviewFreq!);
-    
-    let prev = [...docs];
-    setDocs([...prev!, doc]);
+
+    if (state != null){
+        let prev = [...state];
+        setState([...prev!, doc]);
+    }else{
+        setState([doc])
+    }
     setAddDoc(!addDoc);
-    console.log(docs);
+    console.log(state);
 }
 
   return (
@@ -30,7 +35,7 @@ export const HomePage: React.FC = () => {
             <h1>Getting Things Written.</h1>
             <h3>Write. Journal. Research.</h3>
             {
-              docs != null ? <DocList docs={docs}/> : <></>
+              state != null ? <DocList docs={state}/> : <></>
             }
             <button onClick={requestToRegisterDoc}>Create a document</button>
             {
