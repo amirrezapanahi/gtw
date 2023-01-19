@@ -10,10 +10,11 @@ interface Props {
 }
 
 export const CaptureBlock: React.FC<Props> = ({docIndex}) => {
-    const {state, updateState} = useGlobalState()
+    const {state, setState} = useGlobalState()
 
     const [currentInbox, setCurrentInbox] = useState<TaskType[]>(() => {
         const docs: Document[] = JSON.parse(localStorage.getItem('gtw'))
+        console.log(docs[docIndex]._inbox)
         return docs[docIndex]._inbox
     })
     const [dueDate, setDueDate] = useState<string>("")
@@ -22,18 +23,23 @@ export const CaptureBlock: React.FC<Props> = ({docIndex}) => {
     const [dependentOn, setDependentOn] = useState<TaskType[]>([])
     const handleTask = () => {
         //get inbox property for particular doc
-        const docs: Document[] = JSON.parse(localStorage.getItem('gtw'))
+        // const docs: Document[] = JSON.parse(localStorage.getItem('gtw'))
+        const docs: Document[] = state
         const task: TaskType = {
             description: desc,
             dependentOn: dependentOn,
             priority: Priority[priority],
-            dueDate: new Date(dueDate),
+            dueDate: new Date(dueDate).toISOString().slice(0,10),
         }
 
         docs[docIndex]._inbox.push(task)
         let prev = [...currentInbox];
         setCurrentInbox([...prev!, task]);
         localStorage.setItem('gtw', JSON.stringify(docs))
+        // @ts-ignore
+        setState(docs, () => {
+            console.log(state)
+        })
     }
 
     return(
@@ -52,7 +58,7 @@ export const CaptureBlock: React.FC<Props> = ({docIndex}) => {
         </select>
         <span>Dependent on</span>
           {
-              currentInbox.length == 0 ?
+              currentInbox.length !== 0 ?
                   <select>
                       {
                           currentInbox.map((item:TaskType, i:number) =>{
@@ -62,7 +68,7 @@ export const CaptureBlock: React.FC<Props> = ({docIndex}) => {
                   </select> :
                   <select disabled><option>Inbox empty</option></select>
           }
-          <button type="submit" className='button' onClick={handleTask}/>
+          <button type="submit" onClick={handleTask}>Capture</button>
       </div>
     </div>
   )

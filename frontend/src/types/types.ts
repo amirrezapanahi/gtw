@@ -1,19 +1,9 @@
 export type TaskType = {
     description: string
-    dueDate: Date
+    dueDate: string
     priority: Priority
     dependentOn: TaskType[]
     
-}
-
-export type DocumentType = {
-    doc_name: string;
-    content: string;
-    _inbox: Array<TaskType>;
-    last_reviewed: Date;
-    next_reviewed: Date;
-    created_at: Date;
-    review_freq: number;
 }
 
 export enum Priority{

@@ -1,34 +1,34 @@
 import React, {useState} from 'react'
 import { Inbox } from './Inbox'
 import { DocEditor }  from './Editor'
-import DocumentType from '../types/doc'
-import { useParams } from 'react-router-dom'
+import {Link, useParams} from 'react-router-dom'
 import { CaptureBlock } from './CaptureBlock'
+import {useGlobalState} from "../GTWContext";
+import Document from "../types/doc";
 
 export const DocumentComponent: React.FC = () => {
   let {id} = useParams();
-  
-  const getDoc = (): DocumentType => {
-    let docs = JSON.parse(localStorage.getItem('gtw')!)
-    console.log(docs)
-    console.log(docs[0])
-    return docs[parseInt(id!,10)];
-  }
+  const {state, setState} = useGlobalState()
 
+  const [isDashboard, onDashboard] = useState<boolean>(true)
   const [saved, setSaved] = useState<boolean>(false);
-  const [doc, setDoc] = useState<DocumentType>(getDoc())  
+  const [doc, setDoc] = useState<Document>(state[parseInt(id!,10)])
   
   return (
     <div style={{"display": "flex"}}>
         <div style={{"width": "50%"}}>
             <div className='header'>
               <div style={{display: 'flex', gap: '2em'}}>
-                <span>Dashboard</span>
-                <span>Inbox ({doc._inbox.length})</span>
+                <span onClick={() => onDashboard(true)}>Dashboard</span>
+                <span onClick={() => onDashboard(false)}>Inbox ({state[id!]._inbox.length})</span>
               </div>
             </div>
-            <Inbox/><br></br>
-            <CaptureBlock docIndex={parseInt(id)} />
+            {
+                isDashboard ?
+                    <CaptureBlock docIndex={parseInt(id)} />
+                    :
+                    <Inbox docIndex={parseInt(id)}/>
+            }
         </div>
         <div style={{"width": "50%"}}>
           <div className='header'>

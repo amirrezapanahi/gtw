@@ -39,6 +39,7 @@ import {
   getDefaultCodeLanguage,
   getCodeLanguages
 } from "@lexical/code";
+import {useGlobalState} from "../../GTWContext";
 
 const LowPriority = 1;
 
@@ -536,6 +537,8 @@ export default function ToolbarPlugin({docIndex}) {
     }
   }, [editor, isLink]);
 
+  const {state, setState} = useGlobalState()
+
   return (
     <div className="toolbar" ref={toolbarRef}>
       <button
@@ -698,7 +701,8 @@ export default function ToolbarPlugin({docIndex}) {
         const json = editorState.toJSON();
         let docs = JSON.parse(localStorage.getItem('gtw'))
         docs[docIndex].content = json
-        localStorage.setItem('gtw', JSON.stringify(docs)) 
+        localStorage.setItem('gtw', JSON.stringify(docs))
+        setState(docs)
       }} style={{float: "right"}}>Save</button>
       <button className="button" onClick={''} style={{float: "right"}}>Export</button>
     </div>

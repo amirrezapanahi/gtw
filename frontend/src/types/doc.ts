@@ -38,8 +38,7 @@ export default class Document {
     const date2 = Date.parse(this.next_reviewed.toString());
     const diffInMilliseconds = date2 - date1;
     const diffInDays = diffInMilliseconds / (1000 * 60 * 60 * 24);
-    console.log(diffInDays + "\n" + date2 + "\n" + date1)
-    return diffInDays    
+    return diffInDays
   }
 
   fromJSON(doc: Document): Document{
