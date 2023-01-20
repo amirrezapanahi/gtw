@@ -40,6 +40,7 @@ import {
   getCodeLanguages
 } from "@lexical/code";
 import {useGlobalState} from "../../GTWContext";
+import {GTW} from "../../LocalStorage";
 
 const LowPriority = 1;
 
@@ -696,15 +697,16 @@ export default function ToolbarPlugin({docIndex}) {
         </>
       )}
       <button className="button" onClick={() => {
-        console.log(docIndex)
         const editorState = editor.getEditorState();
         const json = editorState.toJSON();
-        let docs = JSON.parse(localStorage.getItem('gtw'))
+        let docs = JSON.parse(localStorage.getItem(GTW))
         docs[docIndex].content = json
         localStorage.setItem('gtw', JSON.stringify(docs))
         setState(docs)
       }} style={{float: "right"}}>Save</button>
-      <button className="button" onClick={''} style={{float: "right"}}>Export</button>
+      <button className="button" onClick={() => {
+
+      }} style={{float: "right"}}>Export</button>
     </div>
   );
 }

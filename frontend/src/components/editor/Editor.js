@@ -38,7 +38,6 @@ export default function Editor({docIndex}) {
   const {state, setState} = useGlobalState()
   const loadContent = () => {
     console.log(docIndex)
-    // let editorState = JSON.parse(localStorage.getItem('gtw'))
     let editorState = state;
     return editorState[docIndex].content === '' ? emptyEditor : JSON.stringify(editorState[docIndex].content);
   }

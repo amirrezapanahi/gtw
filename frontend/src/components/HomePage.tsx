@@ -1,13 +1,12 @@
 import { useEffect,useState } from "react";
 import React from "react";
 import { DocList } from "./DocList";
-import Document from "../types/doc"
+import {Document} from "../types/types"
 import {useGlobalState} from "../GTWContext";
 
 export const HomePage: React.FC = () => {
     const {state, setState} = useGlobalState()
-  // const [docs, setDocs] = useState<Document[]>(JSON.parse(localStorage.getItem('gtw')!) || []);
-  
+
   const [addDoc, setAddDoc] = useState<boolean>(false);
   const [docName, setDocName] = useState<string>();
   const [reviewFreq, setReviewFreq] = useState<number>();

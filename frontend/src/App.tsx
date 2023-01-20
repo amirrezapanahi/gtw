@@ -10,10 +10,11 @@ import { HomePage } from "./components/HomePage";
 import { DocumentComponent } from "./components/DocumentComponent";
 import {GlobalState} from "./GTWContext";
 // import {Document} from "./types/types";
-import Document from "./types/doc"
+import {Document} from "./types/types"
+import {getGTW} from "./LocalStorage";
 export const App: React.FC = () => {
 
-    const [state, setState] = useState<Document[]>(JSON.parse(localStorage.getItem('gtw')))
+    const [state, setState] = useState<Document[]>(getGTW)
 
     return (
       <GlobalState.Provider value={{state, setState}}>
