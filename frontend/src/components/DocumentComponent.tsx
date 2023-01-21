@@ -4,7 +4,7 @@ import { DocEditor }  from './Editor'
 import {Link, useParams} from 'react-router-dom'
 import { CaptureBlock } from './CaptureBlock'
 import {useGlobalState} from "../GTWContext";
-import Document from "../types/doc";
+import {Document} from "../types/types"
 
 export const DocumentComponent: React.FC = () => {
   let {id} = useParams();
