@@ -2,7 +2,7 @@ export type TaskType = {
     description: string
     dueDate: string
     priority: Priority
-    dependentOn: TaskType[]
+    dependentOn: TaskType
     
 }
 

@@ -20,7 +20,7 @@ export const CaptureBlock: React.FC<Props> = ({docIndex}) => {
     const [dueDate, setDueDate] = useState<string>("")
     const [priority, setPriority] = useState<string>("")
     const [desc, setDesc] = useState<string>("")
-    const [dependentOn, setDependentOn] = useState<TaskType[]>([])
+    const [dependentOn, setDependentOn] = useState<TaskType>(null)
     const handleTask = () => {
         //get inbox property for particular doc
         // const docs: Document[] = JSON.parse(localStorage.getItem('gtw'))

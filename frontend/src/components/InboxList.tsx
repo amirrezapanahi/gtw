@@ -1,5 +1,6 @@
 import React from 'react'
 import {TaskType} from '../types/types'
+import { Task } from './Task'
 
 interface Props{
     tasks: TaskType[]
@@ -7,12 +8,23 @@ interface Props{
 
 export const InboxList: React.FC<Props> = ({tasks}) => {
   return (
-        <li>
+    <table>
+        <thead>
+        <tr>
+          <th>Description</th>
+          <th>Due Date</th>
+          <th>Priority</th>
+          <th>Dependent On</th>
+          <th>Operations</th>
+        </tr>
+      </thead>
+      <tbody>
         {
-            tasks.map(task => {
-                return <ul>{task.description}</ul>
+            tasks.map((task, i) => {
+                return <tr key={i}><Task task={task}></Task></tr>
             })
         }
-        </li>
+      </tbody>
+    </table>
   )
 }
