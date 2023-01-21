@@ -37,16 +37,20 @@ export const CaptureBlock: React.FC<Props> = ({docIndex}) => {
         setCurrentInbox([...prev!, task]);
         addTask(docIndex,task)
         setState(docs)
+        setDesc("")
+        setPriority(0)
+        setDueDate("")
+        setDependentOn(null)
     }
 
     return(
     <div className='block'>
       <h3> Capture </h3>
       <hr></hr>
-      <textarea value={desc} onChange={(event) => setDesc(event.target.value)} required></textarea>
+      <textarea value={desc} onChange={(event) => setDesc(event.target.value)} className={'capture-textarea'} required></textarea>
       <div style={{display: 'flex'}}>
         <span>Due Date</span>
-        <input type="date" value={dueDate} onChange={(event) => setDueDate(event.target.value)} required/>
+        <input type="date" min={new Date().toISOString().substring(0,10)} value={dueDate} onChange={(event) => setDueDate(event.target.value)} required/>
         <span>Priority</span>
         <select onChange={(event) => setPriority(parseInt(event.target.value,10))} required>
             <option value={Priority.High} selected={true}>High</option>

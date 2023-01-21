@@ -26,11 +26,19 @@ export const TaskListing: React.FC<Props> = ({task}) => {
 
     return (
         <>
-        <td>{task.description}</td>
+        <td style={{textAlign: "left"}}>{task.description}</td>
         <td>{task.dueDate}</td>
         <td>{priority}</td>
-        <td>{task.dependentOn.description}</td> 
-        //TODO: change this later on to to clickable button/link which takes to a new component 
+        { task.dependentOn ? <td>{task.dependentOn.description}</td> : <td></td>}
+        {/*TODO: change this later on to to clickable button/link which takes to a new component*/}
+            <td>
+                <div style={{display: 'flex'}}>
+                    <button><i className="fa-solid fa-bed"></i></button>
+                    <button><i className="fa-solid fa-pen"></i></button>
+                    <button><i className="fa-solid fa-trash"></i></button>
+                    <button><i className="fa-solid fa-check"></i></button>
+                </div>
+            </td>
         </>
         )
 }

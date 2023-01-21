@@ -105,3 +105,24 @@ button:hover {
   width: 95%;
   margin: 0 auto;
 }
+
+.capture-textarea{
+  background-color: transparent;
+  border: none;
+  color: white;
+}
+
+.inbox-list{
+  display: table;
+  padding: 1em;
+  width: 98%;
+  margin: 1em auto 0;
+  background-color: rgba(0, 0, 60, 0.8);
+  color: white;
+  border-radius: 1em;
+}
+
+.inbox-list > *{
+  font-size: 14px;
+  text-align: center;
+}
