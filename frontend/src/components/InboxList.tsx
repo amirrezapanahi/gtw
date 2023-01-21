@@ -1,6 +1,6 @@
 import React from 'react'
 import {TaskType} from '../types/types'
-import { Task } from './Task'
+import { TaskListing } from './Task'
 
 interface Props{
     tasks: TaskType[]
@@ -21,7 +21,7 @@ export const InboxList: React.FC<Props> = ({tasks}) => {
       <tbody>
         {
             tasks.map((task, i) => {
-                return <tr key={i}><Task task={task}></Task></tr>
+                return <tr key={i}><TaskListing task={task}></TaskListing></tr>
             })
         }
       </tbody>
