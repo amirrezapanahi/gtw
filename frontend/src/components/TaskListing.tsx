@@ -1,11 +1,15 @@
 import React, { useState } from "react"
 import { Priority, TaskType } from "../types/types";
+import {Link} from "react-router-dom";
 
 interface Props{
+    docIndex: number
+    taskIndex: number
     task: TaskType;
+    overdue: boolean;
 }
 
-export const TaskListing: React.FC<Props> = ({task}) => {
+export const TaskListing: React.FC<Props> = ({docIndex, taskIndex, task, overdue}) => {
 
     const [priority] = useState<string>(() => {
         switch (task.priority) {
@@ -26,8 +30,8 @@ export const TaskListing: React.FC<Props> = ({task}) => {
 
     return (
         <>
-        <td style={{textAlign: "left"}}>{task.description}</td>
-        <td>{task.dueDate}</td>
+        <td style={{textAlign: "left"}}><Link to={`/docs/${docIndex}/task/${taskIndex}`}> {task.description} </Link></td>
+        <td style={overdue ? {color: "red", fontWeight:'bold'} : {}}>{task.dueDate}</td>
         <td>{priority}</td>
         { task.dependentOn ? <td>{task.dependentOn.description}</td> : <td></td>}
         {/*TODO: change this later on to to clickable button/link which takes to a new component*/}

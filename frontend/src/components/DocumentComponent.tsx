@@ -28,7 +28,7 @@ export const DocumentComponent: React.FC = () => {
                 isDashboard ?
                     <Dashboard docIndex={parseInt(id)} />
                     :
-                    <Inbox docIndex={parseInt(id)}/>
+                    <Inbox docIndex={parseInt(id)} condition={null}/>
             }
         </div>
         <div style={{"width": "50%"}}>

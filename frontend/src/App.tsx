@@ -12,6 +12,7 @@ import {GlobalState} from "./GTWContext";
 // import {Document} from "./types/types";
 import {Document} from "./types/types"
 import {getGTW} from "./LocalStorage";
+import {TaskComponent} from "./components/TaskComponent";
 export const App: React.FC = () => {
 
     const [state, setState] = useState<Document[]>(getGTW)
@@ -19,8 +20,9 @@ export const App: React.FC = () => {
     return (
       <GlobalState.Provider value={{state, setState}}>
           <Routes>
-            <Route path="/" element={<HomePage/>}/>
-            <Route path="/docs/:id" element={<DocumentComponent />}/>
+                <Route path="/" element={<HomePage/>}/>
+                <Route path="/docs/:id" element={<DocumentComponent />}/>
+              <Route path='/docs/:id/task{:taskId}' element={<TaskComponent />}/>
           </Routes>
       </GlobalState.Provider>
   )

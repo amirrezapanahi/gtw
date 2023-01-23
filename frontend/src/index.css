@@ -9,7 +9,7 @@ body {
 }
 
 * {
-  font: 1em Georgia, serif;
+  font: 1em Arial, serif;
 }
 
 .header {
@@ -100,6 +100,7 @@ button:hover {
   display: flex;
   flex-direction: column;
   padding: 0.8em;
+  overflow: hidden;
 }
 
 .block h3{
@@ -130,13 +131,10 @@ button:hover {
 }
 
 .inbox-list{
-  display: table;
-  padding: 1em;
+  display: flow-root;
   width: 98%;
   margin: 1em auto 0;
-  background-color: rgba(0, 0, 60, 0.8);
-  color: white;
-  border-radius: 1em;
+  overflow-y: scroll;
 }
 
 .inbox-list > *{
