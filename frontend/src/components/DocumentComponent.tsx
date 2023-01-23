@@ -5,6 +5,7 @@ import {Link, useParams} from 'react-router-dom'
 import { CaptureBlock } from './CaptureBlock'
 import {useGlobalState} from "../GTWContext";
 import {Document} from "../types/types"
+import {Dashboard} from "./Dashboard";
 
 export const DocumentComponent: React.FC = () => {
   let {id} = useParams();
@@ -25,9 +26,9 @@ export const DocumentComponent: React.FC = () => {
             </div>
             {
                 isDashboard ?
-                    <CaptureBlock docIndex={parseInt(id)} />
+                    <Dashboard docIndex={parseInt(id)} />
                     :
-                    <Inbox docIndex={parseInt(id)}/>
+                    <Inbox docIndex={parseInt(id)} condition={null}/>
             }
         </div>
         <div style={{"width": "50%"}}>
