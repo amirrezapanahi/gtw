@@ -29,7 +29,7 @@ body {
 h3 {
   line-height: .9;
   padding: initial;
-  margin: auto;
+  margin: initial;
 }
 
 .container h1 {
@@ -96,14 +96,31 @@ button:hover {
 .block {
   background-color: rgba(0, 0, 60, 0.8);
   color: white;
-  border-radius: 15px;
+  border-radius: 1em;
   display: flex;
   flex-direction: column;
+  padding: 0.8em;
+}
+
+.block h3{
+  text-align: left;
+  width: 95%;
+  margin: 0 auto;
 }
 
 .block textarea {
   width: 95%;
   margin: 0 auto;
+  background-color: darkslateblue;
+  height: 100%;
+  padding: 0.5em;
+  resize: none;
+}
+
+.block hr{
+  background-color: white;
+  opacity: 1;
+  width: 96%;
 }
 
 .capture-textarea{
@@ -125,4 +142,13 @@ button:hover {
 .inbox-list > *{
   font-size: 14px;
   text-align: center;
+}
+
+.dashboard{
+  display: grid;
+  grid-template-rows: 22% 22% auto;
+  height: 100vh;
+  gap: 1em;
+  width: 98%;
+  margin: 1em auto 0;
 }

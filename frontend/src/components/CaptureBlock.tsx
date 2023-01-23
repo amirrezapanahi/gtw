@@ -44,9 +44,7 @@ export const CaptureBlock: React.FC<Props> = ({docIndex}) => {
     }
 
     return(
-    <div className='block'>
-      <h3> Capture </h3>
-      <hr></hr>
+        <>
       <textarea value={desc} onChange={(event) => setDesc(event.target.value)} className={'capture-textarea'} required></textarea>
       <div style={{display: 'flex'}}>
         <span>Due Date</span>
@@ -78,7 +76,7 @@ export const CaptureBlock: React.FC<Props> = ({docIndex}) => {
           }
           <button type="submit" onClick={handleTask}>Capture</button>
       </div>
-    </div>
+        </>
   )
   
 }
