@@ -94,7 +94,7 @@ button:hover {
 }
 
 .block {
-  background-color: rgba(0, 0, 60, 0.8);
+  background-color: #02394A;
   color: white;
   border-radius: 1em;
   display: flex;
@@ -111,7 +111,8 @@ button:hover {
 .block textarea {
   width: 95%;
   margin: 0 auto;
-  background-color: darkslateblue;
+  background-color:#024255;
+  border-radius: 0.5em;
   height: 100%;
   padding: 0.5em;
   resize: none;
@@ -119,7 +120,6 @@ button:hover {
 
 .block hr{
   background-color: white;
-  opacity: 1;
   width: 96%;
 }
 
