@@ -13,8 +13,11 @@ export const Dashboard: React.FC<Props> = ({docIndex}) => {
     const {state, setState} = useGlobalState()
     const [tasks] = useState<TaskType[]>(state[docIndex]._inbox)
 
-    const showOverdue = () => {
-
+    const isOverdue = (task: TaskType) => {
+        const currentDate = new Date()
+        const currentDateMs = currentDate.getTime()
+        const dueDate = new Date(task.dueDate).getTime()
+        return (dueDate - currentDateMs) <=  0
     }
 
     return (
@@ -23,7 +26,7 @@ export const Dashboard: React.FC<Props> = ({docIndex}) => {
                 <CaptureBlock docIndex={docIndex}/>
             </Block>
             <Block docIndex={docIndex} blockName={"Overdue"}>
-                <Inbox docIndex={docIndex} condition={showOverdue}/>
+                <Inbox docIndex={docIndex} condition={isOverdue}/>
             </Block>
             <Block docIndex={docIndex} blockName={"Due Soon"}>
 

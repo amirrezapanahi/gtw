@@ -6,7 +6,7 @@ import {useGlobalState} from "../GTWContext";
 
 interface Props {
     docIndex: number
-    condition: () => any
+    condition: (obj: any) => boolean
 
 }
 export const Inbox: React.FC<Props> = ({docIndex, condition}) => {
@@ -26,7 +26,7 @@ export const Inbox: React.FC<Props> = ({docIndex, condition}) => {
         <tr style={{height: '5px'}}></tr>
         </thead>
         <tbody>
-          <InboxList docIndex={docIndex} tasks={tasks} />
+          <InboxList docIndex={docIndex} tasks={tasks} meetsCondition={condition} />
         </tbody>
       </table>
   )

@@ -5,9 +5,10 @@ import { TaskListing } from './TaskListing'
 interface Props{
     docIndex: number
     tasks: TaskType[]
+    meetsCondition: (obj: any) => boolean
 }
 
-export const InboxList: React.FC<Props> = ({docIndex, tasks}) => {
+export const InboxList: React.FC<Props> = ({docIndex, tasks, meetsCondition}) => {
 
     const isOverdue = (dueDate: string) => {
         const date = new Date(dueDate).getTime()
@@ -19,6 +20,11 @@ export const InboxList: React.FC<Props> = ({docIndex, tasks}) => {
     return (
         <>
         {
+            meetsCondition != null ?
+            tasks.filter(task => meetsCondition(task)).map((task, i) => {
+                return <tr key={i}><TaskListing docIndex={docIndex} taskIndex={i} task={task} overdue={isOverdue(task.dueDate)}></TaskListing></tr>
+            })
+            :
             tasks.map((task, i) => {
                 return <tr key={i}><TaskListing docIndex={docIndex} taskIndex={i} task={task} overdue={isOverdue(task.dueDate)}></TaskListing></tr>
             })
