@@ -30,7 +30,7 @@ export const TaskListing: React.FC<Props> = ({docIndex, taskIndex, task, overdue
 
     return (
         <>
-        <td style={{textAlign: "left"}}><Link to={`/docs/${docIndex}/task/${taskIndex}`}> {task.description} </Link></td>
+        <td style={{textAlign: "left"}}><Link to={`/docs/${docIndex}/task/${taskIndex}`} state={{docIndex: docIndex, task: task}}> {task.description} </Link></td>
         <td style={overdue ? {color: "red", fontWeight:'bold'} : {}}>{task.dueDate}</td>
         <td>{priority}</td>
         { task.dependentOn ? <td>{task.dependentOn.description}</td> : <td></td>}
