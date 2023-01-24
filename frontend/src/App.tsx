@@ -22,7 +22,7 @@ export const App: React.FC = () => {
           <Routes>
                 <Route path="/" element={<HomePage/>}/>
                 <Route path="/docs/:id" element={<DocumentComponent />}/>
-              <Route path='/docs/:id/task{:taskId}' element={<TaskComponent />}/>
+                <Route path='/docs/:id/task/:taskId' element={<TaskComponent />}/>
           </Routes>
       </GlobalState.Provider>
   )
