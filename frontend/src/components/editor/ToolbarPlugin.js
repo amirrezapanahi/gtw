@@ -718,6 +718,12 @@ export default function ToolbarPlugin({docIndex}) {
       <button className="button" onClick={() => {
 
       }} style={{float: "right"}}>Export</button>
+      <button className="button" onClick={() => {
+
+      }} style={{float: "right"}}>Import</button>
+      <button className="button" onClick={() => {
+
+      }} style={{float: "right"}}>Back Up</button>
     </div>
   );
 }
