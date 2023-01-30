@@ -41,6 +41,7 @@ import {
 } from "@lexical/code";
 import {useGlobalState} from "../../GTWContext";
 import {GTW} from "../../LocalStorage";
+import _ from "lodash"
 
 const LowPriority = 1;
 
@@ -699,10 +700,20 @@ export default function ToolbarPlugin({docIndex}) {
       <button className="button" onClick={() => {
         const editorState = editor.getEditorState();
         const json = editorState.toJSON();
-        let docs = JSON.parse(localStorage.getItem(GTW))
-        docs[docIndex].content = json
-        localStorage.setItem('gtw', JSON.stringify(docs))
-        setState(docs)
+        let docs = JSON.parse(localStorage.getItem('gtw'))
+        let lsJson = docs[docIndex].content
+        if (lsJson == ""){
+          lsJson = {"root":{"children":[{"children":[],"direction":null,"format":"","indent":0,"type":"paragraph","version":1}],"direction":null,"format":"","indent":0,"type":"root","version":1}}
+        }
+        if (JSON.stringify(lsJson) == JSON.stringify(json)){
+          alert("You havent made any progress!!!")
+        }else{        
+          docs[docIndex].content = json
+          docs[docIndex].last_reviewed = new Date().toISOString().slice(0, 10);
+          docs[docIndex].next_reviewed = new Date(new Date().setDate(new Date().getDate() + docs[docIndex].review_freq)).toISOString().slice(0,10)
+          localStorage.setItem('gtw', JSON.stringify(docs))
+          setState(docs)
+        }
       }} style={{float: "right"}}>Save</button>
       <button className="button" onClick={() => {
 

@@ -4,7 +4,7 @@ import { Priority } from "../types/types"
 import {useGlobalState} from "../GTWContext";
 import {Document} from "../types/types"
 import {Link} from "react-router-dom";
-import {addTask, getGTW, getTask} from "../LocalStorage";
+import {GTW} from "../LocalStorage";
 
 interface Props {
   docIndex: number;
@@ -12,6 +12,7 @@ interface Props {
 
 export const CaptureBlock: React.FC<Props> = ({docIndex}) => {
     const {state, setState} = useGlobalState()
+    const {getGTW, addTask, getTask} = GTW();
 
     const [currentInbox, setCurrentInbox] = useState<TaskType[]>(() => {
         const docs: Document[] = getGTW()

@@ -16,6 +16,7 @@ export enum Priority{
 export type ReferenceMaterialInterface = {
 
 }
+
 export class Document {
     doc_name: string;
     content: string;
@@ -55,6 +56,12 @@ export class Document {
         const diffInMilliseconds = date2 - date1;
         const diffInDays = diffInMilliseconds / (1000 * 60 * 60 * 24);
         return diffInDays
+    }
+
+    updateReview(): void {
+        this.last_reviewed = new Date().toISOString().slice(0, 10);
+        this.next_reviewed = new Date(new Date().setDate(new Date().getDate() + this.review_freq)).toISOString().slice(0,10)
+        this.reviewDue()
     }
 
     fromJSON(doc: Document): Document{

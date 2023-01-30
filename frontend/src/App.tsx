@@ -11,10 +11,11 @@ import { DocumentComponent } from "./components/DocumentComponent";
 import {GlobalState} from "./GTWContext";
 // import {Document} from "./types/types";
 import {Document} from "./types/types"
-import {getGTW} from "./LocalStorage";
+import { GTW } from "./LocalStorage";
 import {TaskComponent} from "./components/TaskComponent";
 export const App: React.FC = () => {
 
+    const {getGTW} = GTW();
     const [state, setState] = useState<Document[]>(getGTW)
 
     return (
