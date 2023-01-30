@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { InboxList } from './InboxList'
-import { TextBox } from './TextBox'
 import {TaskType} from '../types/types'
 import {useGlobalState} from "../GTWContext";
 
