@@ -45,6 +45,8 @@ import _ from "lodash"
 import {$generateHtmlFromNodes, $generateNodesFromDOM} from '@lexical/html';
 import {jsPDF} from 'jspdf'
 import html2canvas from "html2canvas";
+import {xepOnline} from "../../pdf/xepOnline.jqPlugin";
+import html2PDF from 'jspdf-html2canvas';
 
 const LowPriority = 1;
 
@@ -544,25 +546,19 @@ export default function ToolbarPlugin({docIndex}) {
 
   const {state, setState} = useGlobalState()
 
-  const printPDF = src => {
-    const htmlString = $generateHtmlFromNodes(editor, null);
-    console.log(htmlString)
+  const printPDF = () => {
 
-    window.html2canvas = html2canvas;
-    html2canvas(htmlString).then((canvas) => {
-      const img = canvas.toDataURL("image/png");
-      const printDoc = new jsPDF();
-      printDoc.addImage(img).then(r => printDoc.save('test.pdf'));
-
-
-      // printDoc.html(htmlString.trim(), {
-      //   callback: function (doc) {
-      //     doc.save();
-      //   },
-      //   x: 10,
-      //   y: 10
-      // });
-    })
+    html2canvas(document.getElementsByClassName('editor-input')[0], {
+    }).then(function (canvas) {
+        const img = new Image();
+        console.log(canvas)
+        img.src = canvas.toDataURL('image/png');
+        img.onload = () => {
+          const doc = new jsPDF('p', 'px');
+          doc.addImage(img, 'JPEG', 20, 20, 410, 315);
+          doc.save('sample-file.pdf');
+        }
+      });
   }
 
   return (
