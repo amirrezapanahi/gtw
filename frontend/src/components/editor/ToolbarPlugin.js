@@ -45,8 +45,6 @@ import _ from "lodash"
 import {$generateHtmlFromNodes, $generateNodesFromDOM} from '@lexical/html';
 import {jsPDF} from 'jspdf'
 import html2canvas from "html2canvas";
-import {xepOnline} from "../../pdf/xepOnline.jqPlugin";
-import html2PDF from 'jspdf-html2canvas';
 
 const LowPriority = 1;
 
@@ -545,6 +543,7 @@ export default function ToolbarPlugin({docIndex}) {
   }, [editor, isLink]);
 
   const {state, setState} = useGlobalState()
+  const {getGTW} = GTW();
 
   const printPDF = () => {
 
@@ -559,6 +558,14 @@ export default function ToolbarPlugin({docIndex}) {
           doc.save('sample-file.pdf');
         }
       });
+  }
+
+  const backup = (content, fileName, contentType) => {
+    var a = document.createElement("a");
+    var file = new Blob([content], {type: contentType});
+    a.href = URL.createObjectURL(file);
+    a.download = fileName;
+    a.click();
   }
 
   return (
@@ -741,10 +748,10 @@ export default function ToolbarPlugin({docIndex}) {
         })
       }} style={{float: "right"}}>Export</button>
       <button className="button" onClick={() => {
-
-      }} style={{float: "right"}}>Import</button>
-      <button className="button" onClick={() => {
-
+        const gtwContent = getGTW()[docIndex];
+        const fileName = `${gtwContent.doc_name}.gtw`;
+        const contentType = "text/plain";
+        backup(JSON.stringify(gtwContent), fileName, contentType);
       }} style={{float: "right"}}>Back Up</button>
     </div>
   );

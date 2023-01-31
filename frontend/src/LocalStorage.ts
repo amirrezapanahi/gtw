@@ -10,6 +10,9 @@ export const GTW = () => {
 
     const GTW: string = 'gtw'
 
+    /**
+     * retrieves the GTW local storage state
+     */
     function getGTW(): Document[]{
         return JSON.parse(localStorage.getItem(GTW))
     }
@@ -23,12 +26,14 @@ export const GTW = () => {
         const docs: Document[] = getGTW()
         docs[docIndex]._inbox.push(task)
         setGTW(docs)
+        setState(docs)
     }
     
     function removeTask(docIndex: number, taskIndex: number){
         const docs: Document[] = getGTW()
         docs[docIndex]._inbox.splice(taskIndex, 1)
         setGTW(docs)
+        setState(docs)
     }
     
     function updateTask(docIndex: number, taskIndex: number, task: TaskType){
@@ -48,6 +53,7 @@ export const GTW = () => {
         }
     
         setGTW(docs)
+        setState(docs)
     }
     
     function getTask(id: number, docIndex: number){
@@ -60,12 +66,14 @@ export const GTW = () => {
         const docs: Document[] = getGTW()
         docs.push(doc);
         setGTW(docs)
+        setState(docs)
     }
     
     function removeDoc(docIndex: number){
         const docs: Document[] = getGTW()
         docs.splice(docIndex, 1);
         setGTW(docs)
+        setState(docs)
     }
 
     return {getGTW, setGTW, addDoc, removeDoc, getTask, addTask, removeTask, updateTask}
