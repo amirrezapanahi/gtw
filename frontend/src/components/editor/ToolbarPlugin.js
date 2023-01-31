@@ -42,6 +42,9 @@ import {
 import {useGlobalState} from "../../GTWContext";
 import {GTW} from "../../LocalStorage";
 import _ from "lodash"
+import {$generateHtmlFromNodes, $generateNodesFromDOM} from '@lexical/html';
+import {jsPDF} from 'jspdf'
+import html2canvas from "html2canvas";
 
 const LowPriority = 1;
 
@@ -541,6 +544,27 @@ export default function ToolbarPlugin({docIndex}) {
 
   const {state, setState} = useGlobalState()
 
+  const printPDF = src => {
+    const htmlString = $generateHtmlFromNodes(editor, null);
+    console.log(htmlString)
+
+    window.html2canvas = html2canvas;
+    html2canvas(htmlString).then((canvas) => {
+      const img = canvas.toDataURL("image/png");
+      const printDoc = new jsPDF();
+      printDoc.addImage(img).then(r => printDoc.save('test.pdf'));
+
+
+      // printDoc.html(htmlString.trim(), {
+      //   callback: function (doc) {
+      //     doc.save();
+      //   },
+      //   x: 10,
+      //   y: 10
+      // });
+    })
+  }
+
   return (
     <div className="toolbar" ref={toolbarRef}>
       <button
@@ -716,7 +740,9 @@ export default function ToolbarPlugin({docIndex}) {
         }
       }} style={{float: "right"}}>Save</button>
       <button className="button" onClick={() => {
-
+        editor.update(() => {
+          printPDF()
+        })
       }} style={{float: "right"}}>Export</button>
       <button className="button" onClick={() => {
 
