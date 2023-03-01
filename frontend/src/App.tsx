@@ -8,23 +8,26 @@ import {
 } from "react-router-dom";
 import { HomePage } from "./components/HomePage";
 import { DocumentComponent } from "./components/DocumentComponent";
-import {GlobalState} from "./GTWContext";
+import GTWContext from "./GTWContext";
 // import {Document} from "./types/types";
 import {Document} from "./types/types"
 import { GTW } from "./LocalStorage";
 import {TaskComponent} from "./components/TaskComponent";
+
 export const App: React.FC = () => {
 
     const {getGTW} = GTW();
-    const [state, setState] = useState<Document[]>(getGTW)
+    const [state, setState] = useState<Document[]>(getGTW())
+
+    console.log("getGTW: " + getGTW())
 
     return (
-      <GlobalState.Provider value={{state, setState}}>
+      <GTWContext>
           <Routes>
                 <Route path="/" element={<HomePage/>}/>
                 <Route path="/docs/:id" element={<DocumentComponent />}/>
                 <Route path='/docs/:id/task/:taskId' element={<TaskComponent />}/>
           </Routes>
-      </GlobalState.Provider>
+      </GTWContext>
   )
 }

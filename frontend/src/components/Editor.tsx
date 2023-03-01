@@ -1,9 +1,5 @@
 import React, { useEffect, useState, useCallback, useMemo,Ref, PropsWithChildren } from 'react'
-import ReactDOM from 'react-dom'
-import {LexicalComposer} from '@lexical/react/LexicalComposer';
-import {RichTextPlugin} from '@lexical/react/LexicalRichTextPlugin';
 import Editor from './editor/Editor';
-import {useGlobalState} from "../GTWContext";
 
 interface Props {
   content: string //html

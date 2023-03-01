@@ -1,15 +1,14 @@
-import React, {useState} from 'react'
+import React, {useContext, useState} from 'react'
 import { Inbox } from './Inbox'
 import { DocEditor }  from './Editor'
 import {Link, useParams} from 'react-router-dom'
-import { CaptureBlock } from './CaptureBlock'
-import {useGlobalState} from "../GTWContext";
+import {GlobalState} from "../GTWContext";
 import {Document} from "../types/types"
 import {Dashboard} from "./Dashboard";
 
 export const DocumentComponent: React.FC = () => {
   let {id} = useParams();
-  const {state, setState} = useGlobalState()
+  const [state, setState] = useContext(GlobalState)
 
   const [isDashboard, onDashboard] = useState<boolean>(true)
   const [saved, setSaved] = useState<boolean>(false);

@@ -1,12 +1,12 @@
 import * as types from './types/types'
 import {Document, TaskType} from "./types/types";
 import {LexicalEditor} from "lexical";
-import { useGlobalState } from './GTWContext';
-import React from 'react';
+import { GlobalState } from './GTWContext';
+import React, {useContext} from 'react';
 
 export const GTW = () => {
 
-    const {state, setState} = useGlobalState()
+    const [state, setState] = useContext(GlobalState)
 
     const GTW: string = 'gtw'
 
@@ -20,6 +20,10 @@ export const GTW = () => {
     function setGTW(docs: Document[]){
         localStorage.setItem(GTW, JSON.stringify(docs))
         setState(docs)
+    }
+
+    function getState(): any {
+        return state;
     }
     
     function addTask(docIndex: number, task: types.TaskType) {

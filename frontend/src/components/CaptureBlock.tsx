@@ -1,7 +1,7 @@
 import React, {useContext, useEffect, useState} from "react"
 import {TaskType} from "../types/types"
 import { Priority } from "../types/types"
-import {useGlobalState} from "../GTWContext";
+import {GlobalState} from "../GTWContext";
 import {Document} from "../types/types"
 import {Link} from "react-router-dom";
 import {GTW} from "../LocalStorage";
@@ -11,7 +11,6 @@ interface Props {
 }
 
 export const CaptureBlock: React.FC<Props> = ({docIndex}) => {
-    const {state, setState} = useGlobalState()
     const {getGTW, addTask, getTask} = GTW();
 
     const [currentInbox, setCurrentInbox] = useState<TaskType[]>(() => {
@@ -19,28 +18,30 @@ export const CaptureBlock: React.FC<Props> = ({docIndex}) => {
         console.log(docs[docIndex]._inbox)
         return docs[docIndex]._inbox
     })
+
     const [dueDate, setDueDate] = useState<string>("")
     const [priority, setPriority] = useState<number>(0)
     const [desc, setDesc] = useState<string>("")
     const [dependentOn, setDependentOn] = useState<TaskType>(null)
+
     const handleTask = () => {
         //get inbox property for particular doc
-        const docs: Document[] = state
+        const docs: Document[] = getGTW()
         const task: TaskType = {
             description: desc,
             dependentOn: dependentOn,
             priority: priority,
             dueDate: new Date(dueDate).toISOString().slice(0,10),
         }
-
-        docs[docIndex]._inbox.push(task)
         let prev = [...currentInbox];
+
         setCurrentInbox([...prev!, task]);
         addTask(docIndex,task)
-        setState(docs)
+
         setDesc("")
         setPriority(0)
         setDueDate("")
+
         setDependentOn(null)
     }
 

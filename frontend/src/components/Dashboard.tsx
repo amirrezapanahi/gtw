@@ -1,8 +1,8 @@
-import React, {useState} from "react";
+import React, {useContext, useState} from "react";
 import {CaptureBlock} from "./CaptureBlock";
 import {Block} from "./Block";
 import {InboxList} from "./InboxList";
-import {useGlobalState} from "../GTWContext";
+import {GlobalState} from "../GTWContext";
 import {TaskType} from "../types/types";
 import {Inbox} from "./Inbox";
 
@@ -10,7 +10,7 @@ interface Props{
     docIndex: number
 }
 export const Dashboard: React.FC<Props> = ({docIndex}) => {
-    const {state, setState} = useGlobalState()
+    const [state, setState] = useContext(GlobalState)
     const [tasks] = useState<TaskType[]>(state[docIndex]._inbox)
 
     const isOverdue = (task: TaskType) => {
