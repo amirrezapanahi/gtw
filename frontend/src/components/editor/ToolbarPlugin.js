@@ -1,5 +1,5 @@
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, useContext} from "react";
 import {
   CAN_REDO_COMMAND,
   CAN_UNDO_COMMAND,
@@ -39,7 +39,7 @@ import {
   getDefaultCodeLanguage,
   getCodeLanguages
 } from "@lexical/code";
-import {useGlobalState} from "../../GTWContext";
+import {GlobalState} from "../../GTWContext";
 import {GTW} from "../../LocalStorage";
 import _ from "lodash"
 import {$generateHtmlFromNodes, $generateNodesFromDOM} from '@lexical/html';
@@ -542,7 +542,7 @@ export default function ToolbarPlugin({docIndex}) {
     }
   }, [editor, isLink]);
 
-  const {state, setState} = useGlobalState()
+  const [state, setState] = useContext(GlobalState);
   const {getGTW} = GTW();
 
   const printPDF = () => {

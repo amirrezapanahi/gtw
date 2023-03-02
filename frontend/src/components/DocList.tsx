@@ -1,8 +1,9 @@
 import React, {useContext, useEffect, useState} from "react"
 import { Link } from "react-router-dom";
 import {Document} from "../types/types"
-import {useGlobalState} from "../GTWContext";
+// import {useGlobalState} from "../GTWContext";
 import {GTW} from "../LocalStorage";
+import { GlobalState } from "../GTWContext";
 interface Props {
     docs: Document[]
 }
@@ -35,7 +36,7 @@ function Doc(props: {name:string; daysUntilReview:number;}){
 
 export const DocList: React.FC<Props> = ({docs}) => {
 
-    const {state, setState} = useGlobalState()
+    const [state, setState] = useContext(GlobalState);
     const {setGTW} = GTW()
 
     const updateReviewDueAllDocs = (docs: Document[]): Document[] => {

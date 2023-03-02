@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext } from "react";
 import ExampleTheme from "./ExampleTheme";
 import { LexicalComposer } from "@lexical/react/LexicalComposer";
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
@@ -24,7 +24,7 @@ import ListMaxIndentLevelPlugin from "./ListMaxIndentLevelPlugin";
 import CodeHighlightPlugin from "./CodeHighlightPlugin";
 import AutoLinkPlugin from "./AutoLinkPlugin";
 import { useEffect } from "react";
-import {useGlobalState} from "../../GTWContext";
+import {GlobalState} from "../../GTWContext";
 
 function Placeholder() {
   return <div className="editor-placeholder">Enter some rich text...</div>;
@@ -35,7 +35,7 @@ const emptyEditor = '{"root":{"children":[{"children":[],"direction":null,"forma
 
 export default function Editor({docIndex}) {
 
-  const {state, setState} = useGlobalState()
+  const [state, setState] = useContext(GlobalState);
   const loadContent = () => {
     console.log(docIndex)
     let editorState = state;

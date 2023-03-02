@@ -1,9 +1,9 @@
-import React, {useState} from 'react'
+import React, {useContext, useState} from 'react'
 import { Inbox } from './Inbox'
 import { DocEditor }  from './Editor'
 import {Link, useParams} from 'react-router-dom'
 import { CaptureBlock } from './CaptureBlock'
-import {useGlobalState} from "../GTWContext";
+import {GlobalState} from "../GTWContext";
 import {Document, TaskType} from "../types/types"
 import {Dashboard} from "./Dashboard";
 import { useLocation } from 'react-router-dom'
@@ -14,7 +14,7 @@ import { GTW } from '../LocalStorage'
 export const TaskComponent: React.FC = () => {
     let {id} = useParams();
     const {updateTask} = GTW();
-    const {state, setState} = useGlobalState()
+    const [state, setState] = useContext(GlobalState);
     const taskState = useLocation().state;
     const docIndex = taskState.docIndex
     const task: TaskType = taskState.task;

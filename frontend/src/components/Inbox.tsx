@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { InboxList } from './InboxList'
 import {TaskType} from '../types/types'
-import {useGlobalState} from "../GTWContext";
+import {GlobalState} from "../GTWContext";
 
 interface Props {
     docIndex: number
@@ -9,7 +9,7 @@ interface Props {
 
 }
 export const Inbox: React.FC<Props> = ({docIndex, condition}) => {
-  const {state, setState} = useGlobalState()
+  const [state, setState] = useContext(GlobalState);
   const [tasks, setTasks] = useState<TaskType[]>(state[docIndex]._inbox)
 
   return (

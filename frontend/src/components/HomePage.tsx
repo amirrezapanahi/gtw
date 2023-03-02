@@ -1,13 +1,13 @@
-import { useEffect,useState } from "react";
+import { useEffect,useContext, useState } from "react";
 import React from "react";
 import { DocList } from "./DocList";
 import {Document} from "../types/types"
-import {useGlobalState} from "../GTWContext";
+import {GlobalState} from "../GTWContext";
 import {GTW} from "../LocalStorage";
 import {read} from "fs";
 
 export const HomePage: React.FC = () => {
-    const {state, setState} = useGlobalState()
+    const [state, setState] = useContext(GlobalState);
     const {addDoc} = GTW()
 
   const [addDocBool, setAddDocBool] = useState<boolean>(false);
