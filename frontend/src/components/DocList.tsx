@@ -2,8 +2,8 @@ import React, {useContext, useEffect, useState} from "react"
 import { Link } from "react-router-dom";
 import {Document} from "../types/types"
 // import {useGlobalState} from "../GTWContext";
-import {GTW} from "../LocalStorage";
-import { GlobalState } from "../GTWContext";
+// import {GTW} from "../LocalStorage";
+// import { GlobalState } from "../GTWContext";
 interface Props {
     docs: Document[]
 }
@@ -36,30 +36,10 @@ function Doc(props: {name:string; daysUntilReview:number;}){
 
 export const DocList: React.FC<Props> = ({docs}) => {
 
-    const [state, setState] = useContext(GlobalState);
-    const {setGTW} = GTW()
-
-    const updateReviewDueAllDocs = (docs: Document[]): Document[] => {
-        for (let i = 0 ; i<docs.length-1; i++){
-            docs[i] = new Document(docs[i].doc_name, docs[i].review_freq).fromJSON(docs[i])
-            docs[i].daysUntilReview = new Document(docs[i].doc_name, docs[i].review_freq).reviewDue()
-        }
-        setGTW(docs)
-        setState(docs)
-        return docs
-    }
-
-    const [updatedDocs, setDocs] = useState<Document[]>(updateReviewDueAllDocs(docs))
-
-    useEffect(() => {
-        setDocs(updateReviewDueAllDocs(docs))
-    },[])
-    
     return (
         <div className="docs">
         {
-            updatedDocs.map((item:Document, i:number) =>{
-                console.log(item);
+            docs.map((item:Document, i:number) =>{
                 return <Link to={`/docs/${i}`}><Doc name={item.doc_name} daysUntilReview={item.daysUntilReview}/></Link>
             })
         } 

@@ -5,7 +5,7 @@ interface Props{
     blockName: string
     children: React.ReactNode
 }
-export const Block: React.FC<Props> = ({docIndex, children, blockName}) => {
+export const Block: React.FC<Props> = ({children, blockName}) => {
     return (
         <div className='block'>
             <h3>{blockName}</h3>

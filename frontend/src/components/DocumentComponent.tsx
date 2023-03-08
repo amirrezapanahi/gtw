@@ -5,9 +5,12 @@ import {Link, useParams} from 'react-router-dom'
 import {GlobalState} from "../GTWContext";
 import {Document} from "../types/types"
 import {Dashboard} from "./Dashboard";
+import { GTW } from "../LocalStorage";
 
 export const DocumentComponent: React.FC = () => {
   let {id} = useParams();
+
+  const { getGTW } = GTW();
   const [state, setState] = useContext(GlobalState)
 
   const [isDashboard, onDashboard] = useState<boolean>(true)
@@ -18,6 +21,7 @@ export const DocumentComponent: React.FC = () => {
     <div style={{"display": "flex"}}>
         <div style={{"width": "50%"}}>
             <div className='header'>
+                <Link to={`/`} style={{justifyContent: 'left'}}><span>Back to Documents</span></Link>
               <div style={{display: 'flex', gap: '2em'}}>
                 <span onClick={() => onDashboard(true)}>Dashboard</span>
                 <span onClick={() => onDashboard(false)}>Inbox ({state[id!]._inbox.length})</span>

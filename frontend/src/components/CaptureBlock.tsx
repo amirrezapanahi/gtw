@@ -11,10 +11,11 @@ interface Props {
 }
 
 export const CaptureBlock: React.FC<Props> = ({docIndex}) => {
-    const {getGTW, addTask, getTask} = GTW();
+    const [state, setState] = useContext(GlobalState)
+    const {getGTW, addTask, getTask, getDoc} = GTW();
 
     const [currentInbox, setCurrentInbox] = useState<TaskType[]>(() => {
-        const docs: Document[] = getGTW()
+        const docs: Document[] = state
         console.log(docs[docIndex]._inbox)
         return docs[docIndex]._inbox
     })
@@ -26,8 +27,10 @@ export const CaptureBlock: React.FC<Props> = ({docIndex}) => {
 
     const handleTask = () => {
         //get inbox property for particular doc
-        const docs: Document[] = getGTW()
+        const docs: Document[] = state
         const task: TaskType = {
+            projectID: docIndex,
+            taskID: getDoc(docIndex)._inbox.length + 1,
             description: desc,
             dependentOn: dependentOn,
             priority: priority,
@@ -37,11 +40,11 @@ export const CaptureBlock: React.FC<Props> = ({docIndex}) => {
 
         setCurrentInbox([...prev!, task]);
         addTask(docIndex,task)
+        setState(getGTW())
 
         setDesc("")
         setPriority(0)
         setDueDate("")
-
         setDependentOn(null)
     }
 

@@ -12,7 +12,7 @@ export const GlobalState = React.createContext(initialState);
 
 // export const useGlobalState = () => useContext(GlobalState);
 const GTWContext = ({children}) => {
-    const [context, setContext] = useState(initialState)
+    const [context, setContext] = useState(JSON.parse(localStorage.getItem('gtw')))
 
     return (
         <GlobalState.Provider value={[context, setContext]}>

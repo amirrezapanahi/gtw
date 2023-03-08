@@ -1,4 +1,6 @@
 export type TaskType = {
+    taskID: number
+    projectID: number
     description: string
     dueDate: string
     priority: Priority

@@ -1,4 +1,4 @@
-import React, {createContext, useState} from "react";
+import React, { createContext, useEffect, useState } from "react";
 import "./index.css"
 import {
   BrowserRouter as Router,
@@ -10,24 +10,23 @@ import { HomePage } from "./components/HomePage";
 import { DocumentComponent } from "./components/DocumentComponent";
 import GTWContext from "./GTWContext";
 // import {Document} from "./types/types";
-import {Document} from "./types/types"
+import { Document } from "./types/types"
 import { GTW } from "./LocalStorage";
-import {TaskComponent} from "./components/TaskComponent";
+import { TaskComponent } from "./components/TaskComponent";
 
 export const App: React.FC = () => {
 
-    const {getGTW} = GTW();
-    const [state, setState] = useState<Document[]>(getGTW())
+  // const { getGTW } = GTW();
+  // const [state] = useState<Document[]>(getGTW())
 
-    console.log("getGTW: " + getGTW())
+  return (
+    <GTWContext>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/docs/:id" element={<DocumentComponent />} />
+        <Route path='/docs/:id/task/:taskId' element={<TaskComponent />} />
+      </Routes>
+    </GTWContext>
 
-    return (
-      <GTWContext>
-          <Routes>
-                <Route path="/" element={<HomePage/>}/>
-                <Route path="/docs/:id" element={<DocumentComponent />}/>
-                <Route path='/docs/:id/task/:taskId' element={<TaskComponent />}/>
-          </Routes>
-      </GTWContext>
   )
 }

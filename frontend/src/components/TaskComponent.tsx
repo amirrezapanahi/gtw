@@ -41,16 +41,28 @@ export const TaskComponent: React.FC = () => {
                 <div>                
                     <span>Due Date</span>
                     <input type="date" value={dueDate} min={new Date().toISOString().substring(0,10)} onChange={(event) => setDueDate(event.target.value)}></input>
-                    <button type="submit" onClick={() => updateTask(docIndex, parseInt(id,10), {description,  dueDate: dueDate, priority, dependentOn})}>Update Due Date</button>
+                    <button type="submit" onClick={() => updateTask(docIndex, parseInt(id,10), {
+                        taskID: task.taskID,
+                        projectID: task.projectID,
+                        description,  
+                        dueDate: dueDate, 
+                        priority, 
+                        dependentOn})}>Update Due Date</button>
                 </div>
                 <div>                
                     <span>Priority</span>
                     <select onChange={(event) => setPriority(parseInt(event.target.value,10))} required>
-                        <option value={Priority.High} selected={true}>High</option>
-                        <option value={Priority.Mid}>Mid</option>
-                        <option value={Priority.Low}>Low</option>
+                        <option value={Priority.High} selected={task.priority == Priority.High}>High</option>
+                        <option value={Priority.Mid} selected={task.priority == Priority.Mid}>Mid</option>
+                        <option value={Priority.Low} selected={task.priority == Priority.Low}> Low</option>
                     </select>                
-                    <button type="submit" onClick={() => updateTask(docIndex, parseInt(id,10), {description,  dueDate, priority: priority, dependentOn})}>Update Priority</button>
+                    <button type="submit" onClick={() => updateTask(docIndex, parseInt(id,10), {
+                        taskID: task.taskID,
+                        projectID: task.projectID,
+                        description,  
+                        dueDate, 
+                        priority: priority, 
+                        dependentOn})}>Update Priority</button>
                 </div>
                 <div>                
                     <span>Due Date</span>
@@ -60,7 +72,7 @@ export const TaskComponent: React.FC = () => {
                 <Block docIndex={docIndex} blockName={"Reference Material"}>
                     <h1>ffffff</h1>
                 </Block>
-                <Block docIndex={docIndex} blockName={"Got Writers Block?"}>
+                <Block docIndex={docIndex} blockName={"Assistant"}>
                     <h1>asdsadsd</h1>
                 </Block>
             </div>

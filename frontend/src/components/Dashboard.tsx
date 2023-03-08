@@ -10,7 +10,7 @@ interface Props{
     docIndex: number
 }
 export const Dashboard: React.FC<Props> = ({docIndex}) => {
-    const [state, setState] = useContext(GlobalState)
+    const [state] = useContext(GlobalState)
     const [tasks] = useState<TaskType[]>(state[docIndex]._inbox)
 
     const isOverdue = (task: TaskType) => {
