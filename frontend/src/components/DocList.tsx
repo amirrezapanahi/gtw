@@ -1,48 +1,66 @@
-import React, {useContext, useEffect, useState} from "react"
+import { unset } from "lodash";
+import React, { useContext, useEffect, useState } from "react"
 import { Link } from "react-router-dom";
-import {Document} from "../types/types"
-// import {useGlobalState} from "../GTWContext";
-// import {GTW} from "../LocalStorage";
-// import { GlobalState } from "../GTWContext";
+import { Document } from "../types/types"
+import { GTW } from "../LocalStorage";
+import { GlobalState } from "../GTWContext";
 interface Props {
-    docs: Document[]
+  docs: Document[]
 }
 
-function Paper(){
-    return (
-        <div style={{"backgroundColor": "white", "height": "12em", "width": "8em"}}>
-        </div>
-    )
+function Paper() {
+  return (
+    <div style={{ "backgroundColor": "white", "height": "12em", "width": "8em" }}>
+    </div>
+  )
 }
 
-function Doc(props: {name:string; daysUntilReview:number;}){
-    return (
-        <div className="doc">
-            <Paper/>
-            <h3>{props.name}</h3>
-            {props.daysUntilReview > 0
-            ?
-            <span className="button" style={{backgroundColor:"darkblue"}}>
-                {props.daysUntilReview} days until Review
-            </span>
-            :            
-            <span className="button" style={{backgroundColor:"darkred"}}>
-                Review Overdue
-            </span>
-            }
-        </div>
-    )
+function Doc(props: { name: string; daysUntilReview: number; id: number; }) {
+
+  const [state, setState] = useContext(GlobalState)
+  const { removeDoc, getGTW } = GTW();
+
+  const deleteDoc = () => {
+    removeDoc(props.id)
+    setState(getGTW())
+  }
+
+  return (
+    <div className="doc">
+      <Link to={`/docs/${props.id}`}><Paper /></Link>
+      <h3>{props.name}</h3>
+      {props.daysUntilReview > 0
+        ?
+        <span className="button" style={{ backgroundColor: "darkblue" }}>
+          {props.daysUntilReview} days until Review
+        </span>
+        :
+        <span className="button" style={{ backgroundColor: "darkred" }}>
+          Review Overdue
+        </span>
+      }
+      <button style={{ padding: 'unset', marginTop: '0.3em' }} onClick={deleteDoc}><i className="fa-solid fa-trash" style={{ height: '50%' }}></i></button>
+    </div>
+  )
 }
 
-export const DocList: React.FC<Props> = ({docs}) => {
+export const DocList: React.FC<Props> = ({ docs }) => {
 
-    return (
-        <div className="docs">
-        {
-            docs.map((item:Document, i:number) =>{
-                return <Link to={`/docs/${i}`}><Doc name={item.doc_name} daysUntilReview={item.daysUntilReview}/></Link>
-            })
-        } 
-        </div>  
-    )
+  const [docsSorted, setSorted] = useState(() => {
+    return docs.sort((a, b) => { return a.daysUntilReview - b.daysUntilReview })
+  });
+
+  useEffect(()=>{
+    setSorted(docs.sort((a,b)=>{return a.daysUntilReview - b.daysUntilReview}))
+  },[docs])
+
+  return (
+    <div className="docs">
+      {
+        docsSorted.map((item: Document) => {
+          return <Doc name={item.doc_name} daysUntilReview={item.daysUntilReview} id={item.docID} />
+        })
+      }
+    </div>
+  )
 }

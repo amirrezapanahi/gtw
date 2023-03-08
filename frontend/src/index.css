@@ -12,6 +12,11 @@ body {
   font: 1em Arial, serif;
 }
 
+a{
+  text-decoration: none;
+  color: inherit;
+}
+
 .header {
   padding: 1em 0 1em 0;
 }
@@ -75,6 +80,7 @@ button:hover {
 }
 
 .doc {
+  padding: 2em 0em 2em 1em;
   display: flex;
   flex-direction: column;
   width: fit-content;

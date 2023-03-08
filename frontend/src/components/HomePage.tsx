@@ -17,8 +17,8 @@ export const HomePage: React.FC = () => {
 
   const updateReviewDueAllDocs = (docs: Document[]): void => {
     for (let i = 0; i < docs.length - 1; i++) {
-      docs[i] = new Document(docs[i].doc_name, docs[i].review_freq).fromJSON(docs[i])
-      docs[i].daysUntilReview = new Document(docs[i].doc_name, docs[i].review_freq).reviewDue()
+      docs[i] = new Document(docs[i].doc_name, docs[i].review_freq, docs[i].docID).fromJSON(docs[i])
+      docs[i].daysUntilReview = new Document(docs[i].doc_name, docs[i].review_freq, docs[i].docID).reviewDue()
     }
 
     setGTW(docs)
@@ -39,7 +39,7 @@ export const HomePage: React.FC = () => {
   }
 
   const registerDoc = () => {
-    let doc = new Document(docName!, reviewFreq!);
+    let doc = new Document(docName!, reviewFreq!, getGTW().length);
     addDoc(doc)
 
     if (state != null) {

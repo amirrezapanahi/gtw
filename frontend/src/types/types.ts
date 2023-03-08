@@ -20,6 +20,7 @@ export type ReferenceMaterialInterface = {
 }
 
 export class Document {
+    docID: number;
     doc_name: string;
     content: string;
     _inbox: Array<TaskType>
@@ -29,7 +30,8 @@ export class Document {
     review_freq: number;
     daysUntilReview: number;
 
-    constructor(name: string, freq: number){
+    constructor(name: string, freq: number, numDocs: number){
+        this.docID = numDocs++
         this.created_at = new Date().toISOString().slice(0, 10);
         this.last_reviewed = new Date().toISOString().slice(0,10)
         this.next_reviewed = new Date(new Date().setDate(new Date().getDate() + freq)).toISOString().slice(0,10)
@@ -67,7 +69,7 @@ export class Document {
     }
 
     fromJSON(doc: Document): Document{
-        let docCopy = new Document(doc.doc_name, doc.review_freq)
+        let docCopy = new Document(doc.doc_name, doc.review_freq, doc.docID)
         docCopy.created_at = doc.created_at
         docCopy.last_reviewed = doc.last_reviewed
         docCopy.next_reviewed = doc.next_reviewed
