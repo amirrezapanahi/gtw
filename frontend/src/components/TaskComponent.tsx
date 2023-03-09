@@ -15,7 +15,7 @@ import { GTW } from '../LocalStorage'
 export const TaskComponent: React.FC = () => {
   let { id } = useParams();
   const { updateTask } = GTW();
-  const [state, setState] = useContext(GlobalState);
+  const {state, setState} = useContext(GlobalState);
   const taskState = useLocation().state;
   const docIndex = taskState.docIndex
   const task: TaskType = taskState.task;

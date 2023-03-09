@@ -35,7 +35,7 @@ const emptyEditor = '{"root":{"children":[{"children":[],"direction":null,"forma
 
 export default function Editor({docIndex}) {
 
-  const [state, setState] = useContext(GlobalState);
+  const {state, setState} = useContext(GlobalState);
   const loadContent = () => {
     console.log(docIndex)
     let editorState = state;

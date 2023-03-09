@@ -13,7 +13,7 @@ interface Props {
 
 export const InboxList: React.FC<Props> = ({ docIndex, tasks, meetsCondition }) => {
   const { getGTW } = GTW()
-  const [state, setState] = useContext(GlobalState)
+  const {state, setState} = useContext(GlobalState)
 
   console.log(state)
 

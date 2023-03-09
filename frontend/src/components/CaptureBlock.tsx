@@ -12,7 +12,7 @@ interface Props {
 }
 
 export const CaptureBlock: React.FC<Props> = ({ docIndex }) => {
-  const [state, setState] = useContext(GlobalState)
+  const {state, setState} = useContext(GlobalState)
   const { getGTW, addTask, getTask, getDoc } = GTW();
 
   const [currentInbox, setCurrentInbox] = useState<TaskType[]>(() => {

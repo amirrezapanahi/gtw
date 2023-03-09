@@ -7,7 +7,7 @@ import { GTW } from "../LocalStorage";
 import { read } from "fs";
 
 export const HomePage: React.FC = () => {
-  const [state, setState] = useContext(GlobalState);
+  const {state, setState} = useContext(GlobalState);
   const { addDoc, setGTW, getGTW,  } = GTW()
 
   const [addDocBool, setAddDocBool] = useState<boolean>(false);

@@ -9,7 +9,7 @@ interface Props {
 
 }
 export const Inbox: React.FC<Props> = ({ docIndex, condition }) => {
-  const [state, setState] = useContext(GlobalState);
+  const {state, setState} = useContext(GlobalState);
   const [tasks, setTasks] = useState<TaskType[]>(state[docIndex]._inbox)
   const [showResolved, setShowResolved] = useState(false)
 

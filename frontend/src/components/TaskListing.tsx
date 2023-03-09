@@ -12,7 +12,7 @@ interface Props {
 
 export const TaskListing: React.FC<Props> = ({ docIndex, taskIndex, task}) => {
 
-  const [state, setState] = useContext(GlobalState)
+  const {state, setState} = useContext(GlobalState)
   const { removeTask, snoozeTask, completeTask, getGTW } = GTW();
 
   const isOverdue = (dueDate: string) => {
@@ -21,10 +21,16 @@ export const TaskListing: React.FC<Props> = ({ docIndex, taskIndex, task}) => {
     return date - currentDate < 0
   }
 
+  const taskFromState = state[docIndex]._inbox.find(element => element.taskID == taskIndex+1)
+  if (taskFromState === undefined){
+    throw new TypeError("the value was promised to always be there")
+  }
+  
   console.log(taskIndex)
+  console.log(taskFromState)
 
   const [priority] = useState<string>(() => {
-    switch (state[docIndex]._inbox.find((element: any) => element.taskID == taskIndex).priority) {
+    switch (state[docIndex]._inbox.find(element => element.taskID == taskIndex+1).priority) {
       case 0: {
         return "High"
       }
@@ -43,14 +49,14 @@ export const TaskListing: React.FC<Props> = ({ docIndex, taskIndex, task}) => {
         <Link to={`/docs/${docIndex}/task/${taskIndex}`} state={{ docIndex: docIndex, task: task }}>
          {task.description} 
         </Link></td>
-      <td style={isOverdue(state[docIndex]._inbox.find((element: any) => element.taskID == taskIndex).dueDate) ? { color: "red", fontWeight: 'bold' } : {}}>
-        {state[docIndex]._inbox.find((element: any) => element.taskID == taskIndex).dueDate}
+      <td style={isOverdue(state[docIndex]._inbox.find((element: any) => element.taskID == taskIndex+1).dueDate) ? { color: "red", fontWeight: 'bold' } : {}}>
+        {state[docIndex]._inbox.find(element => element.taskID == taskIndex+1).dueDate}
       </td>
       <td>{priority}</td>
-      {state[docIndex]._inbox.find((element: any) => element.taskID == taskIndex).dependentOn ?
+      {state[docIndex]._inbox.find(element => element.taskID == taskIndex+1).dependentOn ?
         <td>
           <Link to={`/docs/${docIndex}/task/${task.dependentOn.taskID}`} state={{ docIndex: docIndex, task: task.dependentOn }}>
-            {state[docIndex]._inbox.find((element: any) => element.taskID == taskIndex).dependentOn.description}
+            {state[docIndex]._inbox.find(element => element.taskID == taskIndex+1).dependentOn.description}
           </Link></td>
         : <td></td>
       }

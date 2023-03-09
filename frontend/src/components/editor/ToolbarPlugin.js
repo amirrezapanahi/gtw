@@ -542,7 +542,7 @@ export default function ToolbarPlugin({docIndex}) {
     }
   }, [editor, isLink]);
 
-  const [state, setState] = useContext(GlobalState);
+  const {state, setState} = useContext(GlobalState);
   const {getGTW, backupDoc} = GTW();
 
   const printPDF = () => {

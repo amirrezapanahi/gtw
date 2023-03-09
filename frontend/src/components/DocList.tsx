@@ -17,7 +17,7 @@ function Paper() {
 
 function Doc(props: { name: string; daysUntilReview: number; id: number; }) {
 
-  const [state, setState] = useContext(GlobalState)
+  const {state, setState} = useContext(GlobalState)
   const { removeDoc, getGTW, backupDoc } = GTW();
 
   const deleteDoc = () => {

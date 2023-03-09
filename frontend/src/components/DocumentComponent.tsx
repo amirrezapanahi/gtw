@@ -11,7 +11,7 @@ export const DocumentComponent: React.FC = () => {
   let {id} = useParams();
 
   const { getGTW } = GTW();
-  const [state, setState] = useContext(GlobalState)
+  const {state, setState} = useContext(GlobalState)
 
   const [isDashboard, onDashboard] = useState<boolean>(true)
   const [saved, setSaved] = useState<boolean>(false);
