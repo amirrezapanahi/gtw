@@ -1,10 +1,10 @@
 import React, {useContext, useState} from "react";
 import {CaptureBlock} from "./CaptureBlock";
 import {Block} from "./Block";
-import {InboxList} from "./InboxList";
 import {GlobalState} from "../GTWContext";
 import {TaskType} from "../types/types";
 import {Inbox} from "./Inbox";
+import { InboxList } from "./InboxList";
 
 interface Props{
     docIndex: number
@@ -26,7 +26,7 @@ export const Dashboard: React.FC<Props> = ({docIndex}) => {
                 <CaptureBlock docIndex={docIndex}/>
             </Block>
             <Block docIndex={docIndex} blockName={"Overdue"}>
-                <Inbox docIndex={docIndex} condition={isOverdue}/>
+                <InboxList docIndex={docIndex} tasks={tasks} meetsCondition={isOverdue}/>
             </Block>
             <Block docIndex={docIndex} blockName={"Due Soon"}>
 

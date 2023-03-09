@@ -1,32 +1,31 @@
 import React, { useContext, useState } from 'react'
 import { InboxList } from './InboxList'
-import {TaskType} from '../types/types'
-import {GlobalState} from "../GTWContext";
+import { TaskType } from '../types/types'
+import { GlobalState } from "../GTWContext";
 
 interface Props {
-    docIndex: number
-    condition: (obj: any) => boolean
+  docIndex: number
+  condition: (obj: any) => boolean
 
 }
-export const Inbox: React.FC<Props> = ({docIndex, condition}) => {
+export const Inbox: React.FC<Props> = ({ docIndex, condition }) => {
   const [state, setState] = useContext(GlobalState);
   const [tasks, setTasks] = useState<TaskType[]>(state[docIndex]._inbox)
+  const [showResolved, setShowResolved] = useState(false)
 
   return (
-      <table className={'block inbox-list'}>
-        <thead>
-        <tr>
-          <th>Description</th>
-          <th>Due Date</th>
-          <th>Priority</th>
-          <th>Dependent On</th>
-          <th>Operations</th>
-        </tr>
-        <tr style={{height: '5px'}}></tr>
-        </thead>
-        <tbody>
-          <InboxList docIndex={docIndex} tasks={tasks} meetsCondition={condition} />
-        </tbody>
-      </table>
+    <table className={'block inbox-list'}>
+      <select onChange={(event) => {
+        if (event.target.value === "Unresolved") {
+          setShowResolved(true)
+        } else {
+          setShowResolved(false)
+        }
+      }}>
+        <option value="Unresolved" selected={showResolved == false}>Unresolved</option>
+        <option value="Resolved" selected={showResolved == true}>Resolved</option>
+      </select>
+      <InboxList docIndex={docIndex} tasks={tasks} meetsCondition={condition} />
+    </table>
   )
 }

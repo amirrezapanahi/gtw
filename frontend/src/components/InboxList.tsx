@@ -1,34 +1,47 @@
-import React from 'react'
-import {TaskType} from '../types/types'
+import React, { useContext, useState } from 'react'
+import { TaskType } from '../types/types'
 import { TaskListing } from './TaskListing'
+import { GTW } from '../LocalStorage'
+import { GlobalState } from "../GTWContext";
+import '../styles/InboxList.css'
 
-interface Props{
-    docIndex: number
-    tasks: TaskType[]
-    meetsCondition: (obj: any) => boolean
+interface Props {
+  docIndex: number
+  tasks: TaskType[]
+  meetsCondition: (obj: any) => boolean
 }
 
-export const InboxList: React.FC<Props> = ({docIndex, tasks, meetsCondition}) => {
+export const InboxList: React.FC<Props> = ({ docIndex, tasks, meetsCondition }) => {
+  const { getGTW } = GTW()
+  const [state, setState] = useContext(GlobalState)
 
-    const isOverdue = (dueDate: string) => {
-        const date = new Date(dueDate).getTime()
-        const currentDate = new Date().getTime()
-        console.log(currentDate - date)
-        return date - currentDate < 0
-    }
+  console.log(state)
 
-    return (
-        <>
+  return (
+    <>
+      <thead>
+        <tr className={'inbox-list-headers'}>
+          <th>Description</th>
+          <th>Due Date</th>
+          <th>Priority</th>
+          <th>Dependent On</th>
+          <th>Operations</th>
+        </tr>
+        <tr style={{ height: '5px' }}></tr>
+      </thead>
+      <tbody>
         {
-            meetsCondition != null ?
-            tasks.filter(task => meetsCondition(task)).map((task, i) => {
-                return <tr key={i}><TaskListing docIndex={docIndex} taskIndex={i} task={task} overdue={isOverdue(task.dueDate)}></TaskListing></tr>
+          meetsCondition != null ?
+            state[docIndex]._inbox.filter((task: TaskType) => meetsCondition(task)).map((task: TaskType, i: number) => {
+              return <tr key={i}><TaskListing docIndex={docIndex} taskIndex={task.taskID - 1} task={task} ></TaskListing></tr>
             })
             :
-            tasks.map((task, i) => {
-                return <tr key={i}><TaskListing docIndex={docIndex} taskIndex={i} task={task} overdue={isOverdue(task.dueDate)}></TaskListing></tr>
+            state[docIndex]._inbox.map((task: TaskType, i: number) => {
+              return <tr key={i}><TaskListing docIndex={docIndex} taskIndex={task.taskID - 1} task={task} ></TaskListing></tr>
             })
+
         }
-        </>
+      </tbody>
+    </>
   )
 }

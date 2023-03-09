@@ -26,6 +26,17 @@ export const GTW = () => {
     // setState(docs)
   }
 
+  function backupDoc(docIndex: number) {
+    const gtwContent = getGTW()[docIndex];
+    const fileName = `${gtwContent.doc_name}.gtw`;
+    const contentType = "text/plain";
+    var a = document.createElement("a");
+    var file = new Blob([JSON.stringify(gtwContent)], { type: contentType });
+    a.href = URL.createObjectURL(file);
+    a.download = fileName;
+    a.click();
+  }
+
   function addTask(docIndex: number, task: types.TaskType) {
     const docs: Document[] = getGTW()
     docs[docIndex]._inbox.push(task)
@@ -40,7 +51,7 @@ export const GTW = () => {
 
   function updateTask(docIndex: number, taskIndex: number, task: TaskType) {
     const docs: Document[] = getGTW()
-    const taskFromStorage = getTask(docIndex, taskIndex)
+    const taskFromStorage = getTask(taskIndex, docIndex)
 
     if (task.dueDate) {
       taskFromStorage.dueDate = task.dueDate
@@ -55,6 +66,23 @@ export const GTW = () => {
     }
 
     setGTW(docs)
+  }
+
+  function completeTask(docIndex: number, taskIndex: number){
+    let docs: Document[] = getGTW();
+    let task: TaskType = getTask(taskIndex, docIndex)
+    task.completed = true
+    setGTW(docs)
+  }
+
+  function snoozeTask(docIndex: number, taskIndex: number){
+    let docs: Document[] = getGTW();
+    let task: TaskType = getTask(taskIndex, docIndex)
+    const oneWeekFromNow = new Date(task.dueDate);
+    oneWeekFromNow.setDate(oneWeekFromNow.getDate() + 7)
+    docs[docIndex]._inbox[taskIndex].dueDate = oneWeekFromNow.toISOString().slice(0,10)
+    setGTW(docs)
+    console.log(getGTW()[docIndex]._inbox[taskIndex])
   }
 
   function getTask(id: number, docIndex: number): TaskType {
@@ -80,6 +108,7 @@ export const GTW = () => {
     setGTW(docs)
   }
 
-  return { getGTW, setGTW, addDoc, removeDoc, getTask, addTask, removeTask, updateTask , getDoc}
+  return { getGTW, setGTW, addDoc, removeDoc, getTask, addTask, removeTask, updateTask, getDoc, backupDoc,
+          snoozeTask, completeTask}
 }
 

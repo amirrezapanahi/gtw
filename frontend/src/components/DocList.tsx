@@ -18,10 +18,15 @@ function Paper() {
 function Doc(props: { name: string; daysUntilReview: number; id: number; }) {
 
   const [state, setState] = useContext(GlobalState)
-  const { removeDoc, getGTW } = GTW();
+  const { removeDoc, getGTW, backupDoc } = GTW();
 
   const deleteDoc = () => {
     removeDoc(props.id)
+    setState(getGTW())
+  }
+
+  const backupDocDocList = () => {
+    backupDoc(props.id)
     setState(getGTW())
   }
 
@@ -39,7 +44,10 @@ function Doc(props: { name: string; daysUntilReview: number; id: number; }) {
           Review Overdue
         </span>
       }
-      <button style={{ padding: 'unset', marginTop: '0.3em' }} onClick={deleteDoc}><i className="fa-solid fa-trash" style={{ height: '50%' }}></i></button>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
+        <button style={{ padding: 'unset', marginTop: '0.3em' }} onClick={deleteDoc} title="Delete"><i className="fa-solid fa-trash" style={{ height: '50%' }}></i></button>
+        <button style={{ padding: 'unset', marginTop: '0.3em' }} onClick={backupDocDocList} title="Back Up"><i className="fa-solid fa-box" style={{ height: "50%" }}></i></button>
+      </div>
     </div>
   )
 }
@@ -50,9 +58,9 @@ export const DocList: React.FC<Props> = ({ docs }) => {
     return docs.sort((a, b) => { return a.daysUntilReview - b.daysUntilReview })
   });
 
-  useEffect(()=>{
-    setSorted(docs.sort((a,b)=>{return a.daysUntilReview - b.daysUntilReview}))
-  },[docs])
+  useEffect(() => {
+    setSorted(docs.sort((a, b) => { return a.daysUntilReview - b.daysUntilReview }))
+  }, [docs])
 
   return (
     <div className="docs">

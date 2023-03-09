@@ -29,6 +29,7 @@ export const TaskComponent: React.FC = () => {
   const [priority, setPriority] = useState<number>(task.priority)
   const [description, setDesc] = useState<string>(task.description)
   const [dependentOn, setDependentOn] = useState<TaskType>(task.dependentOn)
+  const [completed, setCompleted] = useState<boolean>(task.completed)
 
   const [minutes, setMinutes] = useState(2)
   const [seconds, setSeconds] = useState(0)
@@ -54,7 +55,8 @@ export const TaskComponent: React.FC = () => {
                 description,
                 dueDate: dueDate,
                 priority,
-                dependentOn
+                dependentOn,
+                completed
               })}>Update Due Date</button>
             </div>
             <div>
@@ -70,7 +72,8 @@ export const TaskComponent: React.FC = () => {
                 description,
                 dueDate,
                 priority: priority,
-                dependentOn
+                dependentOn,
+                completed
               })}>Update Priority</button>
             </div>
           </div>

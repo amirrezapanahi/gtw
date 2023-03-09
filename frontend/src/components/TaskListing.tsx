@@ -1,18 +1,30 @@
-import React, { useState } from "react"
+import React, { useContext, useState } from "react"
 import { Priority, TaskType } from "../types/types";
 import { Link } from "react-router-dom";
+import { GTW } from '../LocalStorage'
+import { GlobalState } from "../GTWContext";
 
 interface Props {
   docIndex: number
   taskIndex: number
   task: TaskType;
-  overdue: boolean;
 }
 
-export const TaskListing: React.FC<Props> = ({ docIndex, taskIndex, task, overdue }) => {
+export const TaskListing: React.FC<Props> = ({ docIndex, taskIndex, task}) => {
+
+  const [state, setState] = useContext(GlobalState)
+  const { removeTask, snoozeTask, completeTask, getGTW } = GTW();
+
+  const isOverdue = (dueDate: string) => {
+    const date = new Date(dueDate).getTime()
+    const currentDate = new Date().getTime()
+    return date - currentDate < 0
+  }
+
+  console.log(taskIndex)
 
   const [priority] = useState<string>(() => {
-    switch (task.priority) {
+    switch (state[docIndex]._inbox.find((element: any) => element.taskID == taskIndex).priority) {
       case 0: {
         return "High"
       }
@@ -27,23 +39,40 @@ export const TaskListing: React.FC<Props> = ({ docIndex, taskIndex, task, overdu
 
   return (
     <>
-      <td style={{ textAlign: "left" }}><Link to={`/docs/${docIndex}/task/${taskIndex}`} state={{ docIndex: docIndex, task: task }}> {task.description} </Link></td>
-      <td style={overdue ? { color: "red", fontWeight: 'bold' } : {}}>{task.dueDate}</td>
+      <td style={{ textAlign: "left" }}>
+        <Link to={`/docs/${docIndex}/task/${taskIndex}`} state={{ docIndex: docIndex, task: task }}>
+         {task.description} 
+        </Link></td>
+      <td style={isOverdue(state[docIndex]._inbox.find((element: any) => element.taskID == taskIndex).dueDate) ? { color: "red", fontWeight: 'bold' } : {}}>
+        {state[docIndex]._inbox.find((element: any) => element.taskID == taskIndex).dueDate}
+      </td>
       <td>{priority}</td>
-      {task.dependentOn ?
+      {state[docIndex]._inbox.find((element: any) => element.taskID == taskIndex).dependentOn ?
         <td>
           <Link to={`/docs/${docIndex}/task/${task.dependentOn.taskID}`} state={{ docIndex: docIndex, task: task.dependentOn }}>
-            {task.dependentOn.description}
+            {state[docIndex]._inbox.find((element: any) => element.taskID == taskIndex).dependentOn.description}
           </Link></td>
         : <td></td>
       }
-      {/*TODO: change this later on to to clickable button/link which takes to a new component*/}
       <td style={{ display: 'flex', justifyContent: 'center' }}>
-        <div style={{ display: 'flex' }}>
-          <button><i className="fa-solid fa-bed"></i></button>
-          <button><i className="fa-solid fa-pen"></i></button>
-          <button><i className="fa-solid fa-trash"></i></button>
-          <button><i className="fa-solid fa-check"></i></button>
+        <div style={{ display: 'flex', maxWidth: '100%' }}>
+          <button onClick={() => {
+            snoozeTask(docIndex, taskIndex)
+            setState(getGTW())
+          }}><i className="fa-solid fa-bed"></i></button>
+          <button>
+            <Link to={`/docs/${docIndex}/task/${taskIndex}`} state={{ docIndex: docIndex, task: task }}>
+              <i className="fa-solid fa-pen"></i>
+            </Link>
+          </button>
+          <button onClick={() => {
+            removeTask(docIndex, taskIndex)
+            setState(getGTW())
+          }}><i className="fa-solid fa-trash"></i></button>
+          <button onClick={() => {
+            completeTask(docIndex, taskIndex)
+            setState(getGTW())
+          }}><i className="fa-solid fa-check"></i></button>
         </div>
       </td>
     </>

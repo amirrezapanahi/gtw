@@ -5,7 +5,7 @@ export type TaskType = {
     dueDate: string
     priority: Priority
     dependentOn: TaskType
-    
+    completed: boolean    
 }
 
 export enum Priority{

@@ -543,7 +543,7 @@ export default function ToolbarPlugin({docIndex}) {
   }, [editor, isLink]);
 
   const [state, setState] = useContext(GlobalState);
-  const {getGTW} = GTW();
+  const {getGTW, backupDoc} = GTW();
 
   const printPDF = () => {
 
@@ -558,14 +558,6 @@ export default function ToolbarPlugin({docIndex}) {
           doc.save('sample-file.pdf');
         }
       });
-  }
-
-  const backup = (content, fileName, contentType) => {
-    var a = document.createElement("a");
-    var file = new Blob([content], {type: contentType});
-    a.href = URL.createObjectURL(file);
-    a.download = fileName;
-    a.click();
   }
 
   return (
@@ -748,10 +740,7 @@ export default function ToolbarPlugin({docIndex}) {
         })
       }} style={{float: "right"}}>Export</button>
       <button className="button" onClick={() => {
-        const gtwContent = getGTW()[docIndex];
-        const fileName = `${gtwContent.doc_name}.gtw`;
-        const contentType = "text/plain";
-        backup(JSON.stringify(gtwContent), fileName, contentType);
+        backupDoc(docIndex)
       }} style={{float: "right"}}>Back Up</button>
     </div>
   );
