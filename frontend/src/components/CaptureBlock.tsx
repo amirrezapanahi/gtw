@@ -80,7 +80,7 @@ export const CaptureBlock: React.FC<Props> = ({ docIndex }) => {
                 <option value={-1} selected={true}>None</option>
                 {
                   currentInbox.map((item: TaskType, i: number) => {
-                    return <option value={i}>{item.description}</option>
+                    return <option value={item.taskID}>{item.description}</option>
                   })
                 }
               </select> :

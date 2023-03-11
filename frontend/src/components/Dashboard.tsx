@@ -26,7 +26,7 @@ export const Dashboard: React.FC<Props> = ({docIndex}) => {
                 <CaptureBlock docIndex={docIndex}/>
             </Block>
             <Block docIndex={docIndex} blockName={"Overdue"}>
-                <InboxList docIndex={docIndex} tasks={tasks} meetsCondition={isOverdue}/>
+                <InboxList docIndex={docIndex} tasks={tasks} meetsCondition={isOverdue} showResolved={false}/>
             </Block>
             <Block docIndex={docIndex} blockName={"Due Soon"}>
 

@@ -9,9 +9,10 @@ interface Props {
   docIndex: number
   tasks: TaskType[]
   meetsCondition: (obj: any) => boolean
+  showResolved: boolean
 }
 
-export const InboxList: React.FC<Props> = ({ docIndex, tasks, meetsCondition }) => {
+export const InboxList: React.FC<Props> = ({ docIndex, tasks, meetsCondition, showResolved}) => {
   const { getGTW } = GTW()
   const {state, setState} = useContext(GlobalState)
 
@@ -36,10 +37,16 @@ export const InboxList: React.FC<Props> = ({ docIndex, tasks, meetsCondition }) 
               return <tr key={i}><TaskListing docIndex={docIndex} taskIndex={task.taskID - 1} task={task} ></TaskListing></tr>
             })
             :
-            state[docIndex]._inbox.map((task: TaskType, i: number) => {
+        (
+          showResolved == true ?
+            state[docIndex]._inbox.filter((task: TaskType) => task.completed == true).map((task: TaskType, i: number) => {
               return <tr key={i}><TaskListing docIndex={docIndex} taskIndex={task.taskID - 1} task={task} ></TaskListing></tr>
             })
-
+            :
+            state[docIndex]._inbox.filter((task: TaskType) => task.completed == false).map((task: TaskType, i: number) => {
+              return <tr key={i}><TaskListing docIndex={docIndex} taskIndex={task.taskID - 1} task={task} ></TaskListing></tr>
+            })
+        )
         }
       </tbody>
     </>

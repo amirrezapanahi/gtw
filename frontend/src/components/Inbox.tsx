@@ -17,15 +17,15 @@ export const Inbox: React.FC<Props> = ({ docIndex, condition }) => {
     <table className={'block inbox-list'}>
       <select onChange={(event) => {
         if (event.target.value === "Unresolved") {
-          setShowResolved(true)
-        } else {
           setShowResolved(false)
+        } else {
+          setShowResolved(true)
         }
       }}>
-        <option value="Unresolved" selected={showResolved == false}>Unresolved</option>
-        <option value="Resolved" selected={showResolved == true}>Resolved</option>
+        <option value="Unresolved">Unresolved</option>
+        <option value="Resolved" selected={showResolved}>Resolved</option>
       </select>
-      <InboxList docIndex={docIndex} tasks={tasks} meetsCondition={condition} />
+      <InboxList docIndex={docIndex} tasks={tasks} meetsCondition={condition} showResolved={showResolved}/>
     </table>
   )
 }
