@@ -26,9 +26,6 @@ export const TaskListing: React.FC<Props> = ({ docIndex, taskIndex, task }) => {
     throw new TypeError("the value was promised to always be there")
   }
 
-  console.log(taskIndex)
-  console.log(taskFromState)
-
   const [priority] = useState<string>(() => {
     switch (state[docIndex]._inbox.find(element => element.taskID == taskIndex + 1).priority) {
       case 0: {
@@ -47,7 +44,7 @@ export const TaskListing: React.FC<Props> = ({ docIndex, taskIndex, task }) => {
     <>
       <td style={{ textAlign: "left" }}>
         <Link to={`/docs/${docIndex}/task/${taskIndex}`} state={{ docIndex: docIndex, task: task }}>
-          {task.description}
+          <span className={'task-cell'}>{task.description}</span>
         </Link></td>
       <td style={isOverdue(state[docIndex]._inbox.find((element: any) => element.taskID == taskIndex + 1).dueDate) ? { color: "red", fontWeight: 'bold' } : {}}>
         {state[docIndex]._inbox.find(element => element.taskID == taskIndex + 1).dueDate}
@@ -56,12 +53,12 @@ export const TaskListing: React.FC<Props> = ({ docIndex, taskIndex, task }) => {
       {state[docIndex]._inbox.find(element => element.taskID == taskIndex + 1).dependentOn ?
         <td>
           <Link to={`/docs/${docIndex}/task/${task.dependentOn.taskID}`} state={{ docIndex: docIndex, task: task.dependentOn }}>
-            {state[docIndex]._inbox.find(element => element.taskID == taskIndex + 1).dependentOn.description}
+            <span className={'task-cell'}>{state[docIndex]._inbox.find(element => element.taskID == taskIndex + 1).dependentOn.description}</span>
           </Link></td>
         : <td></td>
       }
-      <td style={{ display: 'flex', justifyContent: 'center' }}>
-        <div style={{ display: 'flex', maxWidth: '100%' }}>
+      <td style={{ justifyContent: 'center' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', maxWidth: '100%' }}>
           <button onClick={() => {
             snoozeTask(docIndex, task.taskID)
             setState(getGTW())

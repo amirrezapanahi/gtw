@@ -3,7 +3,7 @@ import { Inbox } from './Inbox'
 import { DocEditor }  from './Editor'
 import {Link, useParams} from 'react-router-dom'
 import {GlobalState} from "../GTWContext";
-import {Document} from "../types/types"
+import {Document, TaskType} from "../types/types"
 import {Dashboard} from "./Dashboard";
 import { GTW } from "../LocalStorage";
 
@@ -24,7 +24,7 @@ export const DocumentComponent: React.FC = () => {
                 <Link to={`/`} style={{justifyContent: 'left'}}><span>Back to Documents</span></Link>
               <div style={{display: 'flex', gap: '2em'}}>
                 <span onClick={() => onDashboard(true)}>Dashboard</span>
-                <span onClick={() => onDashboard(false)}>Inbox ({state[id!]._inbox.length})</span>
+                <span onClick={() => onDashboard(false)}>Inbox ({state[id!]._inbox.filter((element:TaskType) => element.completed == false).length})</span>
               </div>
             </div>
             {
