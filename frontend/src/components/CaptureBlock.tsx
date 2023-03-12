@@ -39,6 +39,7 @@ export const CaptureBlock: React.FC<Props> = ({ docIndex }) => {
       0,
       description: desc,
       dependentOn: dependentOn,
+      referenceMaterial: null,
       priority: priority,
       dueDate: new Date(dueDate).toISOString().slice(0, 10),
       completed: false,
