@@ -13,7 +13,7 @@ interface Props {
 
 export const CaptureBlock: React.FC<Props> = ({ docIndex }) => {
   const {state, setState} = useContext(GlobalState)
-  const { getGTW, addTask, getTask, getDoc } = GTW();
+  const { getGTW, addTask, getTask, getDoc, getTaskIndex } = GTW();
 
   const [currentInbox, setCurrentInbox] = useState<TaskType[]>(() => {
     const docs: Document[] = state
@@ -31,9 +31,15 @@ export const CaptureBlock: React.FC<Props> = ({ docIndex }) => {
     const docs: Document[] = state
     const task: TaskType = {
       projectID: docIndex,
-      taskID: getDoc(docIndex)._inbox.length + 1,
+      taskID:
+      getDoc(docIndex)._inbox.length != 0 
+       ? 
+      getDoc(docIndex)._inbox[getDoc(docIndex)._inbox.length-1].taskID + 1
+       :
+      0,
       description: desc,
       dependentOn: dependentOn,
+      referenceMaterial: null,
       priority: priority,
       dueDate: new Date(dueDate).toISOString().slice(0, 10),
       completed: false,
@@ -72,14 +78,16 @@ export const CaptureBlock: React.FC<Props> = ({ docIndex }) => {
             currentInbox.length !== 0 ?
               <select className={'myDropDown'} onChange={(event) => {
                 //get task from storage
-                const taskId: number = parseInt(event.target.value, 10)
-                const task: TaskType = getTask(taskId, docIndex)
+                const taskID: number = parseInt(event.target.value, 10)
+                const taskIndex = getTaskIndex(docIndex, taskID)
+                console.log("taskId: " + taskIndex)
+                const task: TaskType = getTask(taskIndex, docIndex)
                 setDependentOn(task)
               }
               }>
                 <option value={-1} selected={true}>None</option>
                 {
-                  currentInbox.map((item: TaskType, i: number) => {
+                  currentInbox.filter((task:TaskType)=>task.completed == false).map((item: TaskType) => {
                     return <option value={item.taskID}>{item.description}</option>
                   })
                 }

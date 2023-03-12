@@ -1,3 +1,33 @@
 h1{
   color: inherit;
 }
+
+.taskInfo{
+  display: grid;
+  grid-template-columns: 60% 40%;
+}
+
+.taskInfoContainer{
+  display: grid;
+  grid-template-rows: 1fr 1fr 1fr 1fr;
+}
+
+.taskInfoContainer div:not(:last-child) {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.taskInfoContainer div:last-child{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.timer{
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+}
+
+.taskOperations{
+  display: flex;
+  width: 100%;
+}

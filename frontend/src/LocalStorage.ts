@@ -89,10 +89,11 @@ export const GTW = () => {
 
   function snoozeTask(docIndex: number, taskID: number){
     let docs: Document[] = getGTW();
-    let task: TaskType = getTask(getTaskIndex(docIndex,taskID), docIndex)
+    const taskIndex = getTaskIndex(docIndex, taskID)
+    let task: TaskType = getTask(taskIndex, docIndex)
     const oneWeekFromNow = new Date(task.dueDate);
     oneWeekFromNow.setDate(oneWeekFromNow.getDate() + 7)
-    docs[docIndex]._inbox[taskID].dueDate = oneWeekFromNow.toISOString().slice(0,10)
+    docs[docIndex]._inbox[taskIndex].dueDate = oneWeekFromNow.toISOString().slice(0,10)
     setGTW(docs)
     console.log(getGTW()[docIndex]._inbox[taskID])
   }
@@ -121,6 +122,6 @@ export const GTW = () => {
   }
 
   return { getGTW, setGTW, addDoc, removeDoc, getTask, addTask, removeTask, updateTask, getDoc, backupDoc,
-          snoozeTask, completeTask}
+          snoozeTask, completeTask, getTaskIndex}
 }
 

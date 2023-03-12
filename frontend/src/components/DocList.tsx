@@ -21,12 +21,14 @@ function Doc(props: { name: string; daysUntilReview: number; id: number; }) {
   const { removeDoc, getGTW, backupDoc } = GTW();
 
   const deleteDoc = () => {
-    removeDoc(props.id)
+    const docIndex = state.findIndex((doc: Document) => doc.docID == props.id)
+    removeDoc(docIndex)
     setState(getGTW())
   }
 
   const backupDocDocList = () => {
-    backupDoc(props.id)
+    const docIndex = state.findIndex((doc: Document) => doc.docID == props.id)
+    backupDoc(docIndex)
     setState(getGTW())
   }
 
