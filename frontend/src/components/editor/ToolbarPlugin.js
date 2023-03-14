@@ -546,6 +546,15 @@ export default function ToolbarPlugin({docIndex}) {
   const {getGTW, backupDoc} = GTW();
 
   const printPDF = () => {
+    const htmlString = $generateHtmlFromNodes(editor, null)
+    console.log(htmlString)
+    // const doc = new jsPDF({
+    //   unit: 'px',
+    //   format: 'a4',
+    // })
+
+    // doc.html(htmlString)
+    // doc.save(state[docIndex].doc_name + '.pdf')
 
     html2canvas(document.getElementsByClassName('editor-input')[0], {
     }).then(function (canvas) {
@@ -553,9 +562,9 @@ export default function ToolbarPlugin({docIndex}) {
         console.log(canvas)
         img.src = canvas.toDataURL('image/png');
         img.onload = () => {
-          const doc = new jsPDF('p', 'px');
-          doc.addImage(img, 'JPEG', 20, 20, 410, 315);
-          doc.save('sample-file.pdf');
+          const doc = new jsPDF('p', 'px', 'a4');
+          doc.addImage(img, 'jpeg', 20, 20);
+          doc.save(state[docIndex].doc_name + '.pdf');
         }
       });
   }

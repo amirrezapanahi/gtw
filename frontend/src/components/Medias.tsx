@@ -4,7 +4,6 @@ import { GlobalState } from '../GTWContext';
 import { GTW } from '../LocalStorage'
 import { ReferenceMaterialInterface, TaskType } from '../types/types';
 import { Dropzone, IMAGE_MIME_TYPE, FileWithPath } from '@mantine/dropzone';
-import { Carousel } from '@mantine/carousel'
 import { useDisclosure } from '@mantine/hooks';
 import { ImageComponent } from './ImageComponent';
 
@@ -17,20 +16,20 @@ export const Medias: React.FC<Props> = ({ docID, taskID }) => {
 
   const { state, setState } = useContext(GlobalState)
   const { updateTask, getTask, getGTW, setGTW , localStorageSize} = GTW()
-  const [setFilesCalled, toggleSetFilesCalled] = useState(false)
+  // const [setFilesCalled, toggleSetFilesCalled] = useState(false)
   const [files, setFiles] = useState<FileWithPath[]>([])
-  const [opened, { open, close }] = useDisclosure(false);
   const [refMaterial, setRefMaterial] = useState<ReferenceMaterialInterface>(
     state[docID]._inbox[taskID].referenceMaterial
   )
 
-  useEffect(() => {
-    console.log("toggled file upload: useEffect(files)")
-    toggleSetFilesCalled(true)
-  },[files])
+  // useEffect(() => {
+  //   console.log("toggled file upload: useEffect(files)")
+  //   toggleSetFilesCalled(true)
+  // },[files])
 
   useEffect(() => {  
     console.log("updating state with file: useEffect(setFilesCaleld)") 
+    console.log(files.length)
     const readFile = async (file) => {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -64,14 +63,14 @@ export const Medias: React.FC<Props> = ({ docID, taskID }) => {
   
       updateTask(docID, taskID, updatedTask)
       setState(getGTW())
-      console.log(localStorageSize())
+      localStorageSize()
     }
 
     addFiles(files)
-    toggleSetFilesCalled(false)
-  }, [setFilesCalled])
+    // toggleSetFilesCalled(false)
+  }, [files])
 
-  const deleteImg = (index) => {
+  const deleteImg = (index: number) => {
     refMaterial.media.splice(index,1)
     setRefMaterial(refMaterial)
     const updatedTask: TaskType = {
