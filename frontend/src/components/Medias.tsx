@@ -6,6 +6,7 @@ import { ReferenceMaterialInterface, TaskType } from '../types/types';
 import { Dropzone, IMAGE_MIME_TYPE, FileWithPath } from '@mantine/dropzone';
 import { Carousel } from '@mantine/carousel'
 import { useDisclosure } from '@mantine/hooks';
+import { ImageComponent } from './ImageComponent';
 
 interface Props {
   docID: number,
@@ -100,20 +101,9 @@ export const Medias: React.FC<Props> = ({ docID, taskID }) => {
           refMaterial.media.map((file, fileIndex) => {
             return (
               <div style={{paddingTop: '0.3em'}}>
-                <Modal opened={opened} onClose={close} title="Image">
-                  <Image
-                  key={fileIndex}
-                  src={file}
-                  />
-                </Modal>
-
                 <Indicator inline label={<i className="fa-solid fa-trash" style={{ height: '50%' }}></i>} size={16} onClick={() => deleteImg(fileIndex)}>
                 </Indicator>
-                <Image onClick={open}
-                  key={fileIndex}
-                  src={file}
-                  style={{zIndex: '1'}}
-                />
+                <ImageComponent fileIndex={fileIndex} file={file}/>
               </div>
             );
           })
