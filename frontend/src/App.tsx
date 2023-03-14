@@ -16,9 +16,6 @@ import { TaskComponent } from "./components/TaskComponent";
 
 export const App: React.FC = () => {
 
-  // const { getGTW } = GTW();
-  // const [state] = useState<Document[]>(getGTW())
-
   return (
     <GTWContext>
       <Routes>

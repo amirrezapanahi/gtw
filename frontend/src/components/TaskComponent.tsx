@@ -10,7 +10,6 @@ import { Priority } from '../types/types'
 import { GTW } from '../LocalStorage'
 import { ReferenceMaterial } from './ReferenceMaterial'
 import { Assistant } from './Assistant'
-import { Collapse } from '@mantine/core'
 
 export const TaskComponent: React.FC = () => {
   const { getGTW, updateTask, getTaskIndex, removeTask, completeTask } = GTW();

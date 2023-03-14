@@ -1,3 +1,5 @@
+import {FileWithPath} from '@mantine/dropzone'
+
 export type TaskType = {
     taskID: number
     projectID: number
@@ -5,6 +7,7 @@ export type TaskType = {
     dueDate: string
     priority: Priority
     dependentOn: TaskType
+    referenceMaterial: ReferenceMaterialInterface
     completed: boolean    
 }
 
@@ -16,7 +19,28 @@ export enum Priority{
 
 
 export type ReferenceMaterialInterface = {
+    notes: string,
+    links: Link[],
+    media: string[]
+}
 
+export type Link = {
+    src: string,
+    date_added: string,
+    title: string
+}
+
+export type Media = {
+    readonly lastModified: number;
+    readonly name: string;
+    readonly webkitRelativePath: string;
+    readonly path?: string;
+    readonly size: number;
+    readonly type: string;
+    arrayBuffer(): Promise<ArrayBuffer>;
+    slice(start?: number, end?: number, contentType?: string): Blob;
+    stream(): ReadableStream<Uint8Array>;
+    text(): Promise<string>;
 }
 
 export class Document {

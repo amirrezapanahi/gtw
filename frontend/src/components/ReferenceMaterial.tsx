@@ -4,6 +4,8 @@ import { IconPhoto, IconLink, IconNotes, IconCircleCheck } from '@tabler/icons-r
 import { GlobalState } from '../GTWContext';
 import { GTW } from '../LocalStorage'
 import { TaskType } from '../types/types';
+import {Links} from '../components/Links'
+import {Medias} from '../components/Medias'
 
 interface Props {
   docID: number,
@@ -41,6 +43,7 @@ export const ReferenceMaterial: React.FC<Props> = ({ docID, taskID }) => {
         getTask(taskID, docID).referenceMaterial.media : null ,
       }
     }
+
     updateTask(docID, taskID, updatedTask)
     setState(getGTW())
     showSaveIcon(true)
@@ -67,11 +70,11 @@ export const ReferenceMaterial: React.FC<Props> = ({ docID, taskID }) => {
         </Tabs.Panel>
 
         <Tabs.Panel value="links" pt="xs">
-          links content
+          <Links docID={docID} taskID={taskID}/>
         </Tabs.Panel>
 
         <Tabs.Panel value="media" pt="xs">
-          Media content
+          <Medias docID={docID} taskID={taskID} />
         </Tabs.Panel>
       </Tabs>
     </>

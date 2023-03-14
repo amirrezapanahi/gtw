@@ -83,6 +83,7 @@ export const GTW = () => {
       dueDate: task.dueDate,
       priority: task.priority,
       dependentOn: task.dependentOn,
+      referenceMaterial: task.referenceMaterial,
       completed: true
     })
   }
@@ -121,7 +122,21 @@ export const GTW = () => {
     setGTW(docs)
   }
 
+  function localStorageSize(){
+    var _lsTotal = 0,
+    _xLen, _x;
+for (_x in localStorage) {
+    if (!localStorage.hasOwnProperty(_x)) {
+        continue;
+    }
+    _xLen = ((localStorage[_x].length + _x.length) * 2);
+    _lsTotal += _xLen;
+    console.log(_x.substr(0, 50) + " = " + (_xLen / 1024).toFixed(2) + " KB")
+};
+console.log("Total = " + (_lsTotal / 1024).toFixed(2) + " KB");
+  }
+
   return { getGTW, setGTW, addDoc, removeDoc, getTask, addTask, removeTask, updateTask, getDoc, backupDoc,
-          snoozeTask, completeTask, getTaskIndex}
+          snoozeTask, completeTask, getTaskIndex, localStorageSize}
 }
 
