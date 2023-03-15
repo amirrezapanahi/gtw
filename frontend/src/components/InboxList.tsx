@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react'
-import { TaskType } from '../types/types'
+import { TaskType, Status } from '../types/types'
 import { TaskListing } from './TaskListing'
 import { GTW } from '../LocalStorage'
 import { GlobalState } from "../GTWContext";
@@ -13,7 +13,7 @@ interface Props {
 }
 
 export const InboxList: React.FC<Props> = ({ docIndex, tasks, meetsCondition, showResolved }) => {
-  const { getGTW } = GTW()
+  const { getGTW, getTaskIndex } = GTW()
   const { state, setState } = useContext(GlobalState)
 
   console.log(state)
@@ -36,17 +36,17 @@ export const InboxList: React.FC<Props> = ({ docIndex, tasks, meetsCondition, sh
         {
           meetsCondition != null ?
             state[docIndex]._inbox.filter((task: TaskType) => meetsCondition(task)).map((task: TaskType, i: number) => {
-              return <tr key={i}><TaskListing docIndex={docIndex} taskIndex={task.taskID - 1} task={task} ></TaskListing></tr>
+              return <tr key={i}><TaskListing docIndex={docIndex} taskIndex={getTaskIndex(docIndex,task.taskID)} task={task} ></TaskListing></tr>
             })
             :
             (
               showResolved == true ?
-                state[docIndex]._inbox.filter((task: TaskType) => task.completed == true).map((task: TaskType, i: number) => {
-                  return <tr key={i}><TaskListing docIndex={docIndex} taskIndex={task.taskID - 1} task={task} ></TaskListing></tr>
+                state[docIndex]._inbox.filter((task: TaskType) => task.status == Status.Done).map((task: TaskType, i: number) => {
+                  return <tr key={i}><TaskListing docIndex={docIndex} taskIndex={getTaskIndex(docIndex,task.taskID)} task={task} ></TaskListing></tr>
                 })
                 :
-                state[docIndex]._inbox.filter((task: TaskType) => task.completed == false).map((task: TaskType, i: number) => {
-                  return <tr key={i}><TaskListing docIndex={docIndex} taskIndex={task.taskID - 1} task={task} ></TaskListing></tr>
+                state[docIndex]._inbox.filter((task: TaskType) => task.status != Status.Done).map((task: TaskType, i: number) => {
+                  return <tr key={i}><TaskListing docIndex={docIndex} taskIndex={getTaskIndex(docIndex,task.taskID)} task={task} ></TaskListing></tr>
                 })
             )
         }

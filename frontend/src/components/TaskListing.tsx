@@ -21,13 +21,13 @@ export const TaskListing: React.FC<Props> = ({ docIndex, taskIndex, task }) => {
     return date - currentDate < 0
   }
 
-  const taskFromState = state[docIndex]._inbox.find(element => element.taskID == taskIndex + 1)
+  const taskFromState = state[docIndex]._inbox[taskIndex]
   if (taskFromState === undefined) {
     throw new TypeError("the value was promised to always be there")
   }
 
   const [priority] = useState<string>(() => {
-    switch (state[docIndex]._inbox.find(element => element.taskID == taskIndex + 1).priority) {
+    switch (state[docIndex]._inbox[taskIndex].priority) {
       case 0: {
         return "High"
       }
@@ -46,14 +46,14 @@ export const TaskListing: React.FC<Props> = ({ docIndex, taskIndex, task }) => {
         <Link to={`/docs/${docIndex}/task/${taskIndex}`} state={{ docIndex: docIndex, task: task }}>
           <span className={'task-cell'}>{task.description}</span>
         </Link></td>
-      <td style={isOverdue(state[docIndex]._inbox.find((element: any) => element.taskID == taskIndex + 1).dueDate) ? { color: "red", fontWeight: 'bold' } : {}}>
-        {state[docIndex]._inbox.find(element => element.taskID == taskIndex + 1).dueDate}
+      <td style={isOverdue(state[docIndex]._inbox[taskIndex].dueDate) ? { color: "red", fontWeight: 'bold' } : {}}>
+        {state[docIndex]._inbox[taskIndex].dueDate}
       </td>
       <td>{priority}</td>
-      {state[docIndex]._inbox.find(element => element.taskID == taskIndex + 1).dependentOn ?
+      {state[docIndex]._inbox[taskIndex].dependentOn ?
         <td>
           <Link to={`/docs/${docIndex}/task/${task.dependentOn.taskID}`} state={{ docIndex: docIndex, task: task.dependentOn }}>
-            <span className={'task-cell'}>{state[docIndex]._inbox.find(element => element.taskID == taskIndex + 1).dependentOn.description}</span>
+            <span className={'task-cell'}>{state[docIndex]._inbox[taskIndex].dependentOn.description}</span>
           </Link></td>
         : <td></td>
       }

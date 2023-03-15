@@ -3,7 +3,7 @@ import '../styles/TaskComponent.css'
 import { DocEditor } from './Editor'
 import { Link, useParams } from 'react-router-dom'
 import { GlobalState } from "../GTWContext";
-import { Document, TaskType } from "../types/types"
+import { Document, TaskType, Status } from "../types/types"
 import { useLocation } from 'react-router-dom'
 import { Block } from "./Block";
 import { Priority } from '../types/types'
@@ -26,7 +26,7 @@ export const TaskComponent: React.FC = () => {
   const [priority, setPriority] = useState<number>(task.priority)
   const [description, setDesc] = useState<string>(task.description)
   const [dependentOn, setDependentOn] = useState<TaskType>(task.dependentOn)
-  const [completed, setCompleted] = useState<boolean>(task.completed)
+  const [completed, setCompleted] = useState<boolean>(task.status == Status.Done ? true : false)
 
   const [seconds, setSeconds] = useState(120)
   const [beginCountdown, setBeginCountdown] = useState(false)
@@ -56,10 +56,10 @@ export const TaskComponent: React.FC = () => {
         <div className='header'>
           <div style={{ display: 'flex', gap: '2em' }}>
             <Link to={`/docs/${task.projectID}`}><span>Dashboard</span></Link>
-            <Link to={`/docs/${task.projectID}`}><span>Inbox ({state[task.projectID]._inbox.filter((x: TaskType) => x.completed == false).length})</span></Link>
+            <Link to={`/docs/${task.projectID}`}><span>Inbox ({state[task.projectID]._inbox.filter((x: TaskType) => x.status != Status.Done).length})</span></Link>
           </div>
         </div>
-        <Block docIndex={task.projectID} blockName={"Task / Idea"}>
+        <Block docIndex={task.projectID} blockName={"Task / Idea"} style={{}}>
           <div className={"taskInfo"}>
             <div className={"taskInfoContainer"}>
               <h1>{task.description}</h1>
@@ -75,7 +75,7 @@ export const TaskComponent: React.FC = () => {
                     priority,
                     dependentOn,
                     referenceMaterial: task.referenceMaterial,
-                    completed
+                    status: task.status
                   })
                   setState(getGTW())
                 }}>Update Due Date</button>
@@ -96,7 +96,7 @@ export const TaskComponent: React.FC = () => {
                     priority: priority,
                     dependentOn,
                     referenceMaterial: task.referenceMaterial,
-                    completed
+                    status: task.status
                   })
                   setState(getGTW())
                 }}>Update Priority</button>
@@ -127,10 +127,10 @@ export const TaskComponent: React.FC = () => {
             </div>
           </div>
         </Block>
-        <Block docIndex={task.projectID} blockName={"Reference Material"}>
+        <Block docIndex={task.projectID} blockName={"Reference Material"} style={{}}>
           <ReferenceMaterial docID={task.projectID} taskID={task.taskID}/>
         </Block>
-        <Block docIndex={task.projectID} blockName={"Assistant"}>
+        <Block docIndex={task.projectID} blockName={"Assistant"} style={{}}>
           <Assistant />
         </Block>
       </div>

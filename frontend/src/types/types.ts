@@ -1,5 +1,3 @@
-import {FileWithPath} from '@mantine/dropzone'
-
 export type TaskType = {
     taskID: number
     projectID: number
@@ -7,8 +5,14 @@ export type TaskType = {
     dueDate: string
     priority: Priority
     dependentOn: TaskType
-    referenceMaterial: ReferenceMaterialInterface
-    completed: boolean    
+    referenceMaterial: ReferenceMaterialInterface  
+    status: Status
+}
+
+export enum Status{
+    Todo,
+    Doing,
+    Done
 }
 
 export enum Priority{

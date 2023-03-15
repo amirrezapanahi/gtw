@@ -1,7 +1,5 @@
 import * as types from './types/types'
-import { Document, TaskType } from "./types/types";
-import { GlobalState } from './GTWContext';
-import React, { useContext } from 'react';
+import { Document, TaskType, Status } from "./types/types";
 
 export const GTW = () => {
 
@@ -84,7 +82,7 @@ export const GTW = () => {
       priority: task.priority,
       dependentOn: task.dependentOn,
       referenceMaterial: task.referenceMaterial,
-      completed: true
+      status: Status.Done 
     })
   }
 
