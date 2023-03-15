@@ -1,14 +1,16 @@
+import { Title } from "@mantine/core";
 import React from "react";
 
 interface Props{
     docIndex: number
     blockName: string
     children: React.ReactNode
+    style: React.CSSProperties
 }
-export const Block: React.FC<Props> = ({children, blockName}) => {
+export const Block: React.FC<Props> = ({children, blockName, style}) => {
     return (
-        <div className='block'>
-            <h3>{blockName}</h3>
+        <div className='block' style={style}>
+            <Title order={3}>{blockName}</Title>
             <hr></hr>
             {children}
         </div>
