@@ -3,19 +3,15 @@ import { DocEditor } from './Editor'
 import { Link, useParams } from 'react-router-dom'
 import { GlobalState } from "../GTWContext";
 import { Document, TaskType, Status } from "../types/types"
-import { Dashboard } from "./Dashboard";
-import { GTW } from "../LocalStorage";
 import { IconArrowNarrowLeft } from '@tabler/icons-react';
+import { Inbox } from './Inbox';
 
-export const DocumentComponent: React.FC = () => {
+export const DocumentComponentInbox: React.FC = () => {
   let { id } = useParams();
 
-  const { getGTW } = GTW();
-  const { state, setState } = useContext(GlobalState)
+  const { state } = useContext(GlobalState)
 
-  const [isDashboard, onDashboard] = useState<boolean>(true)
-  const [saved, setSaved] = useState<boolean>(false);
-  const [doc, setDoc] = useState<Document>(state[parseInt(id!, 10)])
+  const [doc] = useState<Document>(state[parseInt(id!, 10)])
 
   return (
     <div style={{ "display": "flex" }}>
@@ -27,7 +23,7 @@ export const DocumentComponent: React.FC = () => {
             <Link to={`/docs/${id}/inbox`}><span>Inbox ({state[id!]._inbox.filter((x: TaskType) => x.status != Status.Done).length})</span></Link>
           </div>
         </div>
-            <Dashboard docIndex={parseInt(id)} />
+            <Inbox docIndex={parseInt(id)} condition={null} />
       </div>
       <div style={{ "width": "50%" }}>
         <div className='header'>

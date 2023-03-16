@@ -10,6 +10,8 @@ import { Priority } from '../types/types'
 import { GTW } from '../LocalStorage'
 import { ReferenceMaterial } from './ReferenceMaterial'
 import { Assistant } from './Assistant'
+import { Blockquote, Paper } from '@mantine/core';
+import { IconArrowNarrowLeft } from '@tabler/icons-react';
 
 export const TaskComponent: React.FC = () => {
   const { getGTW, updateTask, getTaskIndex, removeTask, completeTask } = GTW();
@@ -18,15 +20,12 @@ export const TaskComponent: React.FC = () => {
   const taskState = useLocation().state;
   const task: TaskType = state[taskState.task.projectID]._inbox[getTaskIndex(taskState.task.projectID, taskState.task.taskID)];
 
-  const [isDashboard, onDashboard] = useState<boolean>(true)
-  const [saved, setSaved] = useState<boolean>(false);
   const [doc, setDoc] = useState<Document>(state[task.projectID])
 
   const [dueDate, setDueDate] = useState<string>(task.dueDate)
   const [priority, setPriority] = useState<number>(task.priority)
   const [description, setDesc] = useState<string>(task.description)
   const [dependentOn, setDependentOn] = useState<TaskType>(task.dependentOn)
-  const [completed, setCompleted] = useState<boolean>(task.status == Status.Done ? true : false)
 
   const [seconds, setSeconds] = useState(120)
   const [beginCountdown, setBeginCountdown] = useState(false)
@@ -54,15 +53,20 @@ export const TaskComponent: React.FC = () => {
     <div style={{ "display": "flex" }}>
       <div style={{ "width": "50%" }}>
         <div className='header'>
+          <Link to={`/`} style={{ justifyContent: 'left' }}><IconArrowNarrowLeft /></Link>
           <div style={{ display: 'flex', gap: '2em' }}>
-            <Link to={`/docs/${task.projectID}`}><span>Dashboard</span></Link>
-            <Link to={`/docs/${task.projectID}`}><span>Inbox ({state[task.projectID]._inbox.filter((x: TaskType) => x.status != Status.Done).length})</span></Link>
+            <Link to={`/docs/${task.projectID}/dashboard`}><span>Dashboard</span></Link>
+            <Link to={`/docs/${task.projectID}/inbox`}><span>Inbox ({state[task.projectID]._inbox.filter((x: TaskType) => x.status != Status.Done).length})</span></Link>
           </div>
         </div>
         <Block docIndex={task.projectID} blockName={"Task / Idea"} style={{}}>
           <div className={"taskInfo"}>
             <div className={"taskInfoContainer"}>
-              <h1>{task.description}</h1>
+              <Paper withBorder>
+                <Blockquote>
+                  {task.description}
+                </Blockquote>
+              </Paper>
               <div>
                 <span>Due Date</span>
                 <input type="date" value={dueDate} min={new Date().toISOString().substring(0, 10)} onChange={(event) => setDueDate(event.target.value)}></input>
@@ -128,7 +132,7 @@ export const TaskComponent: React.FC = () => {
           </div>
         </Block>
         <Block docIndex={task.projectID} blockName={"Reference Material"} style={{}}>
-          <ReferenceMaterial docID={task.projectID} taskID={task.taskID}/>
+          <ReferenceMaterial docID={task.projectID} taskID={task.taskID} />
         </Block>
         <Block docIndex={task.projectID} blockName={"Assistant"} style={{}}>
           <Assistant />

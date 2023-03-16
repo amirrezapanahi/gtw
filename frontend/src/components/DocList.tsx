@@ -34,7 +34,7 @@ function Doc(props: { name: string; daysUntilReview: number; id: number; }) {
 
   return (
     <div className="doc">
-      <Link to={`/docs/${props.id}`}><Paper /></Link>
+      <Link to={`/docs/${props.id}/dashboard`}><Paper /></Link>
       <h3>{props.name}</h3>
       {props.daysUntilReview > 0
         ?

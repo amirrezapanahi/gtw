@@ -23,7 +23,7 @@ export const Dashboard: React.FC<Props> = ({ docIndex }) => {
     const currentDate = new Date()
     const currentDateMs = currentDate.getTime()
     const dueDate = new Date(task.dueDate).getTime()
-    return (dueDate - currentDateMs) <= 0
+    return task.status != Status.Done && (dueDate - currentDateMs) <= 0
   }
 
   return (

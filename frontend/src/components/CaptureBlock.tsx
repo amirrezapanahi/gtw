@@ -75,7 +75,7 @@ export const CaptureBlock: React.FC<Props> = ({ docIndex }) => {
   return (
     <>
       <Textarea
-        placeholder="Your comment"
+        placeholder="What's on your mind?"
         value={desc}
         onChange={(event: any) => setDesc(event.target.value)}
         className='capture-textarea'
@@ -83,20 +83,20 @@ export const CaptureBlock: React.FC<Props> = ({ docIndex }) => {
       {/* <textarea value={desc} onChange={(event) => setDesc(event.target.value)} className={'capture-textarea'} required></textarea> */}
       <div className='captureBlock' style={{ display: 'grid', gridTemplateColumns: '25% 25% 25% 25%' }}>
         <div style={{ display: 'inherit' }}>
-          <span>Due Date</span>
+          <span style={{marginBottom: '0.3em'}}>Due Date</span>
+          
           <DatePickerInput
-      label="Pick date"
-      placeholder="Pick date"
-      value={new Date(dueDate)}
-      onChange={setDueDate} 
-      required
-      mx="auto"
-      maw={400}
-    />
+            placeholder="Pick date"
+            value={dueDate}
+            allowDeselect
+            onChange={setDueDate}
+            minDate={new Date()}
+            required
+          />
           {/* <input className={'myDropDown'} type="date" min={new Date().toISOString().substring(0, 10)} value={dueDate} onChange={(event) => setDueDate(event.target.value)} required /> */}
         </div>
         <div style={{ display: 'inherit' }}>
-          <span>Priority</span>
+          <span style={{marginBottom: '0.3em'}}>Priority</span>
           <Input component="select" rightSection={<IconChevronDown size={14} stroke={1.5} />}
             className={'myDropDown'} onChange={(event) => setPriority(parseInt(event.target.value, 10))} required>
             <option value={Priority.High} selected={true}>High</option>
@@ -105,11 +105,11 @@ export const CaptureBlock: React.FC<Props> = ({ docIndex }) => {
           </Input>
         </div>
         <div style={{ display: 'inherit' }}>
-          <span>Dependent on</span>
+          <span style={{marginBottom: '0.3em'}}>Dependent on</span>
           {
             currentInbox.length !== 0 ?
-            <Input component="select" rightSection={<IconChevronDown size={14} stroke={1.5} />}
-              className={'myDropDown'} onChange={dependentOnInput}>
+              <Input component="select" rightSection={<IconChevronDown size={14} stroke={1.5} />}
+                className={'myDropDown'} onChange={dependentOnInput}>
                 <option value={-1} selected={true}>None</option>
                 {
                   currentInbox.filter((task: TaskType) => task.status != Status.Done).map((item: TaskType) => {

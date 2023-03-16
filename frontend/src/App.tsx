@@ -13,6 +13,7 @@ import GTWContext from "./GTWContext";
 import { Document } from "./types/types"
 import { GTW } from "./LocalStorage";
 import { TaskComponent } from "./components/TaskComponent";
+import { DocumentComponentInbox } from "./components/DocumentComponentInbox";
 
 export const App: React.FC = () => {
 
@@ -20,7 +21,8 @@ export const App: React.FC = () => {
     <GTWContext>
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/docs/:id" element={<DocumentComponent />} />
+        <Route path="/docs/:id/dashboard" element={<DocumentComponent />} />
+        <Route path="/docs/:id/inbox" element={<DocumentComponentInbox />} />
         <Route path='/docs/:id/task/:taskId' element={<TaskComponent />} />
       </Routes>
     </GTWContext>

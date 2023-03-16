@@ -12,18 +12,11 @@ body {
   font: 1em Arial, serif;
 }
 
-a{
+a {
   text-decoration: none;
   color: inherit;
 }
 
-.header {
-  padding: 1em 0 1em 0;
-}
-
-.header>* {
-  float: right;
-}
 
 .container {
   width: 500px;
@@ -91,12 +84,16 @@ button:hover {
 }
 
 .header {
-  background-color: #006BA6;
   display: flex;
-  justify-content: center;
+  justify-content: space-evenly;
   color: white;
   padding: 0.5em 0 0.5em 0;
-  border-left: 1px solid #477998
+  box-shadow: 0 10px 40px 0 rgba(255, 255, 255, 0.08), 0 2px 4px 0 rgba(255, 255, 255, 0.12);
+  height: 43px;
+}
+
+.header>* {
+  float: right;
 }
 
 .block {
@@ -108,7 +105,7 @@ button:hover {
   overflow: hidden;
 }
 
-.block h3{
+.block h3 {
   text-align: left;
   width: 95%;
   margin: 0 auto;
@@ -123,30 +120,30 @@ button:hover {
   resize: none;
 }
 
-.block hr{
+.block hr {
   background-color: white;
   width: 96%;
 }
 
-.capture-textarea{
+.capture-textarea {
   background-color: transparent;
   border: none;
   color: white;
 }
 
-.inbox-list{
+.inbox-list {
   display: flow-root;
   width: 98%;
   margin: 1em auto 0;
   overflow-y: scroll;
 }
 
-.inbox-list > *{
+.inbox-list>* {
   font-size: 14px;
   text-align: center;
 }
 
-.dashboard{
+.dashboard {
   display: grid;
   grid-template-rows: 22% 22% auto;
   height: 100vh;
@@ -155,16 +152,16 @@ button:hover {
   margin: 1em auto 0;
 }
 
-.board{
+.board {
   height: 100vh
 }
 
 
-.card{
+.card {
   margin-top: 1em;
 }
 
-.captureBlock{
+.captureBlock {
   display: grid;
   gridTemplateColumns: '25% 25% 25% 25%';
   width: 95%;
@@ -172,11 +169,11 @@ button:hover {
   margin-top: 1em;
 }
 
-.captureBlock > * {
+.captureBlock>* {
   padding-left: 0.5em;
   padding-right: 0.5em;
 }
 
-.captureButton{
+.captureButton {
   width: 90%;
 }
