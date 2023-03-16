@@ -36,17 +36,17 @@ export const InboxList: React.FC<Props> = ({ docIndex, tasks, meetsCondition, sh
         {
           meetsCondition != null ?
             state[docIndex]._inbox.filter((task: TaskType) => meetsCondition(task)).map((task: TaskType, i: number) => {
-              return <tr key={i}><TaskListing docIndex={docIndex} taskIndex={getTaskIndex(docIndex,task.taskID)} task={task} ></TaskListing></tr>
+              return <tr key={i} className='taskListing'><TaskListing docIndex={docIndex} taskIndex={getTaskIndex(docIndex,task.taskID)} task={task} ></TaskListing></tr>
             })
             :
             (
               showResolved == true ?
                 state[docIndex]._inbox.filter((task: TaskType) => task.status == Status.Done).map((task: TaskType, i: number) => {
-                  return <tr key={i}><TaskListing docIndex={docIndex} taskIndex={getTaskIndex(docIndex,task.taskID)} task={task} ></TaskListing></tr>
+                  return <tr key={i} className='taskListing'><TaskListing docIndex={docIndex} taskIndex={getTaskIndex(docIndex,task.taskID)} task={task} ></TaskListing></tr>
                 })
                 :
                 state[docIndex]._inbox.filter((task: TaskType) => task.status != Status.Done).map((task: TaskType, i: number) => {
-                  return <tr key={i}><TaskListing docIndex={docIndex} taskIndex={getTaskIndex(docIndex,task.taskID)} task={task} ></TaskListing></tr>
+                  return <tr key={i} className='taskListing'><TaskListing docIndex={docIndex} taskIndex={getTaskIndex(docIndex,task.taskID)} task={task} ></TaskListing></tr>
                 })
             )
         }

@@ -53,6 +53,8 @@ body {
   .editor-inner {
     background: #fff;
     position: relative;
+    max-height: 95vh;
+    overflow-y: auto;
   }
   
   .editor-input {

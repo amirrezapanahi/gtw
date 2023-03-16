@@ -18,8 +18,8 @@ export const DocumentComponent: React.FC = () => {
   const [doc, setDoc] = useState<Document>(state[parseInt(id!, 10)])
 
   return (
-    <div style={{ "display": "flex" }}>
-      <div style={{ "width": "50%" }}>
+    <div style={{ "display": "flex", overflow: 'hidden'}}>
+      <div style={{ "width": "50%", maxHeight: '100vh' }}>
         <div className='header'>
           <Link to={`/`} style={{ justifyContent: 'left' }}><IconArrowNarrowLeft /></Link>
           <div style={{ display: 'flex', gap: '2em' }}>
@@ -29,7 +29,7 @@ export const DocumentComponent: React.FC = () => {
         </div>
             <Dashboard docIndex={parseInt(id)} />
       </div>
-      <div style={{ "width": "50%" }}>
+      <div style={{ "width": "50%", maxHeight: '100vh'  }}>
         <div className='header'>
           {doc.doc_name}
         </div>

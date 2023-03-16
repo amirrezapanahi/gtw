@@ -3,6 +3,7 @@ import { Priority, TaskType } from "../types/types";
 import { Link } from "react-router-dom";
 import { GTW } from '../LocalStorage'
 import { GlobalState } from "../GTWContext";
+import { Badge, Paper } from "@mantine/core";
 
 interface Props {
   docIndex: number
@@ -13,7 +14,7 @@ interface Props {
 export const TaskListing: React.FC<Props> = ({ docIndex, taskIndex, task }) => {
 
   const { state, setState } = useContext(GlobalState)
-  const { removeTask, snoozeTask, completeTask, getGTW } = GTW();
+  const { getTaskIndex, removeTask, snoozeTask, completeTask, getGTW } = GTW();
 
   const isOverdue = (dueDate: string) => {
     const date = new Date(dueDate).getTime()
@@ -44,41 +45,41 @@ export const TaskListing: React.FC<Props> = ({ docIndex, taskIndex, task }) => {
     <>
       <td style={{ textAlign: "left" }}>
         <Link to={`/docs/${docIndex}/task/${taskIndex}`} state={{ docIndex: docIndex, task: task }}>
-          <span className={'task-cell'}>{task.description}</span>
+            <Badge color="gray.0" variant='outline' style={{maxWidth: '100%'}} title={task.description}>{task.description}</Badge>
         </Link></td>
-      <td style={isOverdue(state[docIndex]._inbox[taskIndex].dueDate) ? { color: "red", fontWeight: 'bold' } : {}}>
+      <td style={isOverdue(state[docIndex]._inbox[taskIndex].dueDate) ? { color: "#ff6b6b" } : {}}>
         {state[docIndex]._inbox[taskIndex].dueDate}
       </td>
       <td>{priority}</td>
       {state[docIndex]._inbox[taskIndex].dependentOn ?
         <td>
-          <Link to={`/docs/${docIndex}/task/${task.dependentOn.taskID}`} state={{ docIndex: docIndex, task: task.dependentOn }}>
-            <span className={'task-cell'}>{state[docIndex]._inbox[taskIndex].dependentOn.description}</span>
-          </Link></td>
+        <Link to={`/docs/${docIndex}/task/${getTaskIndex(docIndex,task.dependentOn.taskID)}`} state={{ docIndex: docIndex, task: task.dependentOn }}>
+            <Badge color="gray.0" variant='outline' style={{maxWidth: '100%'}} title={task.dependentOn.description}>{task.dependentOn.description}</Badge>
+        </Link></td>
         : <td></td>
       }
       <td style={{ justifyContent: 'center' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', maxWidth: '100%' }}>
-          <button onClick={() => {
+        <div className="operations">
+          <button title='Snooze (7 Days)' onClick={() => {
             snoozeTask(docIndex, task.taskID)
             setState(getGTW())
           }}><i className="fa-solid fa-bed"></i></button>
-          <button>
+          <button title='Edit'>
             <Link to={`/docs/${docIndex}/task/${taskIndex}`} state={{ docIndex: docIndex, task: task }}>
               <i className="fa-solid fa-pen"></i>
             </Link>
           </button>
-          <button onClick={() => {
+          <button title='Delete' onClick={() => {
             const doc = getGTW()[docIndex];
-            for (let i = 0; i<doc._inbox.length; i++){
-              if (doc._inbox[i].dependentOn && (doc._inbox[i].dependentOn.taskID == task.taskID)){
-              removeTask(docIndex, doc._inbox[i].taskID)
+            for (let i = 0; i < doc._inbox.length; i++) {
+              if (doc._inbox[i].dependentOn && (doc._inbox[i].dependentOn.taskID == task.taskID)) {
+                removeTask(docIndex, doc._inbox[i].taskID)
               }
             }
             removeTask(docIndex, task.taskID)
             setState(getGTW())
           }}><i className="fa-solid fa-trash"></i></button>
-          <button onClick={() => {
+          <button title='Complete' onClick={() => {
             completeTask(docIndex, task.taskID)
             setState(getGTW())
           }}><i className="fa-solid fa-check"></i></button>

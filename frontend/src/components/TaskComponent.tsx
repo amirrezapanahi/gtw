@@ -10,11 +10,11 @@ import { Priority } from '../types/types'
 import { GTW } from '../LocalStorage'
 import { ReferenceMaterial } from './ReferenceMaterial'
 import { Assistant } from './Assistant'
-import { Blockquote, Paper } from '@mantine/core';
+import { Badge, Blockquote, Button, Paper } from '@mantine/core';
 import { IconArrowNarrowLeft } from '@tabler/icons-react';
 
 export const TaskComponent: React.FC = () => {
-  const { getGTW, updateTask, getTaskIndex, removeTask, completeTask } = GTW();
+  const { getGTW, updateTask, getTaskIndex, removeTask, completeTask, incompleteTask } = GTW();
   const { state, setState } = useContext(GlobalState);
 
   const taskState = useLocation().state;
@@ -26,6 +26,7 @@ export const TaskComponent: React.FC = () => {
   const [priority, setPriority] = useState<number>(task.priority)
   const [description, setDesc] = useState<string>(task.description)
   const [dependentOn, setDependentOn] = useState<TaskType>(task.dependentOn)
+  const [completed, setCompleted] = useState<boolean>(task.status == Status.Done ? true : false)
 
   const [seconds, setSeconds] = useState(120)
   const [beginCountdown, setBeginCountdown] = useState(false)
@@ -41,6 +42,57 @@ export const TaskComponent: React.FC = () => {
 
     return () => clearInterval(interval)
   }, [beginCountdown, seconds])
+
+  useEffect(()=>{
+    if(completed) {
+      completeTask(task.projectID, task.taskID)
+      setState(getGTW())
+    }else{
+      incompleteTask(task.projectID, task.taskID)
+      setState(getGTW())
+    }
+  }, [completed])
+
+  const handleTimer = () => {
+    setBeginCountdown(!beginCountdown)
+  }
+
+  const handleComplete = () => {
+    setCompleted(!completed)
+  }
+
+  const handleDueDate = () => {
+    updateTask(task.projectID, task.taskID, {
+      taskID: task.taskID,
+      projectID: task.projectID,
+      description,
+      dueDate: dueDate,
+      priority,
+      dependentOn,
+      referenceMaterial: task.referenceMaterial,
+      status: task.status
+    })
+    setState(getGTW())
+  }
+
+  const handlePriority = () => {
+    updateTask(task.projectID, task.taskID, {
+      taskID: task.taskID,
+      projectID: task.projectID,
+      description,
+      dueDate,
+      priority: priority,
+      dependentOn,
+      referenceMaterial: task.referenceMaterial,
+      status: task.status
+    })
+    setState(getGTW())
+  }
+
+  const handleDelete = () => {
+    removeTask(task.projectID, task.taskID)
+    setState(getGTW())
+  }
 
   const formatDuration = (durationInSeconds) =>
     `${Math.floor(durationInSeconds / 60)}:${(durationInSeconds % 60)
@@ -59,7 +111,7 @@ export const TaskComponent: React.FC = () => {
             <Link to={`/docs/${task.projectID}/inbox`}><span>Inbox ({state[task.projectID]._inbox.filter((x: TaskType) => x.status != Status.Done).length})</span></Link>
           </div>
         </div>
-        <Block docIndex={task.projectID} blockName={"Task / Idea"} style={{}}>
+        <Block docIndex={task.projectID} blockName={""} style={{}}>
           <div className={"taskInfo"}>
             <div className={"taskInfoContainer"}>
               <Paper withBorder>
@@ -67,66 +119,65 @@ export const TaskComponent: React.FC = () => {
                   {task.description}
                 </Blockquote>
               </Paper>
-              <div>
+              <div className='taskInfoUpdate'>
                 <span>Due Date</span>
                 <input type="date" value={dueDate} min={new Date().toISOString().substring(0, 10)} onChange={(event) => setDueDate(event.target.value)}></input>
-                <button type="submit" onClick={() => {
-                  updateTask(task.projectID, task.taskID, {
-                    taskID: task.taskID,
-                    projectID: task.projectID,
-                    description,
-                    dueDate: dueDate,
-                    priority,
-                    dependentOn,
-                    referenceMaterial: task.referenceMaterial,
-                    status: task.status
-                  })
-                  setState(getGTW())
-                }}>Update Due Date</button>
+                <Button color="dark" onClick={handleDueDate} >
+                  Update Due Date
+                </Button>
               </div>
-              <div>
+              <div className='taskInfoUpdate'>
                 <span>Priority</span>
                 <select onChange={(event) => setPriority(parseInt(event.target.value, 10))} required>
                   <option value={Priority.High} selected={task.priority == Priority.High}>High</option>
                   <option value={Priority.Mid} selected={task.priority == Priority.Mid}>Mid</option>
                   <option value={Priority.Low} selected={task.priority == Priority.Low}> Low</option>
                 </select>
-                <button type="submit" onClick={() => {
-                  updateTask(task.projectID, task.taskID, {
-                    taskID: task.taskID,
-                    projectID: task.projectID,
-                    description,
-                    dueDate,
-                    priority: priority,
-                    dependentOn,
-                    referenceMaterial: task.referenceMaterial,
-                    status: task.status
-                  })
-                  setState(getGTW())
-                }}>Update Priority</button>
+                <Button color="dark" onClick={handlePriority} >
+                  Update Priority
+                </Button>
               </div>
               <div className={"taskOperations"}>
-                <Link to={`/docs/${task.projectID}`} className={'button'}><button onClick={() => {
-                  removeTask(task.projectID, task.taskID)
-                  setState(getGTW())
-                }} title="Delete"><i className="fa-solid fa-trash" style={{ height: '50%' }}></i></button></Link>
-                <button onClick={() => {
-                  completeTask(task.projectID, task.taskID)
-                  setState(getGTW())
-                }} title="Complete"><i className="fa-solid fa-check" style={{ height: "50%" }}></i></button>
+              <Link to={`/docs/${task.projectID}/dashboard`} style={{width: '100%'}}>
+                <Badge color="red" variant="outline" fullWidth onClick={handleDelete} className='taskDelComplete'>
+                  Delete
+                </Badge>
+              </Link>
+              {
+                completed ?
+                <Badge color="green" variant="outline" fullWidth onClick={handleComplete} className='taskDelComplete'>
+                Completed
+              </Badge>
+              :
+              <Badge color="orange" variant="outline" fullWidth onClick={handleComplete} className='taskDelComplete'>
+              Complete
+             </Badge>
+              }
               </div>
             </div>
             <div className={"timer"}>
-              <div>
+              <div className='clock'>
+                <Badge size='xl'>
                 <span className="time-minutes">{formattedDuration.split(':')[0]}</span>
                 <span className="divider">:</span>
                 <span className="time-seconds">{formattedDuration.split(':')[1]}</span>
+                </Badge>
               </div>
               {
                 beginCountdown ?
-                  <button onClick={() => setBeginCountdown(false)}>Pause Timer</button>
+                      <Button color="dark" disabled style={{
+                        width: '50%',
+                        margin: '0 auto',
+                      }}>
+                      Keep going!
+                    </Button>
                   :
-                  <button onClick={() => setBeginCountdown(true)}>Start Timer</button>
+                  <Button color="dark" onClick={handleTimer} style={{
+                    width: '50%',
+                    margin: '0 auto',
+                  }}>
+                  Start Timer
+                </Button>
               }
             </div>
           </div>

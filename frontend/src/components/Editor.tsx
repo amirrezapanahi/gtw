@@ -11,7 +11,7 @@ export const DocEditor: React.FC<Props> = ({content, docIndex}) => {
   const[newContent, setNewContent] = useState("")
 
   return (
-    <div style={{"backgroundColor": "white", "height": "100vh"}}>
+    <div style={{"backgroundColor": "white", "height": "95vh"}}>
         <Editor docIndex={docIndex}/>
     </div>
   )

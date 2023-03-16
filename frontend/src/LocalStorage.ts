@@ -86,6 +86,20 @@ export const GTW = () => {
     })
   }
 
+  function incompleteTask(docIndex: number, taskID: number){
+    let task: TaskType = getTask(getTaskIndex(docIndex,taskID), docIndex)
+    updateTask(docIndex, taskID, {
+      taskID: task.taskID,
+      projectID: task.projectID,
+      description: task.description,
+      dueDate: task.dueDate,
+      priority: task.priority,
+      dependentOn: task.dependentOn,
+      referenceMaterial: task.referenceMaterial,
+      status: Status.Todo 
+    })
+  }
+
   function snoozeTask(docIndex: number, taskID: number){
     let docs: Document[] = getGTW();
     const taskIndex = getTaskIndex(docIndex, taskID)
@@ -120,21 +134,30 @@ export const GTW = () => {
     setGTW(docs)
   }
 
-  function localStorageSize(){
+  /**
+   * return storage used up in KB
+   * @returns 
+   */
+  function localStorageSize(): number{
     var _lsTotal = 0,
     _xLen, _x;
-for (_x in localStorage) {
-    if (!localStorage.hasOwnProperty(_x)) {
-        continue;
-    }
-    _xLen = ((localStorage[_x].length + _x.length) * 2);
-    _lsTotal += _xLen;
-    console.log(_x.substr(0, 50) + " = " + (_xLen / 1024).toFixed(2) + " KB")
-};
-console.log("Total = " + (_lsTotal / 1024).toFixed(2) + " KB");
+    for (_x in localStorage) {
+        if (!localStorage.hasOwnProperty(_x)) {
+            continue;
+        }
+        _xLen = ((localStorage[_x].length + _x.length) * 2);
+        _lsTotal += _xLen;
+        console.log(_x.substr(0, 50) + " = " + (_xLen / 1024).toFixed(2) + " KB")
+    };
+    console.log("Total = " + (_lsTotal / 1024).toFixed(2) + " KB");
+    return (_lsTotal / 1024)
+  }
+
+  function localStorageSizePercentage(){
+    return (localStorageSize()/5120) * 100
   }
 
   return { getGTW, setGTW, addDoc, removeDoc, getTask, addTask, removeTask, updateTask, getDoc, backupDoc,
-          snoozeTask, completeTask, getTaskIndex, localStorageSize}
+          snoozeTask, completeTask, getTaskIndex, localStorageSize, incompleteTask, localStorageSizePercentage}
 }
 

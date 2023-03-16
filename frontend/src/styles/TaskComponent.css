@@ -1,33 +1,46 @@
-h1{
+h1 {
   color: inherit;
 }
 
-.taskInfo{
+.taskInfo {
   display: grid;
   grid-template-columns: 60% 40%;
 }
 
-.taskInfoContainer{
+.taskInfoContainer {
   display: grid;
-  grid-template-rows: 1fr 1fr 1fr 1fr;
+  gap: 1em;
 }
 
-.taskInfoContainer div:not(:last-child) {
+.taskInfoUpdate {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
+  gap: 1em;
 }
 
-.taskInfoContainer div:last-child{
+/* .taskInfoContainer div:last-child {
   display: grid;
   grid-template-columns: 1fr 1fr;
-}
+} */
 
-.timer{
+.timer {
   display: grid;
   grid-template-rows: 1fr 1fr;
 }
 
-.taskOperations{
+.clock{
+  display: flex;
+justify-content: center;
+align-items: center;
+}
+
+.taskOperations {
   display: flex;
   width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.taskDelComplete:hover{
+  cursor: pointer;
 }

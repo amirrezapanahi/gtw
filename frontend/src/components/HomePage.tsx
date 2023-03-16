@@ -5,10 +5,11 @@ import { Document } from "../types/types"
 import { GlobalState } from "../GTWContext";
 import { GTW } from "../LocalStorage";
 import { read } from "fs";
+import { Text } from "@mantine/core";
 
 export const HomePage: React.FC = () => {
   const {state, setState} = useContext(GlobalState);
-  const { addDoc, setGTW, getGTW,  } = GTW()
+  const { addDoc, setGTW, getGTW, localStorageSizePercentage } = GTW()
 
   const [addDocBool, setAddDocBool] = useState<boolean>(false);
   const [importDoc, setImportDoc] = useState<boolean>(false);
@@ -72,9 +73,10 @@ export const HomePage: React.FC = () => {
   }
 
   return (
-    <div className="App">
+    <div className="App" style={{width: '100%', display: 'grid'}}>
       <div className="container">
         <h1>Getting Things Written.</h1>
+        <br></br>
         <h3>Write. Journal. Research.</h3>
         {
           state != null ? <DocList docs={state} /> : <></>
@@ -98,7 +100,17 @@ export const HomePage: React.FC = () => {
             </div> :
             <></>
         }
+      <Text fz="sm" ta="center" style={{marginTop: '2em'}}>
+        Consolidate your thoughts and ideas with this powerful writing tool which adopts the 'Getting Things Done' methodology
+        by David Allen. <strong>'Getting Things Written'</strong> provide a productive writing experience. Make context switching across different documents a breeze
+        and never feel flustered again.
+      </Text>      
       </div>
+      <Text fz='xs' c="dimmed" style={{display: 'block', margin: '0 auto', marginTop: '5em'}}>Storage Used: {localStorageSizePercentage().toPrecision(3)} %</Text>
+      <Text fz='xs' c="dimmed" style={{display: 'block', margin: '0 auto', fontSize: '10px', marginTop: '2em'}}>
+        <strong>Privacy notice</strong>: This webpage simply downloads the Getting Things Written application to your browser.
+        Once loaded, everything runs locally in your browser. No data is sent back to the server.
+        </Text>
     </div>
   );
 }

@@ -9,6 +9,7 @@ import { Card } from './kanban/Card'
 import { Paper, Text, Badge } from "@mantine/core";
 import { Link } from "react-router-dom";
 import { GTW } from "../LocalStorage";
+import { overflow } from "html2canvas/dist/types/css/property-descriptors/overflow";
 
 interface Props {
   docIndex: number
@@ -28,14 +29,14 @@ export const Dashboard: React.FC<Props> = ({ docIndex }) => {
 
   return (
     <div className={'dashboard'}>
-      <Block docIndex={docIndex} blockName={"Capture"} style={{}}>
+      <Block docIndex={docIndex} blockName={"Capture"} style={{height: '25vh'}}>
         <CaptureBlock docIndex={docIndex} />
       </Block>
-      <Block docIndex={docIndex} blockName={"Overdue"} style={{}}>
+      <Block docIndex={docIndex} blockName={"Overdue"} style={{height: '20vh'}}>
         <InboxList docIndex={docIndex} tasks={tasks} meetsCondition={isOverdue} showResolved={false} />
       </Block>
-      <Block docIndex={docIndex} blockName={"Due Soon"} style={{}}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', padding: '1em', gap: '1em' }}>
+      <Block docIndex={docIndex} blockName={"Due Soon"} style={{height: '50vh'}}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', padding: '1em', gap: '1em', overflow:'auto'}}>
           <div>
             <Badge color="blue" className='kanbanHeader'>To Do</Badge>
             <Board docIndex={docIndex} id='todoBoard' className='board'>

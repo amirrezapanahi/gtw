@@ -1,6 +1,8 @@
 html,
 body {
   margin: 0px;
+  display: block;
+  overflow: auto;
 }
 
 body {
@@ -15,6 +17,10 @@ body {
 a {
   text-decoration: none;
   color: inherit;
+}
+
+.dashboard, .block {
+  box-sizing: border-box;
 }
 
 
@@ -86,10 +92,11 @@ button:hover {
 .header {
   display: flex;
   justify-content: space-evenly;
+  align-items: center;
   color: white;
   padding: 0.5em 0 0.5em 0;
   box-shadow: 0 10px 40px 0 rgba(255, 255, 255, 0.08), 0 2px 4px 0 rgba(255, 255, 255, 0.12);
-  height: 43px;
+  height: 5vh;
 }
 
 .header>* {
@@ -97,12 +104,12 @@ button:hover {
 }
 
 .block {
-  color: white;
   border-radius: 1em;
   display: flex;
   flex-direction: column;
   padding: 0.8em;
   overflow: hidden;
+  max-height: 100%;
 }
 
 .block h3 {
@@ -125,6 +132,12 @@ button:hover {
   width: 96%;
 }
 
+/* .operations {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  max-width: '100%' 
+} */
+
 .capture-textarea {
   background-color: transparent;
   border: none;
@@ -144,16 +157,13 @@ button:hover {
 }
 
 .dashboard {
+  max-height: 100vh;
   display: grid;
-  grid-template-rows: 22% 22% auto;
-  height: 100vh;
   gap: 1em;
-  width: 98%;
-  margin: 1em auto 0;
 }
 
 .board {
-  height: 100vh
+  height: 96vh
 }
 
 
@@ -176,4 +186,8 @@ button:hover {
 
 .captureButton {
   width: 90%;
+}
+
+.taskListing>* {
+  font-size: 0.9em;
 }
