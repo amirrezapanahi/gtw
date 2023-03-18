@@ -23,9 +23,10 @@ interface Props {
   docIndex: number
   showReview: boolean
   handleResponse: (content: string) => void
+  handleLoading: (value: boolean) => void
 }
 
-export const DocEditor: React.FC<Props> = ({ content, docIndex, showReview, handleResponse }) => {
+export const DocEditor: React.FC<Props> = ({ content, docIndex, showReview, handleResponse, handleLoading }) => {
 
   function spawnDocument(content, options) {
     let opt = {
@@ -45,6 +46,7 @@ export const DocEditor: React.FC<Props> = ({ content, docIndex, showReview, hand
   }
 
   const [newContent, setNewContent] = useState("")
+
   const { setGTW, getGTW, backupDoc } = GTW()
   const { state, setState } = useContext(GlobalState)
   const extensions = [
@@ -65,16 +67,6 @@ export const DocEditor: React.FC<Props> = ({ content, docIndex, showReview, hand
     content,
   });
 
-  // editor.view.dom.addEventListener('mouseup', () => {
-  //   // get the HTML representation of the selected text
-  //   const selectionHTML = editor.view
-  //     .state
-  //     .doc
-  //     .cut(editor.state.selection.from, editor.state.selection.to).toJSON();
-
-  //   console.log(selectionHTML);
-  // });
-
   const handleReview = async () => {
 
     //redirect to task component 
@@ -90,13 +82,17 @@ export const DocEditor: React.FC<Props> = ({ content, docIndex, showReview, hand
 
     const selectionHTML = generateHTML(selectionJSON, extensions)
 
+    handleLoading(true)
+
     const aiRes = await fetch('http://localhost:8080/review', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' }, 
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         html: selectionHTML
       }),
     })
+
+    handleLoading(false)
     const aiResHtml = await aiRes.json()
     handleResponse(aiResHtml.aiResponse)
     console.log(aiResHtml.aiResponse);

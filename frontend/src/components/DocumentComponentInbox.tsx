@@ -29,7 +29,7 @@ export const DocumentComponentInbox: React.FC = () => {
         <div className='header'>
           {doc.doc_name}
         </div>
-        <DocEditor content={doc.content != "" ? JSON.parse(doc.content) : {}} docIndex={parseInt(id!, 10)} showReview={false} handleResponse={null}/>
+        <DocEditor content={doc.content != "" ? JSON.parse(doc.content) : {}} docIndex={parseInt(id!, 10)} showReview={false} handleResponse={null} handleLoading={null}/>
       </div>
     </div>
   )

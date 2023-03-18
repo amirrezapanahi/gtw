@@ -32,6 +32,7 @@ export const TaskComponent: React.FC = () => {
   const [beginCountdown, setBeginCountdown] = useState(false)
 
   const [aiRes, setAIRes] = useState("")
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     let interval = null;
@@ -97,10 +98,13 @@ export const TaskComponent: React.FC = () => {
   }
 
   const handleAIResponse = (content: string) => {
-    console.log("Task Component: " + content)
     setAIRes(content)
   }
 
+  const handleAILoading = (value: boolean) => {
+    setLoading(value)
+  }
+  
   const formatDuration = (durationInSeconds) =>
     `${Math.floor(durationInSeconds / 60)}:${(durationInSeconds % 60)
       .toString()
@@ -195,14 +199,14 @@ export const TaskComponent: React.FC = () => {
         <Block docIndex={task.projectID} blockName={"Assistant"} style={{
           flexGrow: '1'
         }}>
-          <Assistant response={aiRes}/>
+          <Assistant docIndex={task.projectID} response={aiRes} isLoading={loading}/>
         </Block>
       </div>
       <div style={{ "width": "50%", maxHeight: '100vh' }}>
         <div className='header'>
           {doc.doc_name}
         </div>
-        <DocEditor content={doc.content != "" ? JSON.parse(doc.content) : {}} docIndex={task.projectID} showReview={true} handleResponse={handleAIResponse}/>
+        <DocEditor content={doc.content != "" ? JSON.parse(doc.content) : {}} docIndex={task.projectID} showReview={true} handleResponse={handleAIResponse} handleLoading={handleAILoading}/>
       </div>
     </div>
   )

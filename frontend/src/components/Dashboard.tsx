@@ -20,6 +20,12 @@ export const Dashboard: React.FC<Props> = ({ docIndex }) => {
   const { getTaskIndex } = GTW()
   const [tasks] = useState<TaskType[]>(state[docIndex]._inbox)
 
+  const currentDate = new Date();
+  const currentWeek = currentDate.getDay() <= 3 ? currentDate.getDay() + 4 : currentDate.getDay() - 3;
+
+  const isDueThisWeek = (dueDate: Date) => {
+    return dueDate >= currentDate && dueDate <= new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + (7 - currentWeek))
+  }
   const isOverdue = (task: TaskType) => {
     const currentDate = new Date()
     const currentDateMs = currentDate.getTime()
@@ -29,29 +35,30 @@ export const Dashboard: React.FC<Props> = ({ docIndex }) => {
 
   return (
     <div className={'dashboard'}>
-      <Block docIndex={docIndex} blockName={"Capture"} style={{height: '25vh'}}>
+      <Block docIndex={docIndex} blockName={"Capture"} style={{ height: '25vh' }}>
         <CaptureBlock docIndex={docIndex} />
       </Block>
-      <Block docIndex={docIndex} blockName={"Overdue"} style={{height: '20vh'}}>
+      <Block docIndex={docIndex} blockName={"Overdue"} style={{ height: '20vh' }}>
         <InboxList docIndex={docIndex} tasks={tasks} meetsCondition={isOverdue} showResolved={false} />
       </Block>
-      <Block docIndex={docIndex} blockName={"Due Soon"} style={{height: '50vh'}}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', padding: '1em', gap: '1em', overflow:'auto'}}>
+      <Block docIndex={docIndex} blockName={"Due Soon"} style={{ height: '50vh' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', padding: '1em', gap: '1em', overflow: 'auto' }}>
           <div>
             <Badge color="blue" className='kanbanHeader'>To Do</Badge>
             <Board docIndex={docIndex} id='todoBoard' className='board'>
               {
-                state[docIndex]._inbox.filter((task: TaskType) => task.status == Status.Todo).map((task) => {
-                  return (
-                    <Card docIndex={docIndex} id={task.taskID.toString()} className="card">
-                      <Link to={`/docs/${docIndex}/task/${getTaskIndex(docIndex,task.taskID)}`} state={{ docIndex: docIndex, task: task }}>
-                        <Paper shadow="xs" p="md" withBorder>
-                          <Text>{task.description}</Text>
-                        </Paper>
-                      </Link>
-                    </Card>
-                  )
-                })
+                state[docIndex]._inbox.filter((task: TaskType) =>
+                  task.status == Status.Todo && isDueThisWeek(new Date(task.dueDate))).map((task) => {
+                    return (
+                      <Card docIndex={docIndex} id={task.taskID.toString()} className="card">
+                        <Link to={`/docs/${docIndex}/task/${getTaskIndex(docIndex, task.taskID)}`} state={{ docIndex: docIndex, task: task }}>
+                          <Paper shadow="xs" p="md" withBorder>
+                            <Text>{task.description}</Text>
+                          </Paper>
+                        </Link>
+                      </Card>
+                    )
+                  })
               }
             </Board>
           </div>
@@ -59,10 +66,12 @@ export const Dashboard: React.FC<Props> = ({ docIndex }) => {
             <Badge color="orange" className='kanbanHeader'>Doing</Badge>
             <Board docIndex={docIndex} id='doingBoard' className='board'>
               {
-                state[docIndex]._inbox.filter((task: TaskType) => task.status == Status.Doing).map((task) => {
+                state[docIndex]._inbox.filter((task: TaskType) =>
+                  (task.status == Status.Doing) && isDueThisWeek(new Date(task.dueDate))
+                ).map((task) => {
                   return (
                     <Card docIndex={docIndex} id={task.taskID.toString()} className="card">
-                      <Link to={`/docs/${docIndex}/task/${getTaskIndex(docIndex,task.taskID)}`} state={{ docIndex: docIndex, task: task }}>
+                      <Link to={`/docs/${docIndex}/task/${getTaskIndex(docIndex, task.taskID)}`} state={{ docIndex: docIndex, task: task }}>
                         <Paper shadow="xs" p="md" withBorder>
                           <Text>{task.description}</Text>
                         </Paper>
@@ -77,17 +86,18 @@ export const Dashboard: React.FC<Props> = ({ docIndex }) => {
             <Badge color="green" className='kanbanHeader'>Done</Badge>
             <Board docIndex={docIndex} id='doneBoard' className='board'>
               {
-                state[docIndex]._inbox.filter((task: TaskType) => task.status == Status.Done).map((task) => {
-                  return (
-                    <Card docIndex={docIndex} id={task.taskID.toString()} className="card">
-                      <Link to={`/docs/${docIndex}/task/${getTaskIndex(docIndex,task.taskID)}`} state={{ docIndex: docIndex, task: task }}>
-                        <Paper shadow="xs" p="md" withBorder>
-                          <Text>{task.description}</Text>
-                        </Paper>
-                      </Link>
-                    </Card>
-                  )
-                })
+                state[docIndex]._inbox.filter((task: TaskType) =>
+                  task.status == Status.Done && isDueThisWeek(new Date(task.dueDate))).map((task) => {
+                    return (
+                      <Card docIndex={docIndex} id={task.taskID.toString()} className="card">
+                        <Link to={`/docs/${docIndex}/task/${getTaskIndex(docIndex, task.taskID)}`} state={{ docIndex: docIndex, task: task }}>
+                          <Paper shadow="xs" p="md" withBorder>
+                            <Text>{task.description}</Text>
+                          </Paper>
+                        </Link>
+                      </Card>
+                    )
+                  })
               }
             </Board>
           </div>
