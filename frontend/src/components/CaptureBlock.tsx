@@ -79,6 +79,7 @@ export const CaptureBlock: React.FC<Props> = ({ docIndex }) => {
         value={desc}
         onChange={(event: any) => setDesc(event.target.value)}
         className='capture-textarea'
+        style={{width: '95%', 'margin': '0 auto'}}
       />
       {/* <textarea value={desc} onChange={(event) => setDesc(event.target.value)} className={'capture-textarea'} required></textarea> */}
       <div className='captureBlock' style={{ display: 'grid', gridTemplateColumns: '25% 25% 25% 25%' }}>

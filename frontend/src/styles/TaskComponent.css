@@ -5,6 +5,8 @@ h1 {
 .taskInfo {
   display: grid;
   grid-template-columns: 60% 40%;
+  width: 95%;
+  margin: 0 auto;
 }
 
 .taskInfoContainer {
@@ -28,10 +30,10 @@ h1 {
   grid-template-rows: 1fr 1fr;
 }
 
-.clock{
+.clock {
   display: flex;
-justify-content: center;
-align-items: center;
+  justify-content: center;
+  align-items: center;
 }
 
 .taskOperations {
@@ -41,6 +43,6 @@ align-items: center;
   grid-template-columns: 1fr 1fr;
 }
 
-.taskDelComplete:hover{
+.taskDelComplete:hover {
   cursor: pointer;
 }

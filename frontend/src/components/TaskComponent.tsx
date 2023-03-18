@@ -31,6 +31,8 @@ export const TaskComponent: React.FC = () => {
   const [seconds, setSeconds] = useState(120)
   const [beginCountdown, setBeginCountdown] = useState(false)
 
+  const [aiRes, setAIRes] = useState("")
+
   useEffect(() => {
     let interval = null;
 
@@ -94,6 +96,11 @@ export const TaskComponent: React.FC = () => {
     setState(getGTW())
   }
 
+  const handleAIResponse = (content: string) => {
+    console.log("Task Component: " + content)
+    setAIRes(content)
+  }
+
   const formatDuration = (durationInSeconds) =>
     `${Math.floor(durationInSeconds / 60)}:${(durationInSeconds % 60)
       .toString()
@@ -102,8 +109,8 @@ export const TaskComponent: React.FC = () => {
   const formattedDuration = formatDuration(seconds);
 
   return (
-    <div style={{ "display": "flex" }}>
-      <div style={{ "width": "50%" }}>
+    <div style={{ "display": "flex", overflow: 'hidden' }}>
+      <div style={{ "width": "50%", maxHeight: '100vh' }}>
         <div className='header'>
           <Link to={`/`} style={{ justifyContent: 'left' }}><IconArrowNarrowLeft /></Link>
           <div style={{ display: 'flex', gap: '2em' }}>
@@ -185,15 +192,17 @@ export const TaskComponent: React.FC = () => {
         <Block docIndex={task.projectID} blockName={"Reference Material"} style={{}}>
           <ReferenceMaterial docID={task.projectID} taskID={task.taskID} />
         </Block>
-        <Block docIndex={task.projectID} blockName={"Assistant"} style={{}}>
-          <Assistant />
+        <Block docIndex={task.projectID} blockName={"Assistant"} style={{
+          flexGrow: '1'
+        }}>
+          <Assistant response={aiRes}/>
         </Block>
       </div>
-      <div style={{ "width": "50%" }}>
+      <div style={{ "width": "50%", maxHeight: '100vh' }}>
         <div className='header'>
           {doc.doc_name}
         </div>
-        <DocEditor content={doc.content} docIndex={task.projectID} />
+        <DocEditor content={doc.content != "" ? JSON.parse(doc.content) : {}} docIndex={task.projectID} showReview={true} handleResponse={handleAIResponse}/>
       </div>
     </div>
   )

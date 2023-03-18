@@ -33,7 +33,7 @@ export const DocumentComponent: React.FC = () => {
         <div className='header'>
           {doc.doc_name}
         </div>
-        <DocEditor content={doc.content} docIndex={parseInt(id!, 10)} />
+        <DocEditor content={doc.content != "" ? JSON.parse(doc.content) : {}} docIndex={parseInt(id!, 10)} showReview={false} handleResponse={null}/>
       </div>
     </div>
   )

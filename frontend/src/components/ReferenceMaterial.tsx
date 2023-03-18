@@ -52,7 +52,10 @@ export const ReferenceMaterial: React.FC<Props> = ({ docID, taskID }) => {
   }
 
   return (
-    <>
+    <div style={{
+    width: '95%',
+    margin: '0 auto'
+  }}>
       <Tabs variant="outline" defaultValue="gallery">
         <Tabs.List>
           <Tabs.Tab value="notes" icon={<IconNotes size="0.8rem" />}>Notes</Tabs.Tab>
@@ -77,6 +80,6 @@ export const ReferenceMaterial: React.FC<Props> = ({ docID, taskID }) => {
           <Medias docID={docID} taskID={taskID} />
         </Tabs.Panel>
       </Tabs>
-    </>
+    </div>
   )
 }
