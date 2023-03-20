@@ -55,7 +55,7 @@ func structurePrompt(topic string) string {
 		headers are represented by a <h1> HTML tag and secondary headers are 
 		represented by <h4> HTML tags. all <h4> tags are underlined with <u> tag. At the end 
 		write a message saying 'Generated Document Structure' but use this delimiter '@' to seperate the contents from 
-		the document structure
+		the document structure. Do not forget to seperate the html output with 'Generated Document Structure' with the delimiter (@)
 	`, topic)
 
 	return emptyStructureTemplate
@@ -63,7 +63,7 @@ func structurePrompt(topic string) string {
 
 func main() {
 	oaClient := openai.NewClient("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")
-	ctx := context.Background()
+	var ctx = context.Background()
 
 	r := gin.Default()
 
@@ -104,18 +104,18 @@ func main() {
 		prompt := requestData.Prompt
 		println(prompt)
 
-		req := openai.CompletionRequest{
-			Model:            openai.GPT3TextDavinci003,
-			MaxTokens:        250,
-			Temperature:      1,
-			TopP:             1,
-			FrequencyPenalty: 0,
-			PresencePenalty:  0,
-			BestOf:           1,
-			Prompt:           string(prompt),
-		}
-
-		resp, err := oaClient.CreateCompletion(ctx, req)
+		resp, err := oaClient.CreateChatCompletion(
+			context.Background(),
+			openai.ChatCompletionRequest{
+				Model: openai.GPT3Dot5Turbo,
+				Messages: []openai.ChatCompletionMessage{
+					{
+						Role:    openai.ChatMessageRoleUser,
+						Content: prompt,
+					},
+				},
+			},
+		)
 
 		if err != nil {
 			fmt.Printf("Completion error: %v\n", err)
@@ -123,7 +123,7 @@ func main() {
 		}
 
 		c.JSON(http.StatusOK, gin.H{
-			"aiResponse": resp.Choices[0].Text,
+			"aiResponse": resp.Choices[0].Message.Content,
 		})
 	})
 
