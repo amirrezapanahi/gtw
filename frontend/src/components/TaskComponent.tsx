@@ -74,7 +74,9 @@ export const TaskComponent: React.FC = () => {
       priority,
       dependentOn,
       referenceMaterial: task.referenceMaterial,
-      status: task.status
+      status: task.status,
+      referenceStart: task.referenceStart,
+      referenceEnd: task.referenceEnd,
     })
     setState(getGTW())
   }
@@ -88,7 +90,9 @@ export const TaskComponent: React.FC = () => {
       priority: priority,
       dependentOn,
       referenceMaterial: task.referenceMaterial,
-      status: task.status
+      status: task.status,
+      referenceStart: task.referenceStart,
+      referenceEnd: task.referenceEnd,
     })
     setState(getGTW())
   }
@@ -224,6 +228,7 @@ export const TaskComponent: React.FC = () => {
           handleResponse={handleAIResponse}
           handleLoading={handleAILoading}
           isEditorEmpty={handleEditorEmpty}
+          position={{start: task.referenceStart, end: task.referenceEnd}}
         />
       </div>
     </div>

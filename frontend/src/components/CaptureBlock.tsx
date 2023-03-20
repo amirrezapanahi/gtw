@@ -12,9 +12,11 @@ import { DatePickerInput } from '@mantine/dates';
 
 interface Props {
   docIndex: number;
+  refStart: number | null;
+  refEnd: number | null;
 }
 
-export const CaptureBlock: React.FC<Props> = ({ docIndex }) => {
+export const CaptureBlock: React.FC<Props> = ({ docIndex, refStart, refEnd }) => {
   const { state, setState } = useContext(GlobalState)
   const { getGTW, addTask, getTask, getDoc, getTaskIndex } = GTW();
 
@@ -49,7 +51,9 @@ export const CaptureBlock: React.FC<Props> = ({ docIndex }) => {
       },
       priority: priority,
       dueDate: new Date(dueDate).toISOString().slice(0, 10),
-      status: Status.Todo
+      status: Status.Todo,
+      referenceStart: refStart,
+      referenceEnd: refEnd
     }
     let prev = [...currentInbox];
 

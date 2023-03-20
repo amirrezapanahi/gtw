@@ -7,6 +7,8 @@ export type TaskType = {
     dependentOn: TaskType
     referenceMaterial: ReferenceMaterialInterface  
     status: Status
+    referenceStart: number | null
+    referenceEnd: number | null
 }
 
 export enum Status{
@@ -38,7 +40,8 @@ export type Content = {
     all: string;
     extract: string;
     start: number;
-    end: number    
+    end: number;
+    numChars: number;
 }
 
 export class Document {
@@ -63,7 +66,8 @@ export class Document {
             all: "",
             extract: "",
             start: 0,
-            end: 0
+            end: 0,
+            numChars: 0
         }
         this._inbox = []
         this.daysUntilReview = this.reviewDue()

@@ -47,7 +47,7 @@ export const Dashboard: React.FC<Props> = ({ docIndex }) => {
   return (
     <div className={'dashboard'}>
       <Block docIndex={index} blockName={"Capture"} style={{ height: '25vh' }}>
-        <CaptureBlock docIndex={index} />
+        <CaptureBlock docIndex={index} refStart={null} refEnd={null}/>
       </Block>
       <Block docIndex={index} blockName={"Overdue"} style={{ height: '20vh' }}>
         <InboxList docIndex={index} tasks={tasks} meetsCondition={isOverdue} showResolved={false} />

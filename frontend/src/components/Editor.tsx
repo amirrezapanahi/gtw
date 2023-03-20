@@ -1,22 +1,22 @@
 import React, { useEffect, useState, useCallback, useMemo, Ref, PropsWithChildren, useContext } from 'react'
-import Editor from './editor/Editor';
 import { RichTextEditor, Link, useRichTextEditorContext } from '@mantine/tiptap';
 import { BubbleMenu, useEditor } from '@tiptap/react';
 import Highlight from '@tiptap/extension-highlight';
+import Image from '@tiptap/extension-image'
 import StarterKit from '@tiptap/starter-kit';
 import Underline from '@tiptap/extension-underline';
 import TextAlign from '@tiptap/extension-text-align';
 import Superscript from '@tiptap/extension-superscript';
-import { Text } from '@mantine/core'
+import { Modal, Text } from '@mantine/core'
 import SubScript from '@tiptap/extension-subscript';
-import FontFamily from '@tiptap/extension-font-family'
-import TextStyle from '@tiptap/extension-text-style'
+import CharacterCount from '@tiptap/extension-character-count'
 import { IconDeviceFloppy, IconFileExport, IconTrash } from '@tabler/icons-react';
 import { GlobalState } from '../GTWContext';
 import { GTW } from '../LocalStorage';
 import { generateHTML, generateJSON } from '@tiptap/html'
-import { ItalicControl } from '@mantine/tiptap/lib/controls';
 import './editor.css'
+import { useDisclosure } from '@mantine/hooks';
+import { CaptureBlock } from './CaptureBlock';
 
 interface Props {
   docIndex: number
@@ -24,9 +24,15 @@ interface Props {
   handleResponse: (content: string) => void
   handleLoading: (value: boolean) => void
   isEditorEmpty: (value: boolean) => void
+  position: RefLines
 }
 
-export const DocEditor: React.FC<Props> = ({ docIndex, showReview, handleResponse, handleLoading, isEditorEmpty }) => {
+type RefLines = {
+  start: number | null;
+  end: number | null
+}
+
+export const DocEditor: React.FC<Props> = ({ docIndex, showReview, handleResponse, handleLoading, isEditorEmpty, position }) => {
 
   function spawnDocument(content, options) {
     let opt = {
@@ -45,10 +51,15 @@ export const DocEditor: React.FC<Props> = ({ docIndex, showReview, handleRespons
     }
   }
 
-  const [newContent, setNewContent] = useState("")
-
   const { setGTW, getGTW, backupDoc } = GTW()
   const { state, setState } = useContext(GlobalState)
+
+  const [newContent, setNewContent] = useState("")
+  const [refLines, setRefLines] = useState<RefLines>({} as RefLines)
+  const [diff, setDiff] = useState(0)
+  const [prevNumChars, setPrevNumChars] = useState(state[docIndex].content.numChars)
+  const [opened, { open, close }] = useDisclosure(false);
+
   const extensions = [
     StarterKit,
     Underline,
@@ -56,10 +67,19 @@ export const DocEditor: React.FC<Props> = ({ docIndex, showReview, handleRespons
     Superscript,
     SubScript,
     Highlight,
+    Image,
+    CharacterCount,
     TextAlign.configure({ types: ['heading', 'paragraph'] }),
   ]
 
   const editor = useEditor({
+    onUpdate({ editor }) {
+      const numChars = editor.storage.characterCount.characters()
+      console.log("numChars: " + numChars + ", prev: " + getGTW()[docIndex].content.numChars)
+      const diff = numChars - getGTW()[docIndex].content.numChars
+      console.log(diff)
+      setDiff(diff)
+    },
     extensions: extensions,
     content: state[docIndex].content.all == "" ? {} : JSON.parse(state[docIndex].content.all),
   });
@@ -67,6 +87,9 @@ export const DocEditor: React.FC<Props> = ({ docIndex, showReview, handleRespons
   useEffect(() => {
     if (editor) {
       isEditorEmpty(editor.isEmpty)
+      state[docIndex].content.all = JSON.stringify(editor.getJSON())
+      setGTW(state)
+      setState(getGTW())
     }
   }, [editor])
 
@@ -75,6 +98,22 @@ export const DocEditor: React.FC<Props> = ({ docIndex, showReview, handleRespons
       editor.commands.setContent(state[docIndex].content.all == "" ? {} : JSON.parse(state[docIndex].content.all))
     }
   }, [state])
+
+  useEffect(() => {
+    if (editor && position) {
+      editor.chain().focus().setTextSelection({
+        from: position.start,
+        to: position.end
+      }).run()
+    }
+  }, [editor, position])
+
+  useEffect(() => {
+    state[docIndex].content.numChars = prevNumChars
+    console.log("prev: " + state[docIndex].content.numChars)
+    setGTW(state)
+    setState(getGTW())
+  }, [prevNumChars])
 
   const handleReview = async () => {
 
@@ -140,9 +179,21 @@ export const DocEditor: React.FC<Props> = ({ docIndex, showReview, handleRespons
     handleResponse(output)
   }
 
+  const handleCapture = () => {
+    setRefLines({ start: editor.state.selection.from, end: editor.state.selection.to })
+    open()
+  }
+
+  // useEffect(()=>{
+  //   open()
+  // },[refLines])
+
   return (
     <div>
       {/* <Editor docIndex={docIndex} /> */}
+      <Modal opened={opened} onClose={close} title="Capture" centered>
+        <CaptureBlock docIndex={docIndex} refStart={refLines.start} refEnd={refLines.end} />
+      </Modal>
       <RichTextEditor editor={editor} className='rte'>
         <RichTextEditor.Toolbar >
           <RichTextEditor.ControlsGroup>
@@ -185,15 +236,34 @@ export const DocEditor: React.FC<Props> = ({ docIndex, showReview, handleRespons
 
           <RichTextEditor.ControlsGroup>
             <RichTextEditor.Control
+              title="Image"
+              onClick={
+                () => {
+                  const url = window.prompt('URL')
+                  if (url) {
+                    editor.chain().focus().setImage({ src: url }).run()
+                  }
+                }
+              }
+            >
+            </RichTextEditor.Control>
+          </RichTextEditor.ControlsGroup>
+
+          <RichTextEditor.ControlsGroup>
+            <RichTextEditor.Control
               title="Save"
               onClick={
                 () => {
                   const json = editor.getJSON()
                   state[docIndex].content.all = JSON.stringify(json)
-                  console.log(state[docIndex])
-                  setGTW(state)
-                  setState(getGTW())
 
+                  for (let i = 0; i < state[docIndex]._inbox.length; i++) {
+                    state[docIndex]._inbox[i].referenceStart += diff
+                    state[docIndex]._inbox[i].referenceEnd += diff
+                    console.log(state[docIndex]._inbox[i].referenceStart + " -> " + state[docIndex]._inbox[i].referenceEnd)
+                  }
+
+                  setPrevNumChars(editor.storage.characterCount.characters())
                 }
               }
             >
@@ -223,13 +293,23 @@ export const DocEditor: React.FC<Props> = ({ docIndex, showReview, handleRespons
               <i className="fa-solid fa-box" style={{}}></i>
             </RichTextEditor.Control>
           </RichTextEditor.ControlsGroup>
-          {editor && showReview && (
+          {editor && (
             <BubbleMenu editor={editor}>
               <RichTextEditor.ControlsGroup>
+                {
+                  showReview && (
+                    <RichTextEditor.Control
+                      onClick={handleReview}
+                    >
+                      <Text fw={700}>Review</Text>
+                    </RichTextEditor.Control>
+
+                  )
+                }
                 <RichTextEditor.Control
-                  onClick={handleReview}
+                  onClick={handleCapture}
                 >
-                  <Text fw={700}>Review</Text>
+                  <Text fw={700}>Capture</Text>
                 </RichTextEditor.Control>
               </RichTextEditor.ControlsGroup>
             </BubbleMenu>

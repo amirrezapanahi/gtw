@@ -31,7 +31,7 @@ export const DocumentComponentInbox: React.FC = () => {
         <div className='header'>
           {doc.doc_name}
         </div>
-        <DocEditor docIndex={getDocIndex(parseInt(id!, 10))} showReview={false} handleResponse={null} handleLoading={null} isEditorEmpty={()=>{}}/>
+        <DocEditor docIndex={getDocIndex(parseInt(id!, 10))} showReview={false} handleResponse={null} handleLoading={null} isEditorEmpty={()=>{}} position={null}/>
       </div>
     </div>
   )

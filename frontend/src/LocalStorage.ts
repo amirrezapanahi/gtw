@@ -86,7 +86,9 @@ export const GTW = () => {
       priority: task.priority,
       dependentOn: task.dependentOn,
       referenceMaterial: task.referenceMaterial,
-      status: Status.Done 
+      status: Status.Done, 
+      referenceStart: task.referenceStart,
+      referenceEnd: task.referenceEnd,
     })
   }
 
@@ -100,7 +102,9 @@ export const GTW = () => {
       priority: task.priority,
       dependentOn: task.dependentOn,
       referenceMaterial: task.referenceMaterial,
-      status: Status.Todo 
+      status: Status.Todo, 
+      referenceStart: task.referenceStart,
+      referenceEnd: task.referenceEnd,
     })
   }
 
