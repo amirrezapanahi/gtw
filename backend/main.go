@@ -19,12 +19,13 @@ const (
 		treat this html document as a piece of writing. 
 		Imagine you are a collaborative reviewer, I want you to provide constructive 
 		criticism regarding the content of this document through bullet points. Once 
-		finished, output the bullet points as well as the same html i gave you. Make sure
-		that you don't add or remove any content from the html. Given this html output I want you to highlight
-	 	html elements (with the html <mark> tag) that reference any of the bullet 
-		points you wrote about. Output your reponse in the following format: 
+		finished, output the bullet points as well as the same html i gave you. Making sure
+		that you don't add or remove any content from the html. With the html output I want 
+		you to highlight the input html elements (with the html <mark> tag) that are related to the respective 
+		bullet points you wrote about but dont insert bullet point content within the html. 		
+		Finally, Output your reponse in the following format: 
 		
-		<BULLET_POINTS> '@' <HTML>
+		<BULLET_POINTS> '@' <OUTPUT_HTML>
 	
 		Here is the HTML: 
 		`

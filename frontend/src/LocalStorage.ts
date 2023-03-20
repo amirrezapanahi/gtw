@@ -138,6 +138,14 @@ export const GTW = () => {
     setGTW(docs)
   }
 
+  
+  // function updateReviewDueDates(): void {
+  //   for ()
+  //       this.last_reviewed = new Date().toISOString().slice(0, 10);
+  //       this.next_reviewed = new Date(new Date().setDate(new Date().getDate() + this.review_freq)).toISOString().slice(0,10)
+  //       this.reviewDue()
+  //   }
+
   /**
    * return storage used up in KB
    * @returns 

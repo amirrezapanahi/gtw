@@ -110,7 +110,9 @@ export const DocEditor: React.FC<Props> = ({ docIndex, showReview, handleRespons
 
 
     const splitData = aiResHtml.aiResponse.split('@')
+    console.log(splitData)
     const html = splitData[1]
+    const output = splitData[0]
 
     const highlightedExtractJSON = generateJSON(html, extensions)
 
@@ -119,15 +121,23 @@ export const DocEditor: React.FC<Props> = ({ docIndex, showReview, handleRespons
     docs.content.end = end
     setGTW(state)
 
-    editor.commands.insertContentAt({ from: start, to: end }, highlightedExtractJSON, {
+    console.log("Editor.tsx (Extract JSON): ")
+    console.log(highlightedExtractJSON)
+
+    // const hasInserted = editor.commands.insertContentAt({ from: start, to: end }, highlightedExtractJSON, {
+    //   updateSelection: true,
+    // })
+
+    const hasInserted = editor.commands.insertContentAt({ from: start, to: end }, html, {
       updateSelection: true,
-      parseOptions: {
-        preserveWhitespace: 'full',
-      }
     })
 
-    handleResponse(aiResHtml.aiResponse)
-    console.log(aiResHtml.aiResponse);
+    state[docIndex].content.all = JSON.stringify(editor.getJSON())
+    setGTW(state)
+
+    if (hasInserted) console.log("Highlighted the data")
+
+    handleResponse(output)
   }
 
   return (

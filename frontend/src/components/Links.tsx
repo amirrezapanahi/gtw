@@ -74,7 +74,7 @@ export const Links: React.FC<Props> = ({ docID, taskID }) => {
           {
             linksList != null ?
               linksList.map((link: Link) => {
-                return <span>● {link.title}: <a href={link.src} style={{textDecoration: 'underline'}}>{link.src}</a></span>
+                return <span>● {link.title}: <a href={link.src} target="_blank" style={{textDecoration: 'underline'}}>{link.src}</a></span>
               })
               : <></>
           }

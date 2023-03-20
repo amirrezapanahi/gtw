@@ -30,10 +30,15 @@ export const Assistant: React.FC<Props> = ({ docIndex, response, isLoading, edit
   const [aiRes, setAIRes] = useState(response)
   const [loading, setLoading] = useState(isLoading)
 
+  useEffect(()=>{
+    setPromptData("")
+  },[aiOption])
+
   useEffect(() => {
     if (isLoading) { //review tool
       const splitData = response.split('@')
       let output = splitData[0]      
+      console.log("Assistant.tsx: " + output)
       setAIRes(output)
     } else {
       console.log("Assistant: " + response)
@@ -127,7 +132,7 @@ export const Assistant: React.FC<Props> = ({ docIndex, response, isLoading, edit
       </Input>
       <Textarea disabled={aiOption == 3}
         placeholder={
-          aiOption == 1 ? "Write custom prompt here" : (aiOption == 2 ? "Topic" : "To review a piece of text. Highlight the piece of text in the editor and click the 'Review' button")
+          aiOption == 1 ? "Write custom prompt here" : (aiOption == 2 ? "Topic" : "To review a piece of text. Highlight the piece of text in the editor and click the 'Review' button \n (Be wary that larger peices of text take longer to review)")
         }
         onChange={(e) => setPromptData(e.target.value)}
         onKeyPress={handlePromptSubmit}
