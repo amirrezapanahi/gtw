@@ -40,7 +40,7 @@ export const HomePage: React.FC = () => {
   }
 
   const registerDoc = () => {
-    let doc = new Document(docName!, reviewFreq!, getGTW().length);
+    let doc = new Document(docName!, reviewFreq!, getGTW().length+1);
     addDoc(doc)
 
     if (state != null) {
@@ -61,9 +61,15 @@ export const HomePage: React.FC = () => {
       reader.readAsText(file);
       reader.onload = function(evt) {
         const result = reader.result as string;
-        const doc = JSON.parse(result) as any;
+        const doc = JSON.parse(result) as Document;
         console.log(doc)
+        const newid = getGTW().length + 1
+        doc.docID = newid
+        for (let i = 0; i<doc._inbox.length; i++){
+          doc._inbox[i].projectID = newid 
+        }
         addDoc(doc)
+        setState(getGTW())
       }
       reader.onerror = function(evt) {
         alert("error reading file");

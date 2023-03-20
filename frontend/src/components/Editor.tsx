@@ -14,19 +14,19 @@ import TextStyle from '@tiptap/extension-text-style'
 import { IconDeviceFloppy, IconFileExport, IconTrash } from '@tabler/icons-react';
 import { GlobalState } from '../GTWContext';
 import { GTW } from '../LocalStorage';
-import { generateHTML } from '@tiptap/html'
+import { generateHTML, generateJSON } from '@tiptap/html'
 import { ItalicControl } from '@mantine/tiptap/lib/controls';
 import './editor.css'
 
 interface Props {
-  content: {}
   docIndex: number
   showReview: boolean
   handleResponse: (content: string) => void
   handleLoading: (value: boolean) => void
+  isEditorEmpty: (value: boolean) => void
 }
 
-export const DocEditor: React.FC<Props> = ({ content, docIndex, showReview, handleResponse, handleLoading }) => {
+export const DocEditor: React.FC<Props> = ({ docIndex, showReview, handleResponse, handleLoading, isEditorEmpty }) => {
 
   function spawnDocument(content, options) {
     let opt = {
@@ -56,16 +56,25 @@ export const DocEditor: React.FC<Props> = ({ content, docIndex, showReview, hand
     Superscript,
     SubScript,
     Highlight,
-    // TextStyle,
-    // FontFamily.configure({
-    //   types: ['textStyle']
-    // }),
     TextAlign.configure({ types: ['heading', 'paragraph'] }),
   ]
+
   const editor = useEditor({
     extensions: extensions,
-    content,
+    content: state[docIndex].content.all == "" ? {} : JSON.parse(state[docIndex].content.all),
   });
+
+  useEffect(() => {
+    if (editor) {
+      isEditorEmpty(editor.isEmpty)
+    }
+  }, [editor])
+
+  useEffect(() => {
+    if (editor) {
+      editor.commands.setContent(state[docIndex].content.all == "" ? {} : JSON.parse(state[docIndex].content.all))
+    }
+  }, [state])
 
   const handleReview = async () => {
 
@@ -75,10 +84,14 @@ export const DocEditor: React.FC<Props> = ({ content, docIndex, showReview, hand
 
     //make call to openAI API
 
+    const docs = state[docIndex]
+    const start = editor.state.selection.from
+    const end = editor.state.selection.to
+
     const selectionJSON = editor.view
       .state
       .doc
-      .cut(editor.state.selection.from, editor.state.selection.to).toJSON();
+      .cut(start, end).toJSON();
 
     const selectionHTML = generateHTML(selectionJSON, extensions)
 
@@ -94,6 +107,25 @@ export const DocEditor: React.FC<Props> = ({ content, docIndex, showReview, hand
 
     handleLoading(false)
     const aiResHtml = await aiRes.json()
+
+
+    const splitData = aiResHtml.aiResponse.split('@')
+    const html = splitData[1]
+
+    const highlightedExtractJSON = generateJSON(html, extensions)
+
+    docs.content.extract = JSON.stringify(highlightedExtractJSON)
+    docs.content.start = start
+    docs.content.end = end
+    setGTW(state)
+
+    editor.commands.insertContentAt({ from: start, to: end }, highlightedExtractJSON, {
+      updateSelection: true,
+      parseOptions: {
+        preserveWhitespace: 'full',
+      }
+    })
+
     handleResponse(aiResHtml.aiResponse)
     console.log(aiResHtml.aiResponse);
   }
@@ -147,7 +179,7 @@ export const DocEditor: React.FC<Props> = ({ content, docIndex, showReview, hand
               onClick={
                 () => {
                   const json = editor.getJSON()
-                  state[docIndex].content = JSON.stringify(json)
+                  state[docIndex].content.all = JSON.stringify(json)
                   console.log(state[docIndex])
                   setGTW(state)
                   setState(getGTW())
@@ -162,7 +194,7 @@ export const DocEditor: React.FC<Props> = ({ content, docIndex, showReview, hand
               onClick={
                 () => {
                   console.log("export html")
-                  const htmlString = generateHTML(JSON.parse(state[docIndex].content),
+                  const htmlString = generateHTML(JSON.parse(state[docIndex].content.all),
                     extensions)
                   spawnDocument(htmlString, {})
                 }

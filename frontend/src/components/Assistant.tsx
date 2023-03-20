@@ -19,9 +19,10 @@ interface Props {
   docIndex: number
   response: string
   isLoading: boolean
+  editorEmpty: boolean
 }
 
-export const Assistant: React.FC<Props> = ({ docIndex, response, isLoading }) => {
+export const Assistant: React.FC<Props> = ({ docIndex, response, isLoading, editorEmpty }) => {
   const { getGTW, setGTW } = GTW()
   const { state, setState } = useContext(GlobalState)
   const [aiOption, setAIOption] = useState(1)
@@ -30,12 +31,28 @@ export const Assistant: React.FC<Props> = ({ docIndex, response, isLoading }) =>
   const [loading, setLoading] = useState(isLoading)
 
   useEffect(() => {
-    console.log("Assistant: " + response)
-    setAIRes(response)
+    if (isLoading) { //review tool
+      const splitData = response.split('@')
+      let output = splitData[0]      
+      setAIRes(output)
+    } else {
+      console.log("Assistant: " + response)
+      setAIRes(response)
+    }
   }, [response])
 
   useEffect(() => {
+    setLoading(isLoading)
+  }, [isLoading])
+
+  useEffect(() => {
+    console.log('is loading: ' + loading)
+    if (!loading || isLoading) {
+      return
+    }
+
     if (aiOption == 1) {
+      console.log("custom prompt entered")
       fetch('http://localhost:8080/custom', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -47,6 +64,13 @@ export const Assistant: React.FC<Props> = ({ docIndex, response, isLoading }) =>
         setLoading(false)
       })
     } else if (aiOption == 2) {
+      console.log("structure prompt entered")
+      if (!editorEmpty) {
+        setAIRes("Document is not an empty slate")
+        setLoading(false)
+        return
+      }
+
       fetch('http://localhost:8080/structure', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -54,9 +78,10 @@ export const Assistant: React.FC<Props> = ({ docIndex, response, isLoading }) =>
           topic: promptData
         }),
       }).then((res) => res.json()).then((data) => {
-        const splitData = data.split('@')
+
+        const splitData = data.aiResponse.split('@')
         const html = splitData[0]
-        const output = splitData[1]
+        let output = splitData[1]
 
         const json = generateJSON(html, [
           StarterKit,
@@ -68,18 +93,23 @@ export const Assistant: React.FC<Props> = ({ docIndex, response, isLoading }) =>
           TextAlign.configure({ types: ['heading', 'paragraph'] }),
         ]);
 
-        if (state[docIndex].content == "") {
-          //serialize html to json
-          state[docIndex].content = JSON.stringify(json)
-          setGTW(state)
-          setState(getGTW())
-        }
-
+        console.log(html)
+        state[docIndex].content.all = JSON.stringify(json)
         setAIRes(output)
-        setLoading(false)
+
       })
     }
   }, [loading])
+
+  useEffect(() => {
+    console.log("new content: " + state[docIndex].content)
+    setGTW(state)
+    setState(getGTW())
+  }, [aiRes])
+
+  useEffect(() => {
+    setLoading(false)
+  }, [state])
 
 
   const handlePromptSubmit = (event: any) => {
@@ -104,7 +134,7 @@ export const Assistant: React.FC<Props> = ({ docIndex, response, isLoading }) =>
         style={{ width: '100%' }}
       />
       <Box className="ai" style={{ marginTop: '1em', flexGrow: '1', 'height': '30vh' }} pos='relative'>
-        <LoadingOverlay visible={isLoading} overlayBlur={2} />
+        <LoadingOverlay visible={loading} overlayBlur={2} />
         <Textarea readOnly={true} value={aiRes} variant="filled" style={{ width: '100%', height: '100%' }} />
       </Box>
 

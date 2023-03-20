@@ -18,16 +18,16 @@ function Paper() {
 function Doc(props: { name: string; daysUntilReview: number; id: number; }) {
 
   const {state, setState} = useContext(GlobalState)
-  const { removeDoc, getGTW, backupDoc } = GTW();
+  const { removeDoc, getGTW, backupDoc, getDocIndex } = GTW();
 
   const deleteDoc = () => {
-    const docIndex = state.findIndex((doc: Document) => doc.docID == props.id)
+    const docIndex = getDocIndex(props.id)
     removeDoc(docIndex)
     setState(getGTW())
   }
 
   const backupDocDocList = () => {
-    const docIndex = state.findIndex((doc: Document) => doc.docID == props.id)
+    const docIndex = getDocIndex(props.id)
     backupDoc(docIndex)
     setState(getGTW())
   }

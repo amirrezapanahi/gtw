@@ -18,6 +18,8 @@ export const ReferenceMaterial: React.FC<Props> = ({ docID, taskID }) => {
   const { getTask, updateTask, getGTW } = GTW()
 
   const [notes, setNotesContent] = useState<string>(() => {
+    console.log(taskID)
+    console.log(docID)
     if (getTask(taskID, docID).referenceMaterial != null) {
       return getTask(taskID, docID).referenceMaterial.notes
     } else {

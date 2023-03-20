@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { DocEditor } from './Editor'
 import { Link, useParams } from 'react-router-dom'
 import { GlobalState } from "../GTWContext";
@@ -10,12 +10,12 @@ import { IconArrowNarrowLeft } from '@tabler/icons-react';
 export const DocumentComponent: React.FC = () => {
   let { id } = useParams();
 
-  const { getGTW } = GTW();
+  const { getDocIndex } = GTW();
   const { state, setState } = useContext(GlobalState)
 
   const [isDashboard, onDashboard] = useState<boolean>(true)
   const [saved, setSaved] = useState<boolean>(false);
-  const [doc, setDoc] = useState<Document>(state[parseInt(id!, 10)])
+  const [doc, setDoc] = useState<Document>(state[getDocIndex(parseInt(id!, 10))])
 
   return (
     <div style={{ "display": "flex", overflow: 'hidden'}}>
@@ -24,7 +24,7 @@ export const DocumentComponent: React.FC = () => {
           <Link to={`/`} style={{ justifyContent: 'left' }}><IconArrowNarrowLeft /></Link>
           <div style={{ display: 'flex', gap: '2em' }}>
             <Link to={`/docs/${id}/dashboard`}><span>Dashboard</span></Link>
-            <Link to={`/docs/${id}/inbox`}><span>Inbox ({state[id!]._inbox.filter((x: TaskType) => x.status != Status.Done).length})</span></Link>
+            <Link to={`/docs/${id}/inbox`}><span>Inbox ({state[getDocIndex(parseInt(id!, 10))]._inbox.filter((x: TaskType) => x.status != Status.Done).length})</span></Link>
           </div>
         </div>
             <Dashboard docIndex={parseInt(id)} />
@@ -33,7 +33,7 @@ export const DocumentComponent: React.FC = () => {
         <div className='header'>
           {doc.doc_name}
         </div>
-        <DocEditor content={doc.content != "" ? JSON.parse(doc.content) : {}} docIndex={parseInt(id!, 10)} showReview={false} handleResponse={null} handleLoading={null}/>
+        <DocEditor docIndex={getDocIndex(parseInt(id!, 10))} showReview={false} handleResponse={null} handleLoading={null} isEditorEmpty={()=>{}}/>
       </div>
     </div>
   )

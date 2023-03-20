@@ -19,11 +19,14 @@ const (
 		treat this html document as a piece of writing. 
 		Imagine you are a collaborative reviewer, I want you to provide constructive 
 		criticism regarding the content of this document through bullet points. Once 
-		finished, output the same html i gave you prefixing it with 'html:' 
-		without adding or removing anything
-		, this time highlighting any html 
-		elements (with the html <mark> tag) that reference any of the bullet 
-		points you wrote about. Here is the HTML: 
+		finished, output the bullet points as well as the same html i gave you. Make sure
+		that you don't add or remove any content from the html. Given this html output I want you to highlight
+	 	html elements (with the html <mark> tag) that reference any of the bullet 
+		points you wrote about. Output your reponse in the following format: 
+		
+		<BULLET_POINTS> '@' <HTML>
+	
+		Here is the HTML: 
 		`
 )
 
@@ -31,11 +34,9 @@ type ReviewRequestData struct {
 	HTML string `json:"html"`
 }
 
-
 type StructureRequestData struct {
 	Topic string `json:"topic"`
 }
-
 
 type CustomRequestData struct {
 	Prompt string `json:"prompt"`
@@ -45,18 +46,18 @@ func reviewPrompt(content string) string {
 	return reviewTemplate + "'" + content + "'"
 }
 
-func structurePrompt(topic string) string{
+func structurePrompt(topic string) string {
 
-	const emptyStructureTemplate = fmt.Sprintf(`
+	var emptyStructureTemplate = fmt.Sprintf(`
 		Generate a document structure with multiple primary headers whom each have a 
 		number of secondary headers on the topic of '%s' where primary 
 		headers are represented by a <h1> HTML tag and secondary headers are 
-		represented by a <h3> HTML tag. At the end write a message saying 'Generated 
-		Document Structure' but use this delimiter (@) to seperate the contents from 
+		represented by <h4> HTML tags. all <h4> tags are underlined with <u> tag. At the end 
+		write a message saying 'Generated Document Structure' but use this delimiter '@' to seperate the contents from 
 		the document structure
 	`, topic)
 
-	return emptyStructureTemplate + "'" + content + "'";
+	return emptyStructureTemplate
 }
 
 func main() {
@@ -100,6 +101,7 @@ func main() {
 		}
 
 		prompt := requestData.Prompt
+		println(prompt)
 
 		req := openai.CompletionRequest{
 			Model:            openai.GPT3TextDavinci003,
@@ -109,7 +111,7 @@ func main() {
 			FrequencyPenalty: 0,
 			PresencePenalty:  0,
 			BestOf:           1,
-			Prompt:           string(prompt), 
+			Prompt:           string(prompt),
 		}
 
 		resp, err := oaClient.CreateCompletion(ctx, req)
@@ -142,7 +144,7 @@ func main() {
 			FrequencyPenalty: 0,
 			PresencePenalty:  0,
 			BestOf:           1,
-			Prompt:           structurePrompt(string(topic)), 
+			Prompt:           structurePrompt(string(topic)),
 		}
 
 		resp, err := oaClient.CreateCompletion(ctx, req)

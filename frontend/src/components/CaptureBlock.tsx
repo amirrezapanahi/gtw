@@ -33,7 +33,7 @@ export const CaptureBlock: React.FC<Props> = ({ docIndex }) => {
     //get inbox property for particular doc
     const docs: Document[] = state
     const task: TaskType = {
-      projectID: docIndex,
+      projectID: docIndex+1,
       taskID:
         getDoc(docIndex)._inbox.length != 0
           ?

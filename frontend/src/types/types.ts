@@ -34,23 +34,17 @@ export type Link = {
     title: string
 }
 
-export type Media = {
-    readonly lastModified: number;
-    readonly name: string;
-    readonly webkitRelativePath: string;
-    readonly path?: string;
-    readonly size: number;
-    readonly type: string;
-    arrayBuffer(): Promise<ArrayBuffer>;
-    slice(start?: number, end?: number, contentType?: string): Blob;
-    stream(): ReadableStream<Uint8Array>;
-    text(): Promise<string>;
+export type Content = {
+    all: string;
+    extract: string;
+    start: number;
+    end: number    
 }
 
 export class Document {
     docID: number;
     doc_name: string;
-    content: string;
+    content: Content;
     _inbox: Array<TaskType>
     last_reviewed: string;
     next_reviewed: string;
@@ -65,7 +59,12 @@ export class Document {
         this.next_reviewed = new Date(new Date().setDate(new Date().getDate() + freq)).toISOString().slice(0,10)
         this.review_freq = freq
         this.doc_name = name
-        this.content = ""
+        this.content = {
+            all: "",
+            extract: "",
+            start: 0,
+            end: 0
+        }
         this._inbox = []
         this.daysUntilReview = this.reviewDue()
     }

@@ -17,41 +17,52 @@ interface Props {
 
 export const Dashboard: React.FC<Props> = ({ docIndex }) => {
   const { state } = useContext(GlobalState)
-  const { getTaskIndex } = GTW()
-  const [tasks] = useState<TaskType[]>(state[docIndex]._inbox)
+  const { getTaskIndex, getDocIndex } = GTW()
+
+  const index = getDocIndex(docIndex)
+  const [tasks] = useState<TaskType[]>(state[index]._inbox)
 
   const currentDate = new Date();
   const currentWeek = currentDate.getDay() <= 3 ? currentDate.getDay() + 4 : currentDate.getDay() - 3;
 
   const isDueThisWeek = (dueDate: Date) => {
-    return dueDate >= currentDate && dueDate <= new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + (7 - currentWeek))
+    // Get the current date (with time set to midnight)
+    const currentDate = new Date();
+    currentDate.setHours(0, 0, 0, 0);
+
+    // Get the date 7 days from now
+    const sevenDaysFromNow = new Date(currentDate.getTime() + 7 * 24 * 60 * 60 * 1000);
+
+    // Check if the target date is within the next 7 days from the current date
+    return dueDate.getTime() >= currentDate.getTime() && dueDate.getTime() <= sevenDaysFromNow.getTime()
   }
   const isOverdue = (task: TaskType) => {
     const currentDate = new Date()
-    const currentDateMs = currentDate.getTime()
-    const dueDate = new Date(task.dueDate).getTime()
-    return task.status != Status.Done && (dueDate - currentDateMs) <= 0
+    currentDate.setHours(0, 0, 0, 0)
+    const dueDate = new Date(task.dueDate)
+    dueDate.setHours(0, 0, 0, 0)
+    return task.status != Status.Done && currentDate.getTime() > dueDate.getTime()
   }
 
   return (
     <div className={'dashboard'}>
-      <Block docIndex={docIndex} blockName={"Capture"} style={{ height: '25vh' }}>
-        <CaptureBlock docIndex={docIndex} />
+      <Block docIndex={index} blockName={"Capture"} style={{ height: '25vh' }}>
+        <CaptureBlock docIndex={index} />
       </Block>
-      <Block docIndex={docIndex} blockName={"Overdue"} style={{ height: '20vh' }}>
-        <InboxList docIndex={docIndex} tasks={tasks} meetsCondition={isOverdue} showResolved={false} />
+      <Block docIndex={index} blockName={"Overdue"} style={{ height: '20vh' }}>
+        <InboxList docIndex={index} tasks={tasks} meetsCondition={isOverdue} showResolved={false} />
       </Block>
-      <Block docIndex={docIndex} blockName={"Due Soon"} style={{ height: '50vh' }}>
+      <Block docIndex={index} blockName={"Due Soon"} style={{ height: '50vh' }}>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', padding: '1em', gap: '1em', overflow: 'auto' }}>
           <div>
             <Badge color="blue" className='kanbanHeader'>To Do</Badge>
-            <Board docIndex={docIndex} id='todoBoard' className='board'>
+            <Board docIndex={index} id='todoBoard' className='board'>
               {
-                state[docIndex]._inbox.filter((task: TaskType) =>
+                state[index]._inbox.filter((task: TaskType) =>
                   task.status == Status.Todo && isDueThisWeek(new Date(task.dueDate))).map((task) => {
                     return (
-                      <Card docIndex={docIndex} id={task.taskID.toString()} className="card">
-                        <Link to={`/docs/${docIndex}/task/${getTaskIndex(docIndex, task.taskID)}`} state={{ docIndex: docIndex, task: task }}>
+                      <Card docIndex={index} id={task.taskID.toString()} className="card">
+                        <Link to={`/docs/${index}/task/${getTaskIndex(index, task.taskID)}`} state={{ index: index, task: task }}>
                           <Paper shadow="xs" p="md" withBorder>
                             <Text>{task.description}</Text>
                           </Paper>
@@ -64,14 +75,14 @@ export const Dashboard: React.FC<Props> = ({ docIndex }) => {
           </div>
           <div>
             <Badge color="orange" className='kanbanHeader'>Doing</Badge>
-            <Board docIndex={docIndex} id='doingBoard' className='board'>
+            <Board docIndex={index} id='doingBoard' className='board'>
               {
-                state[docIndex]._inbox.filter((task: TaskType) =>
+                state[index]._inbox.filter((task: TaskType) =>
                   (task.status == Status.Doing) && isDueThisWeek(new Date(task.dueDate))
                 ).map((task) => {
                   return (
-                    <Card docIndex={docIndex} id={task.taskID.toString()} className="card">
-                      <Link to={`/docs/${docIndex}/task/${getTaskIndex(docIndex, task.taskID)}`} state={{ docIndex: docIndex, task: task }}>
+                    <Card docIndex={index} id={task.taskID.toString()} className="card">
+                      <Link to={`/docs/${index}/task/${getTaskIndex(index, task.taskID)}`} state={{ index: index, task: task }}>
                         <Paper shadow="xs" p="md" withBorder>
                           <Text>{task.description}</Text>
                         </Paper>
@@ -84,13 +95,13 @@ export const Dashboard: React.FC<Props> = ({ docIndex }) => {
           </div>
           <div>
             <Badge color="green" className='kanbanHeader'>Done</Badge>
-            <Board docIndex={docIndex} id='doneBoard' className='board'>
+            <Board docIndex={index} id='doneBoard' className='board'>
               {
-                state[docIndex]._inbox.filter((task: TaskType) =>
+                state[index]._inbox.filter((task: TaskType) =>
                   task.status == Status.Done && isDueThisWeek(new Date(task.dueDate))).map((task) => {
                     return (
-                      <Card docIndex={docIndex} id={task.taskID.toString()} className="card">
-                        <Link to={`/docs/${docIndex}/task/${getTaskIndex(docIndex, task.taskID)}`} state={{ docIndex: docIndex, task: task }}>
+                      <Card docIndex={index} id={task.taskID.toString()} className="card">
+                        <Link to={`/docs/${index}/task/${getTaskIndex(index, task.taskID)}`} state={{ index: index, task: task }}>
                           <Paper shadow="xs" p="md" withBorder>
                             <Text>{task.description}</Text>
                           </Paper>

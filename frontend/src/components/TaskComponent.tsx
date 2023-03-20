@@ -14,13 +14,13 @@ import { Badge, Blockquote, Button, Paper } from '@mantine/core';
 import { IconArrowNarrowLeft } from '@tabler/icons-react';
 
 export const TaskComponent: React.FC = () => {
-  const { getGTW, updateTask, getTaskIndex, removeTask, completeTask, incompleteTask } = GTW();
+  const { getGTW, updateTask, getTaskIndex, removeTask, completeTask, incompleteTask, getDocIndex } = GTW();
   const { state, setState } = useContext(GlobalState);
 
   const taskState = useLocation().state;
-  const task: TaskType = state[taskState.task.projectID]._inbox[getTaskIndex(taskState.task.projectID, taskState.task.taskID)];
+  const task: TaskType = state[getDocIndex(taskState.task.projectID)]._inbox[getTaskIndex(getDocIndex(taskState.task.projectID), taskState.task.taskID)];
 
-  const [doc, setDoc] = useState<Document>(state[task.projectID])
+  const [doc, setDoc] = useState<Document>(state[getDocIndex(task.projectID)])
 
   const [dueDate, setDueDate] = useState<string>(task.dueDate)
   const [priority, setPriority] = useState<number>(task.priority)
@@ -31,6 +31,7 @@ export const TaskComponent: React.FC = () => {
   const [seconds, setSeconds] = useState(120)
   const [beginCountdown, setBeginCountdown] = useState(false)
 
+  const [editorEmpty, setEditorEmpty] = useState(false)
   const [aiRes, setAIRes] = useState("")
   const [loading, setLoading] = useState(false)
 
@@ -46,12 +47,12 @@ export const TaskComponent: React.FC = () => {
     return () => clearInterval(interval)
   }, [beginCountdown, seconds])
 
-  useEffect(()=>{
-    if(completed) {
-      completeTask(task.projectID, task.taskID)
+  useEffect(() => {
+    if (completed) {
+      completeTask(getDocIndex(task.projectID), task.taskID)
       setState(getGTW())
-    }else{
-      incompleteTask(task.projectID, task.taskID)
+    } else {
+      incompleteTask(getDocIndex(task.projectID), task.taskID)
       setState(getGTW())
     }
   }, [completed])
@@ -65,7 +66,7 @@ export const TaskComponent: React.FC = () => {
   }
 
   const handleDueDate = () => {
-    updateTask(task.projectID, task.taskID, {
+    updateTask(getDocIndex(task.projectID), task.taskID, {
       taskID: task.taskID,
       projectID: task.projectID,
       description,
@@ -79,7 +80,7 @@ export const TaskComponent: React.FC = () => {
   }
 
   const handlePriority = () => {
-    updateTask(task.projectID, task.taskID, {
+    updateTask(getDocIndex(task.projectID), task.taskID, {
       taskID: task.taskID,
       projectID: task.projectID,
       description,
@@ -93,8 +94,12 @@ export const TaskComponent: React.FC = () => {
   }
 
   const handleDelete = () => {
-    removeTask(task.projectID, task.taskID)
+    removeTask(getDocIndex(task.projectID), task.taskID)
     setState(getGTW())
+  }
+
+  const handleEditorEmpty = (value: boolean) => {
+    setEditorEmpty(value)
   }
 
   const handleAIResponse = (content: string) => {
@@ -104,7 +109,7 @@ export const TaskComponent: React.FC = () => {
   const handleAILoading = (value: boolean) => {
     setLoading(value)
   }
-  
+
   const formatDuration = (durationInSeconds) =>
     `${Math.floor(durationInSeconds / 60)}:${(durationInSeconds % 60)
       .toString()
@@ -119,10 +124,10 @@ export const TaskComponent: React.FC = () => {
           <Link to={`/`} style={{ justifyContent: 'left' }}><IconArrowNarrowLeft /></Link>
           <div style={{ display: 'flex', gap: '2em' }}>
             <Link to={`/docs/${task.projectID}/dashboard`}><span>Dashboard</span></Link>
-            <Link to={`/docs/${task.projectID}/inbox`}><span>Inbox ({state[task.projectID]._inbox.filter((x: TaskType) => x.status != Status.Done).length})</span></Link>
+            <Link to={`/docs/${task.projectID}/inbox`}><span>Inbox ({state[getDocIndex(task.projectID)]._inbox.filter((x: TaskType) => x.status != Status.Done).length})</span></Link>
           </div>
         </div>
-        <Block docIndex={task.projectID} blockName={""} style={{}}>
+        <Block docIndex={getDocIndex(task.projectID)} blockName={""} style={{}}>
           <div className={"taskInfo"}>
             <div className={"taskInfoContainer"}>
               <Paper withBorder>
@@ -149,64 +154,77 @@ export const TaskComponent: React.FC = () => {
                 </Button>
               </div>
               <div className={"taskOperations"}>
-              <Link to={`/docs/${task.projectID}/dashboard`} style={{width: '100%'}}>
-                <Badge color="red" variant="outline" fullWidth onClick={handleDelete} className='taskDelComplete'>
-                  Delete
-                </Badge>
-              </Link>
-              {
-                completed ?
-                <Badge color="green" variant="outline" fullWidth onClick={handleComplete} className='taskDelComplete'>
-                Completed
-              </Badge>
-              :
-              <Badge color="orange" variant="outline" fullWidth onClick={handleComplete} className='taskDelComplete'>
-              Complete
-             </Badge>
-              }
+                <Link to={`/docs/${task.projectID}/dashboard`} style={{ width: '100%' }}>
+                  <Badge color="red" variant="outline" fullWidth onClick={handleDelete} className='taskDelComplete'>
+                    Delete
+                  </Badge>
+                </Link>
+                {
+                  task.dependentOn != null && task.dependentOn.status != Status.Done ?
+                    <Badge title={`task is dependent on ${task.dependentOn.description}`} color="orange" variant="outline" fullWidth className='taskDelDep'>
+                      Dependent
+                    </Badge>
+                    :
+                    (
+                      completed ?
+                        <Badge color="green" variant="outline" fullWidth onClick={handleComplete} className='taskDelComplete'>
+                          Completed
+                        </Badge>
+                        :
+                        <Badge color="orange" variant="outline" fullWidth onClick={handleComplete} className='taskDelComplete'>
+                          Complete
+                        </Badge>
+                    )
+                }
               </div>
             </div>
             <div className={"timer"}>
               <div className='clock'>
                 <Badge size='xl'>
-                <span className="time-minutes">{formattedDuration.split(':')[0]}</span>
-                <span className="divider">:</span>
-                <span className="time-seconds">{formattedDuration.split(':')[1]}</span>
+                  <span className="time-minutes">{formattedDuration.split(':')[0]}</span>
+                  <span className="divider">:</span>
+                  <span className="time-seconds">{formattedDuration.split(':')[1]}</span>
                 </Badge>
               </div>
               {
                 beginCountdown ?
-                      <Button color="dark" disabled style={{
-                        width: '50%',
-                        margin: '0 auto',
-                      }}>
-                      Keep going!
-                    </Button>
+                  <Button color="dark" disabled style={{
+                    width: '50%',
+                    margin: '0 auto',
+                  }}>
+                    Keep going!
+                  </Button>
                   :
                   <Button color="dark" onClick={handleTimer} style={{
                     width: '50%',
                     margin: '0 auto',
                   }}>
-                  Start Timer
-                </Button>
+                    Start Timer
+                  </Button>
               }
             </div>
           </div>
         </Block>
-        <Block docIndex={task.projectID} blockName={"Reference Material"} style={{}}>
-          <ReferenceMaterial docID={task.projectID} taskID={task.taskID} />
+        <Block docIndex={getDocIndex(task.projectID)} blockName={"Reference Material"} style={{}}>
+          <ReferenceMaterial docID={getDocIndex(task.projectID)} taskID={getTaskIndex(getDocIndex(task.projectID), task.taskID)} />
         </Block>
-        <Block docIndex={task.projectID} blockName={"Assistant"} style={{
+        <Block docIndex={getDocIndex(task.projectID)} blockName={"Assistant"} style={{
           flexGrow: '1'
         }}>
-          <Assistant docIndex={task.projectID} response={aiRes} isLoading={loading}/>
+          <Assistant docIndex={getDocIndex(task.projectID)} response={aiRes} isLoading={loading} editorEmpty={editorEmpty} />
         </Block>
       </div>
       <div style={{ "width": "50%", maxHeight: '100vh' }}>
         <div className='header'>
           {doc.doc_name}
         </div>
-        <DocEditor content={doc.content != "" ? JSON.parse(doc.content) : {}} docIndex={task.projectID} showReview={true} handleResponse={handleAIResponse} handleLoading={handleAILoading}/>
+        <DocEditor 
+          docIndex={getDocIndex(task.projectID)}
+          showReview={true}
+          handleResponse={handleAIResponse}
+          handleLoading={handleAILoading}
+          isEditorEmpty={handleEditorEmpty}
+        />
       </div>
     </div>
   )

@@ -39,6 +39,10 @@ export const GTW = () => {
     return getGTW()[docIndex]._inbox.findIndex((element)=> element.taskID == taskID)
   }
 
+  function getDocIndex(docID: number): number{
+    return getGTW().findIndex((element)=> element.docID == docID)
+  }
+
   function addTask(docIndex: number, task: types.TaskType) {
     const docs: Document[] = getGTW()
     docs[docIndex]._inbox.push(task)
@@ -158,6 +162,7 @@ export const GTW = () => {
   }
 
   return { getGTW, setGTW, addDoc, removeDoc, getTask, addTask, removeTask, updateTask, getDoc, backupDoc,
-          snoozeTask, completeTask, getTaskIndex, localStorageSize, incompleteTask, localStorageSizePercentage}
+          snoozeTask, completeTask, getTaskIndex, localStorageSize, incompleteTask, localStorageSizePercentage,
+          getDocIndex}
 }
 

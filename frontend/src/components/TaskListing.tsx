@@ -17,9 +17,11 @@ export const TaskListing: React.FC<Props> = ({ docIndex, taskIndex, task }) => {
   const { getTaskIndex, removeTask, snoozeTask, completeTask, getGTW } = GTW();
 
   const isOverdue = (dueDate: string) => {
-    const date = new Date(dueDate).getTime()
-    const currentDate = new Date().getTime()
-    return date - currentDate < 0
+    const currentDateCopy = new Date()
+    currentDateCopy.setHours(0, 0, 0, 0)
+    const dueDateCopy = new Date(dueDate)
+    dueDateCopy.setHours(0, 0, 0, 0)
+    return currentDateCopy.getTime() > dueDateCopy.getTime()
   }
 
   const taskFromState = state[docIndex]._inbox[taskIndex]
@@ -44,18 +46,19 @@ export const TaskListing: React.FC<Props> = ({ docIndex, taskIndex, task }) => {
   return (
     <>
       <td style={{ textAlign: "left" }}>
-        <Link to={`/docs/${docIndex}/task/${taskIndex}`} state={{ docIndex: docIndex, task: task }}>
-            <Badge color="gray.0" variant='outline' style={{maxWidth: '100%'}} title={task.description}>{task.description}</Badge>
-        </Link></td>
+        <Link to={`/docs/${task.projectID}/task/${taskIndex}`} state={{ docIndex: docIndex, task: task }}>
+          <Badge color="gray.0" variant='outline' style={{ maxWidth: '100%' }} title={task.description}>{task.description}</Badge>
+        </Link>
+      </td>
       <td style={isOverdue(state[docIndex]._inbox[taskIndex].dueDate) ? { color: "#ff6b6b" } : {}}>
         {state[docIndex]._inbox[taskIndex].dueDate}
       </td>
       <td>{priority}</td>
       {state[docIndex]._inbox[taskIndex].dependentOn ?
         <td>
-        <Link to={`/docs/${docIndex}/task/${getTaskIndex(docIndex,task.dependentOn.taskID)}`} state={{ docIndex: docIndex, task: task.dependentOn }}>
-            <Badge color="gray.0" variant='outline' style={{maxWidth: '100%'}} title={task.dependentOn.description}>{task.dependentOn.description}</Badge>
-        </Link></td>
+          <Link to={`/docs/${task.projectID}/task/${getTaskIndex(docIndex, task.dependentOn.taskID)}`} state={{ docIndex: docIndex, task: task.dependentOn }}>
+            <Badge color="gray.0" variant='outline' style={{ maxWidth: '100%' }} title={task.dependentOn.description}>{task.dependentOn.description}</Badge>
+          </Link></td>
         : <td></td>
       }
       <td style={{ justifyContent: 'center' }}>
@@ -65,7 +68,7 @@ export const TaskListing: React.FC<Props> = ({ docIndex, taskIndex, task }) => {
             setState(getGTW())
           }}><i className="fa-solid fa-bed"></i></button>
           <button title='Edit'>
-            <Link to={`/docs/${docIndex}/task/${taskIndex}`} state={{ docIndex: docIndex, task: task }}>
+            <Link to={`/docs/${task.projectID}/task/${taskIndex}`} state={{ docIndex: docIndex, task: task }}>
               <i className="fa-solid fa-pen"></i>
             </Link>
           </button>
