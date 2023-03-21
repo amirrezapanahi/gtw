@@ -101,10 +101,10 @@ export const DocEditor: React.FC<Props> = ({ docIndex, showReview, handleRespons
 
   useEffect(() => {
     if (editor && position) {
-      editor.chain().focus().setTextSelection({
+      editor.commands.setTextSelection({
         from: position.start,
         to: position.end
-      }).run()
+      })
     }
   }, [editor, position])
 
@@ -191,7 +191,7 @@ export const DocEditor: React.FC<Props> = ({ docIndex, showReview, handleRespons
   return (
     <div>
       {/* <Editor docIndex={docIndex} /> */}
-      <Modal opened={opened} onClose={close} title="Capture" centered>
+      <Modal size='auto' opened={opened} onClose={close} title="Capture" centered>
         <CaptureBlock docIndex={docIndex} refStart={refLines.start} refEnd={refLines.end} />
       </Modal>
       <RichTextEditor editor={editor} className='rte'>

@@ -61,7 +61,13 @@ export const HomePage: React.FC = () => {
       reader.readAsText(file);
       reader.onload = function(evt) {
         const result = reader.result as string;
-        const doc = JSON.parse(result) as Document;
+        let doc: Document;
+        try{
+          doc = JSON.parse(result) as Document;
+        }catch(e){
+          alert("Corrupted GTW file")
+          return
+        }
         console.log(doc)
         const newid = getGTW().length + 1
         doc.docID = newid
@@ -72,7 +78,7 @@ export const HomePage: React.FC = () => {
         setState(getGTW())
       }
       reader.onerror = function(evt) {
-        alert("error reading file");
+        alert("Invalid file format");
       }
     }
 

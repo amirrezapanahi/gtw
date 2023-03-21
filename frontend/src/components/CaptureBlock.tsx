@@ -35,7 +35,7 @@ export const CaptureBlock: React.FC<Props> = ({ docIndex, refStart, refEnd }) =>
     //get inbox property for particular doc
     const docs: Document[] = state
     const task: TaskType = {
-      projectID: docIndex+1,
+      projectID: docIndex + 1,
       taskID:
         getDoc(docIndex)._inbox.length != 0
           ?
@@ -83,25 +83,25 @@ export const CaptureBlock: React.FC<Props> = ({ docIndex, refStart, refEnd }) =>
         value={desc}
         onChange={(event: any) => setDesc(event.target.value)}
         className='capture-textarea'
-        style={{width: '95%', 'margin': '0 auto'}}
+        style={{ width: '95%', 'margin': '0 auto' }}
       />
       {/* <textarea value={desc} onChange={(event) => setDesc(event.target.value)} className={'capture-textarea'} required></textarea> */}
       <div className='captureBlock' style={{ display: 'grid', gridTemplateColumns: '25% 25% 25% 25%' }}>
         <div style={{ display: 'inherit' }}>
-          <span style={{marginBottom: '0.3em'}}>Due Date</span>
-          
+          <span style={{ marginBottom: '0.3em' }}>Due Date</span>
+
           <DatePickerInput
             placeholder="Pick date"
             value={dueDate}
             allowDeselect
             onChange={setDueDate}
             minDate={new Date()}
-            required
+            dropdownType="modal"
           />
           {/* <input className={'myDropDown'} type="date" min={new Date().toISOString().substring(0, 10)} value={dueDate} onChange={(event) => setDueDate(event.target.value)} required /> */}
         </div>
         <div style={{ display: 'inherit' }}>
-          <span style={{marginBottom: '0.3em'}}>Priority</span>
+          <span style={{ marginBottom: '0.3em' }}>Priority</span>
           <Input component="select" rightSection={<IconChevronDown size={14} stroke={1.5} />}
             className={'myDropDown'} onChange={(event) => setPriority(parseInt(event.target.value, 10))} required>
             <option value={Priority.High} selected={true}>High</option>
@@ -110,7 +110,7 @@ export const CaptureBlock: React.FC<Props> = ({ docIndex, refStart, refEnd }) =>
           </Input>
         </div>
         <div style={{ display: 'inherit' }}>
-          <span style={{marginBottom: '0.3em'}}>Dependent on</span>
+          <span style={{ marginBottom: '0.3em' }}>Dependent on</span>
           {
             currentInbox.length !== 0 ?
               <Input component="select" rightSection={<IconChevronDown size={14} stroke={1.5} />}

@@ -23,7 +23,8 @@ const (
 		that you don't add or remove any content from the html. With the html output I want 
 		you to highlight the input html elements (with the html <mark> tag) that are related to the respective 
 		bullet points you wrote about but dont insert bullet point content within the html. 		
-		Finally, Output your reponse in the following format: 
+		Finally, Output your reponse in the following format with no exceptions. Where <BULLET_POINTS>
+		is a placeholder for the bullet points you write and <OUTPUT_HTML> is the html you return back to me: 
 		
 		<BULLET_POINTS> '@' <OUTPUT_HTML>
 	
