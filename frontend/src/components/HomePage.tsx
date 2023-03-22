@@ -96,7 +96,7 @@ export const HomePage: React.FC = () => {
         <button onClick={requestToRegisterDoc}>Create a document</button>
         {
           addDocBool ?
-            <div>
+            <div style={{display: 'flex', flexDirection: 'column'}}>
               <input placeholder='Document Name' onChange={e => setDocName(e.target.value)}></input>
               <input placeholder='How often will you review? (days)' onChange={e => setReviewFreq(Number(e.target.value))}></input>
               <button onClick={registerDoc}>Create</button>

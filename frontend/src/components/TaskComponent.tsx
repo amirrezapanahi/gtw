@@ -10,8 +10,9 @@ import { Priority } from '../types/types'
 import { GTW } from '../LocalStorage'
 import { ReferenceMaterial } from './ReferenceMaterial'
 import { Assistant } from './Assistant'
-import { Badge, Blockquote, Button, Paper } from '@mantine/core';
+import { Badge, Blockquote, Button, Modal, Paper } from '@mantine/core';
 import { IconArrowNarrowLeft } from '@tabler/icons-react';
+import { useDisclosure } from '@mantine/hooks';
 
 export const TaskComponent: React.FC = () => {
   const { getGTW, updateTask, getTaskIndex, removeTask, completeTask, incompleteTask, getDocIndex } = GTW();
@@ -120,6 +121,7 @@ export const TaskComponent: React.FC = () => {
       .padStart(2, '0')}`;
 
   const formattedDuration = formatDuration(seconds);
+  const [opened, { open, close }] = useDisclosure(false);
 
   return (
     <div style={{ "display": "flex", overflow: 'hidden' }}>
@@ -131,7 +133,10 @@ export const TaskComponent: React.FC = () => {
             <Link to={`/docs/${task.projectID}/inbox`}><span>Inbox ({state[getDocIndex(task.projectID)]._inbox.filter((x: TaskType) => x.status != Status.Done).length})</span></Link>
           </div>
         </div>
-        <Block docIndex={getDocIndex(task.projectID)} blockName={""} style={{}}>
+        <Button className='button' style={{display: 'flex', justifyContent: 'center',width: '95%', margin: '0 auto', marginTop: '1em'}} onClick={open}>
+          Task Information
+        </Button>
+        <Modal size='auto' opened={opened} onClose={close} title="Task Info">
           <div className={"taskInfo"}>
             <div className={"taskInfoContainer"}>
               <Paper withBorder>
@@ -208,12 +213,13 @@ export const TaskComponent: React.FC = () => {
               }
             </div>
           </div>
-        </Block>
-        <Block docIndex={getDocIndex(task.projectID)} blockName={"Reference Material"} style={{}}>
+        </Modal>
+        <Block docIndex={getDocIndex(task.projectID)} blockName={"Reference Material"} style={{ height: '45vh' }}>
           <ReferenceMaterial docID={getDocIndex(task.projectID)} taskID={getTaskIndex(getDocIndex(task.projectID), task.taskID)} />
         </Block>
         <Block docIndex={getDocIndex(task.projectID)} blockName={"Assistant"} style={{
-          flexGrow: '1'
+          flexGrow: '1',
+          height: '45vh'
         }}>
           <Assistant docIndex={getDocIndex(task.projectID)} response={aiRes} isLoading={loading} editorEmpty={editorEmpty} />
         </Block>
@@ -222,13 +228,13 @@ export const TaskComponent: React.FC = () => {
         <div className='header'>
           {doc.doc_name}
         </div>
-        <DocEditor 
+        <DocEditor
           docIndex={getDocIndex(task.projectID)}
           showReview={true}
           handleResponse={handleAIResponse}
           handleLoading={handleAILoading}
           isEditorEmpty={handleEditorEmpty}
-          position={{start: task.referenceStart, end: task.referenceEnd}}
+          position={{ start: task.referenceStart, end: task.referenceEnd }}
         />
       </div>
     </div>

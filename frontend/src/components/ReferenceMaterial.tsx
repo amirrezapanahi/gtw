@@ -1,11 +1,11 @@
 import React, { useContext, useState, useEffect } from 'react'
-import { Tabs, Textarea, Image } from '@mantine/core'
+import { Tabs, Textarea, Image, Button } from '@mantine/core'
 import { IconPhoto, IconLink, IconNotes, IconCircleCheck } from '@tabler/icons-react';
 import { GlobalState } from '../GTWContext';
 import { GTW } from '../LocalStorage'
 import { TaskType } from '../types/types';
-import {Links} from '../components/Links'
-import {Medias} from '../components/Medias'
+import { Links } from '../components/Links'
+import { Medias } from '../components/Medias'
 
 interface Props {
   docID: number,
@@ -41,8 +41,8 @@ export const ReferenceMaterial: React.FC<Props> = ({ docID, taskID }) => {
             getTask(taskID, docID).referenceMaterial.links
             :
             null,
-        media: getTask(taskID, docID).referenceMaterial != null ? 
-        getTask(taskID, docID).referenceMaterial.media : null ,
+        media: getTask(taskID, docID).referenceMaterial != null ?
+          getTask(taskID, docID).referenceMaterial.media : null,
       }
     }
 
@@ -55,10 +55,10 @@ export const ReferenceMaterial: React.FC<Props> = ({ docID, taskID }) => {
 
   return (
     <div style={{
-    width: '95%',
-    margin: '0 auto'
-  }}>
-      <Tabs variant="outline" defaultValue="gallery">
+      width: '95%',
+      margin: '0 auto'
+    }}>
+      <Tabs defaultValue="notes" variant="outline">
         <Tabs.List>
           <Tabs.Tab value="notes" icon={<IconNotes size="0.8rem" />}>Notes</Tabs.Tab>
           <Tabs.Tab value="links" icon={<IconLink size="0.8rem" />}>Articles/Links</Tabs.Tab>
@@ -71,11 +71,14 @@ export const ReferenceMaterial: React.FC<Props> = ({ docID, taskID }) => {
         </Tabs.List>
 
         <Tabs.Panel value="notes" pt="xs">
-          <Textarea label="Write notes here" value={notes} onChange={(event) => automaticallySaveNotes(event.currentTarget.value)} />
+          <Textarea minRows={11} placeholder="Write notes here" value={notes} onChange={(event) => setNotesContent(event.currentTarget.value)} style={{height: '25vh'}} />
+          <Button style={{float: 'right'}} color='dark' onClick={() => automaticallySaveNotes(notes)}>
+            Save
+          </Button>
         </Tabs.Panel>
 
         <Tabs.Panel value="links" pt="xs">
-          <Links docID={docID} taskID={taskID}/>
+          <Links docID={docID} taskID={taskID} />
         </Tabs.Panel>
 
         <Tabs.Panel value="media" pt="xs">

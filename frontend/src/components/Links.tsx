@@ -70,7 +70,7 @@ export const Links: React.FC<Props> = ({ docID, taskID }) => {
             onChange={(event: any) => setHref(event.currentTarget.value)}
           />
         </div>
-        <div style={{display: 'flex', flexDirection:'column'}}>
+        <div style={{display: 'flex', flexDirection:'column', height: '30vh', overflowY: 'auto'}}>
           {
             linksList != null ?
               linksList.map((link: Link) => {
