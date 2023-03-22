@@ -87,6 +87,7 @@ export const DocEditor: React.FC<Props> = ({ docIndex, showReview, handleRespons
   useEffect(() => {
     if (editor) {
       isEditorEmpty(editor.isEmpty)
+
       state[docIndex].content.all = JSON.stringify(editor.getJSON())
       setGTW(state)
       setState(getGTW())
@@ -101,12 +102,16 @@ export const DocEditor: React.FC<Props> = ({ docIndex, showReview, handleRespons
 
   useEffect(() => {
     if (editor && position) {
-      editor.commands.setTextSelection({
+      editor.chain().focus().setTextSelection({
         from: position.start,
         to: position.end
-      })
+      }).run()
+      // editor.commands.setTextSelection({
+      //   from: position.start,
+      //   to: position.end
+      // })
     }
-  }, [editor, position])
+  }, [position])
 
   useEffect(() => {
     state[docIndex].content.numChars = prevNumChars

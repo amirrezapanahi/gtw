@@ -95,6 +95,7 @@ export const Medias: React.FC<Props> = ({ docID, taskID }) => {
         cols={3}
         breakpoints={[{ maxWidth: 'sm', cols: 1 }]}
         mt={refMaterial.media.length > 0 ? 'xl' : 0}
+        style={{height: '30vh', overflowY: 'auto'}}
       >
         {
           refMaterial.media.map((file, fileIndex) => {

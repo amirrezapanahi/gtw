@@ -138,7 +138,7 @@ export const Assistant: React.FC<Props> = ({ docIndex, response, isLoading, edit
         onKeyPress={handlePromptSubmit}
         style={{ width: '100%' }}
       />
-      <Box className="ai" style={{ marginTop: '1em', flexGrow: '1', 'height': '30vh' }} pos='relative'>
+      <Box className="ai" style={{ marginTop: '1em', flexGrow: '1', 'height': '25vh' }} pos='relative'>
         <LoadingOverlay visible={loading} overlayBlur={2} />
         <Textarea readOnly={true} value={aiRes} variant="filled" style={{ width: '100%', height: '100%' }} />
       </Box>
