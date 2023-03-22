@@ -36,6 +36,10 @@ export const TaskComponent: React.FC = () => {
   const [aiRes, setAIRes] = useState("")
   const [loading, setLoading] = useState(false)
 
+  useEffect(()=>{
+    console.log(task)
+  },[task])
+
   useEffect(() => {
     let interval = null;
 
@@ -49,10 +53,11 @@ export const TaskComponent: React.FC = () => {
   }, [beginCountdown, seconds])
 
   useEffect(() => {
+    const currentStatus = task.status
     if (completed) {
       completeTask(getDocIndex(task.projectID), task.taskID)
       setState(getGTW())
-    } else {
+    } else if (currentStatus === Status.Done) {
       incompleteTask(getDocIndex(task.projectID), task.taskID)
       setState(getGTW())
     }

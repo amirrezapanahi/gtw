@@ -4,8 +4,7 @@ import { DocList } from "./DocList";
 import { Document } from "../types/types"
 import { GlobalState } from "../GTWContext";
 import { GTW } from "../LocalStorage";
-import { read } from "fs";
-import { Text } from "@mantine/core";
+import { Badge, Text } from "@mantine/core";
 
 export const HomePage: React.FC = () => {
   const {state, setState} = useContext(GlobalState);
@@ -87,7 +86,10 @@ export const HomePage: React.FC = () => {
   return (
     <div className="App" style={{width: '100%', display: 'grid'}}>
       <div className="container">
-        <h1>Getting Things Written.</h1>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <h1><a href="/" style={{ textDecoration: 'none' }}>Getting Things Written.</a></h1>
+          <Badge variant="outline"><a href="/usage">How to Use</a></Badge>
+        </div>
         <br></br>
         <h3>Write. Journal. Research.</h3>
         {

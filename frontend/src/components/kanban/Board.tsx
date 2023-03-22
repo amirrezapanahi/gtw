@@ -35,7 +35,6 @@ export const Board: React.FC<Props> = ({ docIndex, id, className, children }) =>
 
     updateTask(docIndex, cardIDint, updatedTask)
     setState(getGTW())
-
   }
 
   const dragOver = (e: any) => {

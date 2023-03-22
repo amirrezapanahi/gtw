@@ -62,7 +62,7 @@ export const Dashboard: React.FC<Props> = ({ docIndex }) => {
                   task.status == Status.Todo && isDueThisWeek(new Date(task.dueDate))).map((task) => {
                     return (
                       <Card docIndex={index} id={task.taskID.toString()} className="card">
-                        <Link to={`/docs/${index}/task/${getTaskIndex(index, task.taskID)}`} state={{ index: index, task: task }}>
+                        <Link to={`/docs/${task.projectID}/task/${getTaskIndex(index, task.taskID)}`} state={{ index: index, task: task }}>
                           <Paper shadow="xs" p="md" withBorder>
                             <Text>{task.description}</Text>
                           </Paper>
@@ -82,7 +82,7 @@ export const Dashboard: React.FC<Props> = ({ docIndex }) => {
                 ).map((task) => {
                   return (
                     <Card docIndex={index} id={task.taskID.toString()} className="card">
-                      <Link to={`/docs/${index}/task/${getTaskIndex(index, task.taskID)}`} state={{ index: index, task: task }}>
+                      <Link to={`/docs/${task.projectID}/task/${getTaskIndex(index, task.taskID)}`} state={{ index: index, task: task }}>
                         <Paper shadow="xs" p="md" withBorder>
                           <Text>{task.description}</Text>
                         </Paper>
@@ -101,7 +101,7 @@ export const Dashboard: React.FC<Props> = ({ docIndex }) => {
                   task.status == Status.Done && isDueThisWeek(new Date(task.dueDate))).map((task) => {
                     return (
                       <Card docIndex={index} id={task.taskID.toString()} className="card">
-                        <Link to={`/docs/${index}/task/${getTaskIndex(index, task.taskID)}`} state={{ index: index, task: task }}>
+                        <Link to={`/docs/${task.projectID}/task/${getTaskIndex(index, task.taskID)}`} state={{ index: index, task: task }}>
                           <Paper shadow="xs" p="md" withBorder>
                             <Text>{task.description}</Text>
                           </Paper>
