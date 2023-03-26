@@ -33,6 +33,10 @@ export const CaptureBlock: React.FC<Props> = ({ docIndex, refStart, refEnd }) =>
 
   const handleTask = () => {
     //get inbox property for particular doc
+    if (desc === "" || dueDate == null){
+      return;
+    }
+
     const docs: Document[] = state
     const task: TaskType = {
       projectID: docIndex + 1,

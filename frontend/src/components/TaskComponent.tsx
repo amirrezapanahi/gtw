@@ -13,6 +13,7 @@ import { Assistant } from './Assistant'
 import { Badge, Blockquote, Button, Modal, Paper } from '@mantine/core';
 import { IconArrowNarrowLeft } from '@tabler/icons-react';
 import { useDisclosure } from '@mantine/hooks';
+import { EditableText } from './EditableText';
 
 export const TaskComponent: React.FC = () => {
   const { getGTW, updateTask, getTaskIndex, removeTask, completeTask, incompleteTask, getDocIndex } = GTW();
@@ -36,9 +37,9 @@ export const TaskComponent: React.FC = () => {
   const [aiRes, setAIRes] = useState("")
   const [loading, setLoading] = useState(false)
 
-  useEffect(()=>{
+  useEffect(() => {
     console.log(task)
-  },[task])
+  }, [task])
 
   useEffect(() => {
     let interval = null;
@@ -138,7 +139,7 @@ export const TaskComponent: React.FC = () => {
             <Link to={`/docs/${task.projectID}/inbox`}><span>Inbox ({state[getDocIndex(task.projectID)]._inbox.filter((x: TaskType) => x.status != Status.Done).length})</span></Link>
           </div>
         </div>
-        <Button className='button' style={{display: 'flex', justifyContent: 'center',width: '95%', margin: '0 auto', marginTop: '1em'}} onClick={open}>
+        <Button className='button' style={{ display: 'flex', justifyContent: 'center', width: '95%', margin: '0 auto', marginTop: '1em' }} onClick={open}>
           Task Information
         </Button>
         <Modal size='auto' opened={opened} onClose={close} title="Task Info">
@@ -146,7 +147,12 @@ export const TaskComponent: React.FC = () => {
             <div className={"taskInfoContainer"}>
               <Paper withBorder>
                 <Blockquote>
-                  {task.description}
+                  <EditableText
+                    docIndex={getDocIndex(task.projectID)}
+                    taskIndex={getTaskIndex(getDocIndex(task.projectID), task.taskID)}
+                    text={task.description}
+                    type="task" 
+                    />
                 </Blockquote>
               </Paper>
               <div className='taskInfoUpdate'>
@@ -231,7 +237,7 @@ export const TaskComponent: React.FC = () => {
       </div>
       <div style={{ "width": "50%", maxHeight: '100vh' }}>
         <div className='header'>
-          {doc.doc_name}
+          <EditableText docIndex={getDocIndex(task.projectID)} taskIndex={0} text={doc.doc_name} type={"doc"}/>
         </div>
         <DocEditor
           docIndex={getDocIndex(task.projectID)}

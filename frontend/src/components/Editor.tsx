@@ -10,7 +10,7 @@ import Superscript from '@tiptap/extension-superscript';
 import { Modal, Text } from '@mantine/core'
 import SubScript from '@tiptap/extension-subscript';
 import CharacterCount from '@tiptap/extension-character-count'
-import { IconDeviceFloppy, IconFileExport, IconTrash } from '@tabler/icons-react';
+import { IconDeviceFloppy, IconFileExport, IconPhoto, IconTrash } from '@tabler/icons-react';
 import { GlobalState } from '../GTWContext';
 import { GTW } from '../LocalStorage';
 import { generateHTML, generateJSON } from '@tiptap/html'
@@ -55,6 +55,7 @@ export const DocEditor: React.FC<Props> = ({ docIndex, showReview, handleRespons
   const { state, setState } = useContext(GlobalState)
 
   const [newContent, setNewContent] = useState("")
+  const [inEditor, setInEditor] = useState(false);
   const [refLines, setRefLines] = useState<RefLines>({} as RefLines)
   const [diff, setDiff] = useState(0)
   const [prevNumChars, setPrevNumChars] = useState(state[docIndex].content.numChars)
@@ -80,9 +81,16 @@ export const DocEditor: React.FC<Props> = ({ docIndex, showReview, handleRespons
       console.log(diff)
       setDiff(diff)
     },
+    onBlur() {
+      setInEditor(false);
+    },
     extensions: extensions,
     content: state[docIndex].content.all == "" ? {} : JSON.parse(state[docIndex].content.all),
   });
+
+  useEffect(()=> {
+    setInEditor(true)
+  },[diff])
 
   useEffect(() => {
     if (editor) {
@@ -101,7 +109,7 @@ export const DocEditor: React.FC<Props> = ({ docIndex, showReview, handleRespons
   }, [state])
 
   useEffect(() => {
-    if (editor && position) {
+    if (editor && position && inEditor) {
       editor.chain().focus().setTextSelection({
         from: position.start,
         to: position.end
@@ -251,6 +259,7 @@ export const DocEditor: React.FC<Props> = ({ docIndex, showReview, handleRespons
                 }
               }
             >
+            <IconPhoto stroke={1.5} size='1rem' />
             </RichTextEditor.Control>
           </RichTextEditor.ControlsGroup>
 
@@ -272,7 +281,8 @@ export const DocEditor: React.FC<Props> = ({ docIndex, showReview, handleRespons
                 }
               }
             >
-              <IconDeviceFloppy stroke={1.5} size='1rem' />
+              <p style={{fontSize:'0.7em', padding:'1em'}}>Save</p>
+              {/*<IconDeviceFloppy stroke={1.5} size='1rem' />*/}
             </RichTextEditor.Control>
             <RichTextEditor.Control
               title="Export HTML"
@@ -285,7 +295,8 @@ export const DocEditor: React.FC<Props> = ({ docIndex, showReview, handleRespons
                 }
               }
             >
-              <IconFileExport stroke={1.5} size='1rem' />
+              <p style={{fontSize:'0.7em', padding:'1em'}}>Export HTML</p>
+              {/*<IconFileExport stroke={1.5} size='1rem' />*/}
             </RichTextEditor.Control>
             <RichTextEditor.Control
               title="Back Up"
@@ -295,7 +306,8 @@ export const DocEditor: React.FC<Props> = ({ docIndex, showReview, handleRespons
                 }
               }
             >
-              <i className="fa-solid fa-box" style={{}}></i>
+              <p style={{fontSize:'0.7em', padding:'1em'}}>Back Up</p>
+              {/*<i className="fa-solid fa-box" style={{}}></i>*/}
             </RichTextEditor.Control>
           </RichTextEditor.ControlsGroup>
           {editor && (

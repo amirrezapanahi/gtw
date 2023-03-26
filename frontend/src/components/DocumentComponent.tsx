@@ -6,6 +6,7 @@ import { Document, TaskType, Status } from "../types/types"
 import { Dashboard } from "./Dashboard";
 import { GTW } from "../LocalStorage";
 import { IconArrowNarrowLeft } from '@tabler/icons-react';
+import {EditableText} from './EditableText'
 
 export const DocumentComponent: React.FC = () => {
   let { id } = useParams();
@@ -17,6 +18,10 @@ export const DocumentComponent: React.FC = () => {
   const [saved, setSaved] = useState<boolean>(false);
   const [doc, setDoc] = useState<Document>(state[getDocIndex(parseInt(id!, 10))])
 
+  useEffect(() => {
+    console.log("getDocIndex: " + getDocIndex(parseInt(id))) 
+  },[])
+
   return (
     <div style={{ "display": "flex", overflow: 'hidden'}}>
       <div style={{ "width": "50%", maxHeight: '100vh' }}>
@@ -27,11 +32,12 @@ export const DocumentComponent: React.FC = () => {
             <Link to={`/docs/${id}/inbox`}><span>Inbox ({state[getDocIndex(parseInt(id!, 10))]._inbox.filter((x: TaskType) => x.status != Status.Done).length})</span></Link>
           </div>
         </div>
-            <Dashboard docIndex={parseInt(id)} />
+            <Dashboard docIndex={parseInt(id,10)} />
+
       </div>
       <div style={{ "width": "50%", maxHeight: '100vh'  }}>
         <div className='header'>
-          {doc.doc_name}
+          <EditableText docIndex={getDocIndex(parseInt(id!, 10))} taskIndex={0} text={doc.doc_name} type={"doc"}/>
         </div>
         <DocEditor docIndex={getDocIndex(parseInt(id!, 10))} showReview={false} handleResponse={null} handleLoading={null} isEditorEmpty={()=>{}} position={null}/>
       </div>

@@ -6,6 +6,7 @@ import { Document, TaskType, Status } from "../types/types"
 import { IconArrowNarrowLeft } from '@tabler/icons-react';
 import { Inbox } from './Inbox';
 import { GTW } from '../LocalStorage';
+import { EditableText } from './EditableText';
 
 export const DocumentComponentInbox: React.FC = () => {
   let { id } = useParams();
@@ -29,7 +30,7 @@ export const DocumentComponentInbox: React.FC = () => {
       </div>
       <div style={{ "width": "50%" }}>
         <div className='header'>
-          {doc.doc_name}
+          <EditableText docIndex={getDocIndex(parseInt(id!, 10))} taskIndex={0} text={doc.doc_name} type={"doc"}/>
         </div>
         <DocEditor docIndex={getDocIndex(parseInt(id!, 10))} showReview={false} handleResponse={null} handleLoading={null} isEditorEmpty={()=>{}} position={null}/>
       </div>

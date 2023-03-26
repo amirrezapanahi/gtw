@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { Document } from "../types/types"
 import { GTW } from "../LocalStorage";
 import { GlobalState } from "../GTWContext";
+import { EditableText } from "./EditableText";
 interface Props {
   docs: Document[]
 }
@@ -17,7 +18,7 @@ function Paper() {
 
 function Doc(props: { name: string; daysUntilReview: number; id: number; }) {
 
-  const {state, setState} = useContext(GlobalState)
+  const { state, setState } = useContext(GlobalState)
   const { removeDoc, getGTW, backupDoc, getDocIndex } = GTW();
 
   const deleteDoc = () => {
@@ -35,7 +36,9 @@ function Doc(props: { name: string; daysUntilReview: number; id: number; }) {
   return (
     <div className="doc">
       <Link to={`/docs/${props.id}/dashboard`}><Paper /></Link>
-      <h3>{props.name}</h3>
+      <h3 style={{ marginTop: '0.5em', marginBottom: '0.5em' }}>
+          <EditableText docIndex={getDocIndex(props.id)} taskIndex={0} text={props.name} type={"doc"}/>
+      </h3>
       {props.daysUntilReview > 0
         ?
         <span className="button" style={{ backgroundColor: "darkblue" }}>
@@ -56,18 +59,18 @@ function Doc(props: { name: string; daysUntilReview: number; id: number; }) {
 
 export const DocList: React.FC<Props> = ({ docs }) => {
 
-  const [docsSorted, setSorted] = useState(() => {
-    return docs.sort((a, b) => { return a.daysUntilReview - b.daysUntilReview })
-  });
+  // const [docsSorted, setSorted] = useState(() => {
+  //   return docs.sort((a, b) => { return a.daysUntilReview - b.daysUntilReview })
+  // });
 
-  useEffect(() => {
-    setSorted(docs.sort((a, b) => { return a.daysUntilReview - b.daysUntilReview }))
-  }, [docs])
+  // useEffect(() => {
+  //   setSorted(docs.sort((a, b) => { return a.daysUntilReview - b.daysUntilReview }))
+  // }, [docs])
 
   return (
     <div className="docs">
       {
-        docsSorted.map((item: Document) => {
+        docs.map((item: Document) => {
           return <Doc name={item.doc_name} daysUntilReview={item.daysUntilReview} id={item.docID} />
         })
       }
