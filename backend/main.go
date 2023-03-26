@@ -16,19 +16,18 @@ import (
 
 const (
 	reviewTemplate = `
-		treat this html document as a piece of writing. 
+		treat this html extract as a piece of writing. 
 		Imagine you are a collaborative reviewer, I want you to provide constructive 
-		criticism regarding the content of this document through bullet points. Once 
+		criticism regarding the content of this extract through bullet points. Once 
 		finished, output the bullet points as well as the same html i gave you. Making sure
 		that you don't add or remove any content from the html. With the html output I want 
 		you to highlight the input html elements (with the html <mark> tag) that are related to the respective 
 		bullet points you wrote about but dont insert bullet point content within the html. 		
-		Finally, Output your reponse in the following format with no exceptions. Where <BULLET_POINTS>
-		is a placeholder for the bullet points you write and <OUTPUT_HTML> is the html you return back to me: 
-		
+		Finally, Output your reponse in the following format with no exceptions:
 		<BULLET_POINTS> '@' <OUTPUT_HTML>
-	
-		Here is the HTML: 
+		Where <BULLET_POINTS> is a placeholder for the bullet points you write and <OUTPUT_HTML> is the html you return back to me: 
+		
+		Here is the input HTML extract: 
 		`
 )
 
