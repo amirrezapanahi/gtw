@@ -39,6 +39,7 @@ export const HomePage: React.FC = () => {
   }
 
   const registerDoc = () => {
+    console.log("review freq: " + reviewFreq)
     let doc = new Document(docName!, reviewFreq!, getGTW().length+1);
     addDoc(doc)
 
