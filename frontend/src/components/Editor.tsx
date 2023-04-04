@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback, useMemo, Ref, PropsWithChildren, useContext } from 'react'
 import { RichTextEditor, Link, useRichTextEditorContext } from '@mantine/tiptap';
 import { BubbleMenu, useEditor } from '@tiptap/react';
+import { Mark, Extension } from '@tiptap/core'
 import Highlight from '@tiptap/extension-highlight';
 import Image from '@tiptap/extension-image'
 import StarterKit from '@tiptap/starter-kit';
@@ -17,6 +18,8 @@ import { generateHTML, generateJSON } from '@tiptap/html'
 import './editor.css'
 import { useDisclosure } from '@mantine/hooks';
 import { CaptureBlock } from './CaptureBlock';
+import { Plugin, PluginKey } from '@tiptap/pm/state'
+import { EditorView } from '@tiptap/pm/view'
 
 interface Props {
   docIndex: number
@@ -61,14 +64,86 @@ export const DocEditor: React.FC<Props> = ({ docIndex, showReview, handleRespons
   const [prevNumChars, setPrevNumChars] = useState(state[docIndex].content.numChars)
   const [opened, { open, close }] = useDisclosure(false);
 
+  const Hover = Extension.create({
+    name: 'hover',
+    addProseMirrorPlugins() {
+      return [
+        new Plugin({
+          view: (editorView: EditorView) => {
+            const tooltip = document.createElement("div");
+            tooltip.className = "tooltip";
+            tooltip.style.display = "none";
+            editorView.dom.parentNode.appendChild(tooltip);
+
+            function hideTooltip() {
+              tooltip.style.display = "none";
+            }
+
+            function showTooltip(event: any) {
+              // const { state } = editorView
+              const pos = editorView.posAtCoords({ left: event.clientX, top: event.clientY })
+              const node = editorView.state.doc.nodeAt(pos.pos)
+
+              if (node && node.attrs.title) {
+                tooltip.innerHTML = node.attrs.title;
+                tooltip.style.top = `20px`;
+                tooltip.style.left = `${20 + window.scrollX}px`;
+                tooltip.style.display = "block";
+              } else {
+                hideTooltip();
+              }
+            }
+
+            editorView.dom.addEventListener("mouseleave", hideTooltip);
+
+            editorView.dom.addEventListener("mouseover", (event) => showTooltip(event))
+
+            return {
+              update: (view) => {
+                const { state } = view;
+                const { $anchor } = state.selection;
+
+                if ($anchor.parent.attrs.title) {
+                  tooltip.innerHTML = $anchor.parent.attrs.title;
+                  tooltip.style.top = `20px`;
+                  tooltip.style.left = `${20 + window.scrollX}px`;
+                  tooltip.style.display = "block";
+                } else {
+                  hideTooltip();
+                }
+              },
+              destroy: () => {
+                editorView.dom.removeEventListener("mouseleave", hideTooltip);
+                editorView.dom.removeEventListener("mouseover", showTooltip);
+                tooltip.remove();
+              },
+            };
+          },
+        })
+      ]
+    }
+  })
+
+  const HighlightExtended = Highlight.extend({
+    addAttributes() {
+      return {
+        title: {
+          default: "",
+          parseHTML: element => element.getAttribute('title')
+        }
+      }
+    }
+  })
+
   const extensions = [
     StarterKit,
     Underline,
     Link,
     Superscript,
     SubScript,
-    Highlight,
+    HighlightExtended,
     Image,
+    Hover,
     CharacterCount,
     TextAlign.configure({ types: ['heading', 'paragraph'] }),
   ]
@@ -81,16 +156,36 @@ export const DocEditor: React.FC<Props> = ({ docIndex, showReview, handleRespons
       console.log(diff)
       setDiff(diff)
     },
-    onBlur() {
-      setInEditor(false);
+    onFocus({ editor }) {
+      console.log("line index: " + editor.state.selection.from)
+    },
+    onBlur({ editor }) {
+      state[docIndex].content.all = JSON.stringify(editor.getJSON())
+      setGTW(state)
+      setState(state)
     },
     extensions: extensions,
-    content: state[docIndex].content.all == "" ? {} : JSON.parse(state[docIndex].content.all),
+    content: state[docIndex].content.all == "" ? {} : JSON.parse(state[docIndex].content.all)
   });
 
-  useEffect(()=> {
+  useEffect(() => {
     setInEditor(true)
-  },[diff])
+  }, [diff])
+
+  useEffect(() => {
+    if (editor) {
+      const json = editor.getJSON()
+      state[docIndex].content.all = JSON.stringify(json)
+
+      for (let i = 0; i < state[docIndex]._inbox.length; i++) {
+        state[docIndex]._inbox[i].referenceStart += diff
+        state[docIndex]._inbox[i].referenceEnd += diff
+        console.log(state[docIndex]._inbox[i].referenceStart + " -> " + state[docIndex]._inbox[i].referenceEnd)
+      }
+
+      setPrevNumChars(editor.storage.characterCount.characters())
+    }
+  }, [editor, inEditor])
 
   useEffect(() => {
     if (editor) {
@@ -105,11 +200,12 @@ export const DocEditor: React.FC<Props> = ({ docIndex, showReview, handleRespons
   useEffect(() => {
     if (editor) {
       editor.commands.setContent(state[docIndex].content.all == "" ? {} : JSON.parse(state[docIndex].content.all))
+      setInEditor(false);
     }
   }, [state])
 
   useEffect(() => {
-    if (editor && position && inEditor) {
+    if (editor && position) {
       editor.chain().focus().setTextSelection({
         from: position.start,
         to: position.end
@@ -163,7 +259,7 @@ export const DocEditor: React.FC<Props> = ({ docIndex, showReview, handleRespons
 
     const splitData = aiResHtml.aiResponse.split('@')
     console.log(splitData)
-    const html = splitData[1]
+    let html: string = splitData[1]
     const output = splitData[0]
 
     const highlightedExtractJSON = generateJSON(html, extensions)
@@ -181,8 +277,14 @@ export const DocEditor: React.FC<Props> = ({ docIndex, showReview, handleRespons
     // })
 
     console.log(html);
+    console.log(start)
+    console.log(end)
 
-    const hasInserted = editor.commands.insertContentAt({ from: start-1, to: end }, html)
+    // html = "<p title='this is a tooltip'><mark>Hello World</mark></p>"
+
+    const hasInserted = editor.commands.insertContentAt({ from: start - 2, to: end }, html.trim(), {
+      updateSelection: true,
+    })
 
     state[docIndex].content.all = JSON.stringify(editor.getJSON())
     setGTW(state)
@@ -259,7 +361,7 @@ export const DocEditor: React.FC<Props> = ({ docIndex, showReview, handleRespons
                 }
               }
             >
-            <IconPhoto stroke={1.5} size='1rem' />
+              <IconPhoto stroke={1.5} size='1rem' />
             </RichTextEditor.Control>
           </RichTextEditor.ControlsGroup>
 
@@ -281,7 +383,7 @@ export const DocEditor: React.FC<Props> = ({ docIndex, showReview, handleRespons
                 }
               }
             >
-              <p style={{fontSize:'0.7em', padding:'1em'}}>Save</p>
+              <p style={{ fontSize: '0.7em', padding: '1em' }}>Save</p>
               {/*<IconDeviceFloppy stroke={1.5} size='1rem' />*/}
             </RichTextEditor.Control>
             <RichTextEditor.Control
@@ -295,7 +397,7 @@ export const DocEditor: React.FC<Props> = ({ docIndex, showReview, handleRespons
                 }
               }
             >
-              <p style={{fontSize:'0.7em', padding:'1em'}}>Export HTML</p>
+              <p style={{ fontSize: '0.7em', padding: '1em' }}>Export HTML</p>
               {/*<IconFileExport stroke={1.5} size='1rem' />*/}
             </RichTextEditor.Control>
             <RichTextEditor.Control
@@ -306,7 +408,7 @@ export const DocEditor: React.FC<Props> = ({ docIndex, showReview, handleRespons
                 }
               }
             >
-              <p style={{fontSize:'0.7em', padding:'1em'}}>Back Up</p>
+              <p style={{ fontSize: '0.7em', padding: '1em' }}>Back Up</p>
               {/*<i className="fa-solid fa-box" style={{}}></i>*/}
             </RichTextEditor.Control>
           </RichTextEditor.ControlsGroup>
@@ -318,7 +420,7 @@ export const DocEditor: React.FC<Props> = ({ docIndex, showReview, handleRespons
                     <RichTextEditor.Control
                       onClick={handleReview}
                     >
-                      <Text fw={700} style={{padding:'1em'}}>Review</Text>
+                      <Text fw={700} style={{ padding: '1em' }}>Review</Text>
                     </RichTextEditor.Control>
 
                   )
@@ -326,7 +428,7 @@ export const DocEditor: React.FC<Props> = ({ docIndex, showReview, handleRespons
                 <RichTextEditor.Control
                   onClick={handleCapture}
                 >
-                  <Text fw={700} style={{padding:'1em'}}>Capture</Text>
+                  <Text fw={700} style={{ padding: '1em' }}>Capture</Text>
                 </RichTextEditor.Control>
               </RichTextEditor.ControlsGroup>
             </BubbleMenu>
