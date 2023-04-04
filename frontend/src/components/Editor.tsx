@@ -180,9 +180,9 @@ export const DocEditor: React.FC<Props> = ({ docIndex, showReview, handleRespons
     //   updateSelection: true,
     // })
 
-    const hasInserted = editor.commands.insertContentAt({ from: start, to: end }, html, {
-      updateSelection: true,
-    })
+    console.log(html);
+
+    const hasInserted = editor.commands.insertContentAt({ from: start-1, to: end }, html)
 
     state[docIndex].content.all = JSON.stringify(editor.getJSON())
     setGTW(state)
@@ -318,7 +318,7 @@ export const DocEditor: React.FC<Props> = ({ docIndex, showReview, handleRespons
                     <RichTextEditor.Control
                       onClick={handleReview}
                     >
-                      <Text fw={700}>Review</Text>
+                      <Text fw={700} style={{padding:'1em'}}>Review</Text>
                     </RichTextEditor.Control>
 
                   )
@@ -326,7 +326,7 @@ export const DocEditor: React.FC<Props> = ({ docIndex, showReview, handleRespons
                 <RichTextEditor.Control
                   onClick={handleCapture}
                 >
-                  <Text fw={700}>Capture</Text>
+                  <Text fw={700} style={{padding:'1em'}}>Capture</Text>
                 </RichTextEditor.Control>
               </RichTextEditor.ControlsGroup>
             </BubbleMenu>

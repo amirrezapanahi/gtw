@@ -140,7 +140,7 @@ func main() {
 		req := openai.CompletionRequest{
 			Model:            openai.GPT3TextDavinci003,
 			MaxTokens:        500,
-			Temperature:      1,
+			Temperature:      0.1,
 			TopP:             1,
 			FrequencyPenalty: 0,
 			PresencePenalty:  0,
@@ -174,7 +174,7 @@ func main() {
 		req := openai.CompletionRequest{
 			Model:            openai.GPT3TextDavinci003,
 			MaxTokens:        1700,
-			Temperature:      1,
+			Temperature:      0.1,
 			TopP:             1,
 			FrequencyPenalty: 0,
 			PresencePenalty:  0,
