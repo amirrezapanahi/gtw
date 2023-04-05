@@ -20,10 +20,10 @@ const (
 		Imagine you are a collaborative reviewer, I want you to provide constructive 
 		criticism regarding the content of this extract through bullet points. Once 
 		finished, output the bullet points as well as the same html i gave you. Making sure
-		that you don't add or remove any content from the html. With the html output I want 
-		you to highlight the input html elements (with the html <mark> tag) that are related to the respective 
-		bullet points you wrote about but dont insert bullet point content within the html. 		
-		Finally, Output your reponse in the following format with no exceptions:
+		that you don't add or remove any content from the html (do NOT insert the bullet points within the html!). With the html output I want 
+		you to modify the existing input html elements that are related to the respective bullet point you wrote about
+		in the following format (<mark title={BULLET_POINT}>{ORIGINAL_EXTRACT}</mark>). 		
+		Finally, Output your response in the following format with no exceptions:
 		<BULLET_POINTS> '@' <OUTPUT_HTML>
 		Where <BULLET_POINTS> is a placeholder for the bullet points you write and <OUTPUT_HTML> is the html you return back to me: 
 		
