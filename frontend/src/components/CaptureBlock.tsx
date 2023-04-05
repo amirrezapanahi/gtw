@@ -38,6 +38,9 @@ export const CaptureBlock: React.FC<Props> = ({ docIndex, refStart, refEnd }) =>
     }
 
     const docs: Document[] = state
+
+    const dueDateTimeZone = new Date(Date.UTC(dueDate.getFullYear(), dueDate.getMonth(), dueDate.getDate(), 0, 0, 0))
+
     const task: TaskType = {
       projectID: docIndex + 1,
       taskID:
@@ -54,7 +57,7 @@ export const CaptureBlock: React.FC<Props> = ({ docIndex, refStart, refEnd }) =>
         media: []
       },
       priority: priority,
-      dueDate: new Date(dueDate).toISOString().slice(0, 10),
+      dueDate: dueDateTimeZone.toISOString().slice(0, 10),
       status: Status.Todo,
       referenceStart: refStart,
       referenceEnd: refEnd

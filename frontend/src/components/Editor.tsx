@@ -233,7 +233,7 @@ export const DocEditor: React.FC<Props> = ({ docIndex, showReview, handleRespons
     //make call to openAI API
 
     const docs = state[docIndex]
-    const start = editor.state.selection.from
+    let start = editor.state.selection.from
     const end = editor.state.selection.to
 
     const selectionJSON = editor.view
@@ -281,8 +281,13 @@ export const DocEditor: React.FC<Props> = ({ docIndex, showReview, handleRespons
     console.log(end)
 
     // html = "<p title='this is a tooltip'><mark>Hello World</mark></p>"
+    if (start - 2 < 0){
+      start = editor.state.selection.head;
+    }else{
+      start = start - 2;
+    }
 
-    const hasInserted = editor.commands.insertContentAt({ from: start - 2, to: end }, html.trim(), {
+    const hasInserted = editor.commands.insertContentAt({ from: start, to: end }, html.trim(), {
       updateSelection: true,
     })
 
