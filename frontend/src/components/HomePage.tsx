@@ -7,13 +7,13 @@ import { GTW } from "../LocalStorage";
 import { Badge, Text } from "@mantine/core";
 
 export const HomePage: React.FC = () => {
-  const {state, setState} = useContext(GlobalState);
+  const { state, setState } = useContext(GlobalState);
   const { addDoc, setGTW, getGTW, localStorageSizePercentage } = GTW()
 
   const [addDocBool, setAddDocBool] = useState<boolean>(false);
   const [importDoc, setImportDoc] = useState<boolean>(false);
   const [docName, setDocName] = useState<string>();
-  const [reviewFreq, setReviewFreq] = useState<number>();
+  const [reviewFreq, setReviewFreq] = useState<number>(0);
 
   const updateReviewDueAllDocs = (docs: Document[]): void => {
     for (let i = 0; i < docs.length - 1; i++) {
@@ -39,8 +39,12 @@ export const HomePage: React.FC = () => {
   }
 
   const registerDoc = () => {
-    console.log("review freq: " + reviewFreq)
-    let doc = new Document(docName!, reviewFreq!, getGTW().length+1);
+    console.log(docName)
+    console.log(reviewFreq)
+    if (docName === undefined) return
+    if (Number.isNaN(reviewFreq) || reviewFreq === 0) return
+
+    let doc = new Document(docName!, reviewFreq!, getGTW().length + 1);
     addDoc(doc)
 
     if (state != null) {
@@ -62,17 +66,17 @@ export const HomePage: React.FC = () => {
       reader.onload = function(evt) {
         const result = reader.result as string;
         let doc: Document;
-        try{
+        try {
           doc = JSON.parse(result) as Document;
-        }catch(e){
+        } catch (e) {
           alert("Corrupted GTW file")
           return
         }
         console.log(doc)
         const newid = getGTW().length + 1
         doc.docID = newid
-        for (let i = 0; i<doc._inbox.length; i++){
-          doc._inbox[i].projectID = newid 
+        for (let i = 0; i < doc._inbox.length; i++) {
+          doc._inbox[i].projectID = newid
         }
         addDoc(doc)
         setState(getGTW())
@@ -85,7 +89,7 @@ export const HomePage: React.FC = () => {
   }
 
   return (
-    <div className="App" style={{width: '100%', display: 'grid'}}>
+    <div className="App" style={{ width: '100%', display: 'grid' }}>
       <div className="container">
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <h1><a href="/" style={{ textDecoration: 'none' }}>Getting Things Written.</a></h1>
@@ -99,9 +103,12 @@ export const HomePage: React.FC = () => {
         <button onClick={requestToRegisterDoc}>Create a document</button>
         {
           addDocBool ?
-            <div style={{display: 'flex', flexDirection: 'column'}}>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
               <input placeholder='Document Name' onChange={e => setDocName(e.target.value)}></input>
-              <input placeholder='How often will you review? (days)' onChange={e => setReviewFreq(Number(e.target.value))}></input>
+              <input placeholder='How often will you review? (days)' onChange={(e) => {
+              setReviewFreq(Number(e.target.value))
+              }
+              }></input>
               <button onClick={registerDoc}>Create</button>
             </div> :
             <></>
@@ -115,17 +122,17 @@ export const HomePage: React.FC = () => {
             </div> :
             <></>
         }
-      <Text fz="sm" ta="center" style={{marginTop: '2em'}}>
-        Consolidate your thoughts and ideas with this powerful writing tool which adopts the 'Getting Things Done' methodology
-        by David Allen. <strong>'Getting Things Written'</strong> provide a productive writing experience. Make context switching across different documents a breeze
-        and never feel flustered again.
-      </Text>      
+        <Text fz="sm" ta="center" style={{ marginTop: '2em' }}>
+          Consolidate your thoughts and ideas with this powerful writing tool which adopts the 'Getting Things Done' methodology
+          by David Allen. <strong>'Getting Things Written'</strong> provide a productive writing experience. Make context switching across different documents a breeze
+          and never feel flustered again.
+        </Text>
       </div>
-      <Text fz='xs' c="dimmed" style={{display: 'block', margin: '0 auto', marginTop: '5em'}}>Storage Used: {localStorageSizePercentage().toPrecision(3)} %</Text>
-      <Text fz='xs' c="dimmed" style={{display: 'block', margin: '0 auto', fontSize: '10px', marginTop: '2em'}}>
+      <Text fz='xs' c="dimmed" style={{ display: 'block', margin: '0 auto', marginTop: '5em' }}>Storage Used: {localStorageSizePercentage().toPrecision(3)} %</Text>
+      <Text fz='xs' c="dimmed" style={{ display: 'block', margin: '0 auto', fontSize: '10px', marginTop: '2em' }}>
         <strong>Privacy notice</strong>: This webpage simply downloads the Getting Things Written application to your browser.
         Once loaded, everything runs locally in your browser. No data is sent back to the server.
-        </Text>
+      </Text>
     </div>
   );
 }
