@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react"
-import { Priority, TaskType } from "../types/types";
+import { Priority, Status, TaskType } from "../types/types";
 import { Link } from "react-router-dom";
 import { GTW } from '../LocalStorage'
 import { GlobalState } from "../GTWContext";
@@ -82,10 +82,22 @@ export const TaskListing: React.FC<Props> = ({ docIndex, taskIndex, task }) => {
             removeTask(docIndex, task.taskID)
             setState(getGTW())
           }}><i className="fa-solid fa-trash"></i></button>
-          <button title='Complete' onClick={() => {
-            completeTask(docIndex, task.taskID)
-            setState(getGTW())
-          }}><i className="fa-solid fa-check"></i></button>
+          {
+            task.dependentOn && task.dependentOn.status != Status.Done ?
+              <button title='Complete'
+                disabled
+                onClick={() => {
+                  completeTask(docIndex, task.taskID)
+                  setState(getGTW())
+                }}><i className="fa-solid fa-check"></i></button>
+              :
+
+              <button title='Complete'
+                onClick={() => {
+                  completeTask(docIndex, task.taskID)
+                  setState(getGTW())
+                }}><i className="fa-solid fa-check"></i></button>
+          }
         </div>
       </td>
     </>

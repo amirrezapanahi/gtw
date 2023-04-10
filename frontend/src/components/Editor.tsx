@@ -28,6 +28,7 @@ interface Props {
   handleLoading: (value: boolean) => void
   isEditorEmpty: (value: boolean) => void
   position: RefLines
+  inEditableText: boolean
 }
 
 type RefLines = {
@@ -35,7 +36,7 @@ type RefLines = {
   end: number | null
 }
 
-export const DocEditor: React.FC<Props> = ({ docIndex, showReview, handleResponse, handleLoading, isEditorEmpty, position }) => {
+export const DocEditor: React.FC<Props> = ({ docIndex, showReview, handleResponse, handleLoading, isEditorEmpty, position, inEditableText }) => {
 
   function spawnDocument(content, options) {
     let opt = {
@@ -160,20 +161,26 @@ export const DocEditor: React.FC<Props> = ({ docIndex, showReview, handleRespons
       console.log("line index: " + editor.state.selection.from)
     },
     onBlur({ editor }) {
-      state[docIndex].content.all = JSON.stringify(editor.getJSON())
-      setGTW(state)
-      setState(state)
+      // state[docIndex].content.all = JSON.stringify(editor.getJSON())
+      // setGTW(state)
+      // setState(state)
     },
     extensions: extensions,
     content: state[docIndex].content.all == "" ? {} : JSON.parse(state[docIndex].content.all)
   });
 
   useEffect(() => {
+    console.log("editor notices that in editable: " + inEditableText)
+  }, [inEditableText])
+
+  useEffect(() => {
     setInEditor(true)
   }, [diff])
 
+
   useEffect(() => {
     if (editor) {
+
       const json = editor.getJSON()
       state[docIndex].content.all = JSON.stringify(json)
 
@@ -190,32 +197,35 @@ export const DocEditor: React.FC<Props> = ({ docIndex, showReview, handleRespons
   useEffect(() => {
     if (editor) {
       isEditorEmpty(editor.isEmpty)
-
-      state[docIndex].content.all = JSON.stringify(editor.getJSON())
-      setGTW(state)
-      setState(getGTW())
+      // state[docIndex].content.all = JSON.stringify(editor.getJSON())
+      // setGTW(state)
+      // setState(getGTW())
     }
   }, [editor])
 
   useEffect(() => {
     if (editor) {
+      const currentPos = editor.state.selection.anchor
+      if (!inEditableText){
       editor.commands.setContent(state[docIndex].content.all == "" ? {} : JSON.parse(state[docIndex].content.all))
+      editor.commands.focus(currentPos)
+      }
       setInEditor(false);
     }
   }, [state])
 
   useEffect(() => {
-    if (editor && position) {
+    if (editor && position && !editor.isFocused && !inEditableText) {
       editor.chain().focus().setTextSelection({
         from: position.start,
         to: position.end
       }).run()
-      // editor.commands.setTextSelection({
-      //   from: position.start,
-      //   to: position.end
-      // })
     }
   }, [position])
+
+  function sleep(time) {
+    return new Promise((resolve) => setTimeout(resolve, time));
+  }
 
   useEffect(() => {
     state[docIndex].content.numChars = prevNumChars
@@ -225,12 +235,6 @@ export const DocEditor: React.FC<Props> = ({ docIndex, showReview, handleRespons
   }, [prevNumChars])
 
   const handleReview = async () => {
-
-    //redirect to task component 
-
-    //get select html
-
-    //make call to openAI API
 
     const docs = state[docIndex]
     let start = editor.state.selection.from
@@ -281,9 +285,9 @@ export const DocEditor: React.FC<Props> = ({ docIndex, showReview, handleRespons
     console.log(end)
 
     // html = "<p title='this is a tooltip'><mark>Hello World</mark></p>"
-    if (start - 2 < 0){
+    if (start - 2 < 0) {
       start = editor.state.selection.head;
-    }else{
+    } else {
       start = start - 2;
     }
 
@@ -311,7 +315,7 @@ export const DocEditor: React.FC<Props> = ({ docIndex, showReview, handleRespons
   return (
     <div>
       {/* <Editor docIndex={docIndex} /> */}
-      <Modal size='auto' opened={opened} onClose={close} title="Capture" centered>
+      <Modal size='xl' opened={opened} onClose={close} title="Capture" centered>
         <CaptureBlock docIndex={docIndex} refStart={refLines.start} refEnd={refLines.end} />
       </Modal>
       <RichTextEditor editor={editor} className='rte'>

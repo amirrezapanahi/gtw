@@ -25,6 +25,7 @@ export const TaskComponent: React.FC = () => {
   const [doc, setDoc] = useState<Document>(state[getDocIndex(task.projectID)])
 
   const [dueDate, setDueDate] = useState<string>(task.dueDate)
+  const [inEditableText, setInEditableText] = useState(false)
   const [priority, setPriority] = useState<number>(task.priority)
   const [description, setDesc] = useState<string>(task.description)
   const [dependentOn, setDependentOn] = useState<TaskType>(task.dependentOn)
@@ -36,10 +37,6 @@ export const TaskComponent: React.FC = () => {
   const [editorEmpty, setEditorEmpty] = useState(false)
   const [aiRes, setAIRes] = useState("")
   const [loading, setLoading] = useState(false)
-
-  useEffect(() => {
-    console.log(task)
-  }, [task])
 
   useEffect(() => {
     let interval = null;
@@ -151,6 +148,7 @@ export const TaskComponent: React.FC = () => {
                     docIndex={getDocIndex(task.projectID)}
                     taskIndex={getTaskIndex(getDocIndex(task.projectID), task.taskID)}
                     text={task.description}
+                    setInEditable={setInEditableText}
                     type="task" 
                     />
                 </Blockquote>
@@ -237,7 +235,7 @@ export const TaskComponent: React.FC = () => {
       </div>
       <div style={{ "width": "50%", maxHeight: '100vh' }}>
         <div className='header'>
-          <EditableText docIndex={getDocIndex(task.projectID)} taskIndex={0} text={doc.doc_name} type={"doc"}/>
+          <EditableText docIndex={getDocIndex(task.projectID)} taskIndex={0} text={doc.doc_name} type={"doc"} setInEditable={setInEditableText}/>
         </div>
         <DocEditor
           docIndex={getDocIndex(task.projectID)}
@@ -245,6 +243,7 @@ export const TaskComponent: React.FC = () => {
           handleResponse={handleAIResponse}
           handleLoading={handleAILoading}
           isEditorEmpty={handleEditorEmpty}
+          inEditableText={inEditableText}
           position={{ start: task.referenceStart, end: task.referenceEnd }}
         />
       </div>

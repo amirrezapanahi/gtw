@@ -35,12 +35,12 @@ export const GTW = () => {
     a.click();
   }
 
-  function getTaskIndex(docIndex: number, taskID: number): number{
-    return getGTW()[docIndex]._inbox.findIndex((element)=> element.taskID == taskID)
+  function getTaskIndex(docIndex: number, taskID: number): number {
+    return getGTW()[docIndex]._inbox.findIndex((element) => element.taskID == taskID)
   }
 
-  function getDocIndex(docID: number): number{
-    return getGTW().findIndex((element)=> element.docID == docID)
+  function getDocIndex(docID: number): number {
+    return getGTW().findIndex((element) => element.docID == docID)
   }
 
   function addTask(docIndex: number, task: types.TaskType) {
@@ -51,7 +51,7 @@ export const GTW = () => {
 
   function removeTask(docIndex: number, taskID: number) {
     const docs: Document[] = getGTW()
-    docs[docIndex]._inbox.splice(getTaskIndex(docIndex,taskID), 1)
+    docs[docIndex]._inbox.splice(getTaskIndex(docIndex, taskID), 1)
     setGTW(docs)
   }
 
@@ -76,9 +76,10 @@ export const GTW = () => {
     setGTW(docs)
   }
 
-  function completeTask(docIndex: number, taskID: number){
-    let task: TaskType = getTask(getTaskIndex(docIndex,taskID), docIndex)
-    updateTask(docIndex, taskID, {
+  function completeTask(docIndex: number, taskID: number) {
+    let task: TaskType = getTask(getTaskIndex(docIndex, taskID), docIndex)
+    console.log("updated dependent task")
+    let newTask: TaskType = {
       taskID: task.taskID,
       projectID: task.projectID,
       description: task.description,
@@ -86,15 +87,39 @@ export const GTW = () => {
       priority: task.priority,
       dependentOn: task.dependentOn,
       referenceMaterial: task.referenceMaterial,
-      status: Status.Done, 
+      status: Status.Done,
       referenceStart: task.referenceStart,
       referenceEnd: task.referenceEnd,
-    })
+    }
+
+    updateTask(docIndex, taskID, newTask)
+
+    //check each task in inbox and determine if this task is a dependent task
+    for (let i = 0; i < getDoc(docIndex)._inbox.length; i++) {
+      console.log(getDoc(docIndex)._inbox[i])
+      const taskInbox = getDoc(docIndex)._inbox[i]
+      const depenTask: TaskType = getDoc(docIndex)._inbox[i].dependentOn
+      if (depenTask && depenTask.taskID === taskID) {
+        console.log("updated dependent task in other task")
+        updateTask(docIndex, taskInbox.taskID, {
+          taskID: taskInbox.taskID,
+          projectID: taskInbox.projectID,
+          description: taskInbox.description,
+          dueDate: taskInbox.dueDate,
+          priority: taskInbox.priority,
+          dependentOn: newTask,
+          referenceMaterial: taskInbox.referenceMaterial,
+          status: taskInbox.status,
+          referenceStart: taskInbox.referenceStart,
+          referenceEnd: taskInbox.referenceEnd,
+        })
+      }
+    }
   }
 
-  function incompleteTask(docIndex: number, taskID: number){
-    let task: TaskType = getTask(getTaskIndex(docIndex,taskID), docIndex)
-    updateTask(docIndex, taskID, {
+  function incompleteTask(docIndex: number, taskID: number) {
+    let task: TaskType = getTask(getTaskIndex(docIndex, taskID), docIndex)
+    let newTask: TaskType = {
       taskID: task.taskID,
       projectID: task.projectID,
       description: task.description,
@@ -102,19 +127,42 @@ export const GTW = () => {
       priority: task.priority,
       dependentOn: task.dependentOn,
       referenceMaterial: task.referenceMaterial,
-      status: Status.Todo, 
+      status: Status.Todo,
       referenceStart: task.referenceStart,
       referenceEnd: task.referenceEnd,
-    })
+    }
+
+    updateTask(docIndex, taskID, newTask)
+
+    //check each task in inbox and determine if this task is a dependent task
+    for (let i = 0; i < getDoc(docIndex)._inbox.length; i++) {
+      const taskInbox = getDoc(docIndex)._inbox[i]
+      const depenTask: TaskType = getDoc(docIndex)._inbox[i].dependentOn
+      if (!depenTask) continue
+      if (depenTask.taskID === taskID) {
+        updateTask(docIndex, taskInbox.taskID, {
+          taskID: taskInbox.taskID,
+          projectID: taskInbox.projectID,
+          description: taskInbox.description,
+          dueDate: taskInbox.dueDate,
+          priority: taskInbox.priority,
+          dependentOn: newTask,
+          referenceMaterial: taskInbox.referenceMaterial,
+          status: taskInbox.status,
+          referenceStart: taskInbox.referenceStart,
+          referenceEnd: taskInbox.referenceEnd,
+        })
+      }
+    }
   }
 
-  function snoozeTask(docIndex: number, taskID: number){
+  function snoozeTask(docIndex: number, taskID: number) {
     let docs: Document[] = getGTW();
     const taskIndex = getTaskIndex(docIndex, taskID)
     let task: TaskType = getTask(taskIndex, docIndex)
     const oneWeekFromNow = new Date(task.dueDate);
     oneWeekFromNow.setDate(oneWeekFromNow.getDate() + 7)
-    docs[docIndex]._inbox[taskIndex].dueDate = oneWeekFromNow.toISOString().slice(0,10)
+    docs[docIndex]._inbox[taskIndex].dueDate = oneWeekFromNow.toISOString().slice(0, 10)
     setGTW(docs)
     console.log(getGTW()[docIndex]._inbox[taskID])
   }
@@ -142,7 +190,7 @@ export const GTW = () => {
     setGTW(docs)
   }
 
-  
+
   // function updateReviewDueDates(): void {
   //   for ()
   //       this.last_reviewed = new Date().toISOString().slice(0, 10);
@@ -154,27 +202,29 @@ export const GTW = () => {
    * return storage used up in KB
    * @returns 
    */
-  function localStorageSize(): number{
+  function localStorageSize(): number {
     var _lsTotal = 0,
-    _xLen, _x;
+      _xLen, _x;
     for (_x in localStorage) {
-        if (!localStorage.hasOwnProperty(_x)) {
-            continue;
-        }
-        _xLen = ((localStorage[_x].length + _x.length) * 2);
-        _lsTotal += _xLen;
-        console.log(_x.substr(0, 50) + " = " + (_xLen / 1024).toFixed(2) + " KB")
+      if (!localStorage.hasOwnProperty(_x)) {
+        continue;
+      }
+      _xLen = ((localStorage[_x].length + _x.length) * 2);
+      _lsTotal += _xLen;
+      console.log(_x.substr(0, 50) + " = " + (_xLen / 1024).toFixed(2) + " KB")
     };
     console.log("Total = " + (_lsTotal / 1024).toFixed(2) + " KB");
     return (_lsTotal / 1024)
   }
 
-  function localStorageSizePercentage(){
-    return (localStorageSize()/5120) * 100
+  function localStorageSizePercentage() {
+    return (localStorageSize() / 5120) * 100
   }
 
-  return { getGTW, setGTW, addDoc, removeDoc, getTask, addTask, removeTask, updateTask, getDoc, backupDoc,
-          snoozeTask, completeTask, getTaskIndex, localStorageSize, incompleteTask, localStorageSizePercentage,
-          getDocIndex}
+  return {
+    getGTW, setGTW, addDoc, removeDoc, getTask, addTask, removeTask, updateTask, getDoc, backupDoc,
+    snoozeTask, completeTask, getTaskIndex, localStorageSize, incompleteTask, localStorageSizePercentage,
+    getDocIndex
+  }
 }
 

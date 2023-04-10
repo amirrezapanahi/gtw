@@ -37,7 +37,7 @@ function Doc(props: { name: string; daysUntilReview: number; id: number; }) {
     <div className="doc">
       <Link to={`/docs/${props.id}/dashboard`}><Paper /></Link>
       <h3 style={{ marginTop: '0.5em', marginBottom: '0.5em' }}>
-          <EditableText docIndex={getDocIndex(props.id)} taskIndex={0} text={props.name} type={"doc"}/>
+          <EditableText docIndex={getDocIndex(props.id)} taskIndex={0} text={props.name} type={"doc"} setInEditable={null}/>
       </h3>
       {props.daysUntilReview > 0
         ?

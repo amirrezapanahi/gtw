@@ -8,9 +8,10 @@ interface EditableTextProps {
   taskIndex: number
   text: string
   type: string
+  setInEditable: React.Dispatch<React.SetStateAction<boolean>> | null
 }
 
-export function EditableText({ docIndex, taskIndex, text, type }: EditableTextProps) {
+export function EditableText({ docIndex, taskIndex, text, type, setInEditable }: EditableTextProps) {
   const { state, setState } = useContext(GlobalState)
   const { setGTW, getGTW } = GTW();
   const [isEditing, setIsEditing] = useState(false);
@@ -27,6 +28,13 @@ export function EditableText({ docIndex, taskIndex, text, type }: EditableTextPr
     setGTW(state)
     setState(getGTW())
   }, [value])
+
+  useEffect(() => {
+    if (setInEditable) {
+      console.log("inside editable text")
+      setInEditable(isEditing)
+    }
+  }, [isEditing])
 
   const handleDoubleClick = () => {
     setIsEditing(true);
