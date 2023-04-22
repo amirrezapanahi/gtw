@@ -44,7 +44,7 @@ export const Block: React.FC<Props> = ({ children, blockName, style, allowed }) 
                     <Input placeholder="API Key" onKeyDown={(evnt: any) => {
                       if (evnt.keyCode == 13) {
                         //store api key in localstorage
-                        fetch('http://localhost:8080/key', {
+                        fetch('/api/key', {
                           method: 'POST',
                           headers: { 'Content-Type': 'application/json' },
                           body: JSON.stringify({

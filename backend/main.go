@@ -104,7 +104,7 @@ func main() {
 	// apply the CORS middleware to the engine
 	r.Use(adapter.Wrap(cors))
 
-	r.POST("/key", func(c *gin.Context) {
+	r.POST("/api/key", func(c *gin.Context) {
 		//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
 		body, err := ioutil.ReadAll(c.Request.Body)
 		if err != nil {
@@ -126,7 +126,7 @@ func main() {
 		c.AbortWithStatusJSON(http.StatusOK, requestData)
 	})
 
-	r.POST("/custom", func(c *gin.Context) {
+	r.POST("/api/custom", func(c *gin.Context) {
 		body, err := ioutil.ReadAll(c.Request.Body)
 		var requestData CustomRequestData
 		if err := json.Unmarshal(body, &requestData); err != nil {
@@ -160,7 +160,7 @@ func main() {
 		})
 	})
 
-	r.POST("/structure", func(c *gin.Context) {
+	r.POST("/api/structure", func(c *gin.Context) {
 		body, err := ioutil.ReadAll(c.Request.Body)
 		var requestData StructureRequestData
 		if err := json.Unmarshal(body, &requestData); err != nil {
@@ -194,7 +194,7 @@ func main() {
 		})
 	})
 
-	r.POST("/review", func(c *gin.Context) {
+	r.POST("/api/review", func(c *gin.Context) {
 		body, err := ioutil.ReadAll(c.Request.Body)
 
 		var requestData ReviewRequestData

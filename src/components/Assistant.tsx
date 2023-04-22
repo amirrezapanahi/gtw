@@ -59,7 +59,7 @@ export const Assistant: React.FC<Props> = ({ docIndex, response, isLoading, edit
 
     if (aiOption == 1) {
       console.log("custom prompt entered")
-      fetch('http://localhost:8080/custom', {
+      fetch('/api/custom', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -77,7 +77,7 @@ export const Assistant: React.FC<Props> = ({ docIndex, response, isLoading, edit
         return
       }
 
-      fetch('http://localhost:8080/structure', {
+      fetch('/api/structure', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

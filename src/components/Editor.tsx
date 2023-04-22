@@ -249,7 +249,7 @@ export const DocEditor: React.FC<Props> = ({ docIndex, showReview, handleRespons
 
     handleLoading(true)
 
-    const aiRes = await fetch('http://localhost:8080/review', {
+    const aiRes = await fetch('/api/review', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
