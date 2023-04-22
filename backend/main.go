@@ -7,7 +7,9 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 
+	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
 	adapter "github.com/gwatts/gin-adapter"
 	"github.com/jub0bs/fcors"
@@ -43,6 +45,10 @@ type CustomRequestData struct {
 	Prompt string `json:"prompt"`
 }
 
+type KeyRequestData struct {
+	Key string `json:"key"`
+}
+
 func reviewPrompt(content string) string {
 	return reviewTemplate + "'" + content + "'"
 }
@@ -62,10 +68,15 @@ func structurePrompt(topic string) string {
 }
 
 func main() {
-	oaClient := openai.NewClient("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")
+	port := os.Getenv("PORT")
+	defaultPort := "8080"
+	// var key = os.Getenv("KEY")
+	// oaClient := openai.NewClient("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")
 	var ctx = context.Background()
 
 	r := gin.Default()
+
+	r.Use(static.Serve("/", static.LocalFile("./build", true)))
 
 	// configure the CORS middleware
 	cors, err := fcors.AllowAccess(
@@ -93,6 +104,28 @@ func main() {
 	// apply the CORS middleware to the engine
 	r.Use(adapter.Wrap(cors))
 
+	r.POST("/key", func(c *gin.Context) {
+		//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
+		body, err := ioutil.ReadAll(c.Request.Body)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		var requestData KeyRequestData
+		if err := json.Unmarshal(body, &requestData); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		key := requestData.Key
+
+		os.Setenv("KEY", key)
+
+		println(os.Getenv("KEY"))
+		c.AbortWithStatusJSON(http.StatusOK, requestData)
+	})
+
 	r.POST("/custom", func(c *gin.Context) {
 		body, err := ioutil.ReadAll(c.Request.Body)
 		var requestData CustomRequestData
@@ -103,7 +136,7 @@ func main() {
 
 		prompt := requestData.Prompt
 		println(prompt)
-
+		oaClient := openai.NewClient(os.Getenv("KEY"))
 		resp, err := oaClient.CreateChatCompletion(
 			context.Background(),
 			openai.ChatCompletionRequest{
@@ -148,6 +181,7 @@ func main() {
 			Prompt:           structurePrompt(string(topic)),
 		}
 
+		oaClient := openai.NewClient(os.Getenv("KEY"))
 		resp, err := oaClient.CreateCompletion(ctx, req)
 
 		if err != nil {
@@ -182,6 +216,7 @@ func main() {
 			Prompt:           reviewPrompt(string(html)),
 		}
 
+		oaClient := openai.NewClient(os.Getenv("KEY"))
 		resp, err := oaClient.CreateCompletion(ctx, req)
 
 		if err != nil {
@@ -193,5 +228,11 @@ func main() {
 			"aiResponse": resp.Choices[0].Text,
 		})
 	})
-	r.Run()
+
+	// r.Run(":")
+	if !(port == "") {
+		log.Fatal(r.Run(":" + port))
+	} else {
+		log.Fatal(r.Run(":" + defaultPort))
+	}
 }

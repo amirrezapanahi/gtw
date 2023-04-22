@@ -1,0 +1,48 @@
+h1 {
+  color: inherit;
+}
+
+.taskInfo {
+  display: grid;
+  grid-template-columns: 60% 40%;
+  width: 95%;
+  margin: 0 auto;
+}
+
+.taskInfoContainer {
+  display: grid;
+  gap: 1em;
+}
+
+.taskInfoUpdate {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1em;
+}
+
+/* .taskInfoContainer div:last-child {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+} */
+
+.timer {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+}
+
+.clock {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.taskOperations {
+  display: flex;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.taskDelComplete:hover {
+  cursor: pointer;
+}
